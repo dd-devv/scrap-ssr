@@ -69,14 +69,21 @@ export default class ProductsComponent implements OnInit {
   loadingSubscription = signal(false);
 
   ngOnInit(): void {
-    this.loadProducts();
+    // Solo cargar productos en el lado del cliente
+    if (typeof window !== 'undefined') {
+      this.loadProducts();
+    } else {
+      // Estamos en SSR, solo marcar como no cargando
+      this.componentLoading.set(false);
+    }
   }
 
   loadProducts() {
     this.componentLoading.set(true);
     this.productService.getLatestResults().subscribe({
       next: () => this.componentLoading.set(false),
-      error: () => {
+      error: (err) => {
+        console.error('Error loading products:', err);
         this.componentLoading.set(false);
         this.messageService.add({
           severity: 'error',
@@ -84,7 +91,8 @@ export default class ProductsComponent implements OnInit {
           detail: 'No se pudieron cargar los productos',
           life: 3000
         });
-      }
+      },
+      complete: () => this.componentLoading.set(false)
     });
   }
 
@@ -165,6 +173,9 @@ export default class ProductsComponent implements OnInit {
       next: (res) => {
         this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Producto quitado con éxito', life: 3000 });
         this.productService.getLatestResults().subscribe();
+      },
+      error: (err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error!', detail: 'Error al eliminar el producto', life: 3000 });
       }
     });
   }

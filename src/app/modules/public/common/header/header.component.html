@@ -29,14 +29,8 @@
     <div class="flex items-center justify-between w-full">
       <!-- Logo -->
       <div class="flex-none">
-        @if (isDarkTheme$ | async) {
-          <img src="../../../../../assets/svg/logo-white.svg" [routerLink]="['/']" width="40" alt="logo"
-            class="hidden md:block cursor-pointer">
-        }
-        @else {
-          <img src="../../../../../assets/svg/logo.svg" [routerLink]="['/']" width="40" alt="logo"
-            class="hidden md:block cursor-pointer">
-        }
+        <img src="../../../../../assets/svg/logo.svg" [routerLink]="['/']" width="40" alt="logo"
+          class="hidden md:block cursor-pointer">
       </div>
 
       <!-- Navigation Items -->
@@ -61,7 +55,7 @@
               class="flex flex-col md:flex-row items-center justify-center px-3 py-2 rounded-md">
 
               <!-- Ícono: Visible solo en pantallas pequeñas y medianas -->
-              <i class="pi pi-percentage
+              <i class="pi pi-ticket
                text-2xl md:text-base mb-1 md:mb-0 md:mr-2 sm:block"></i>
 
               <!-- Texto: Visible solo en pantallas medianas y grandes -->
@@ -89,7 +83,7 @@
               class="flex flex-col md:flex-row items-center justify-center px-3 py-2 rounded-md">
 
               <!-- Ícono: Visible solo en pantallas pequeñas y medianas -->
-              <i class="pi pi-cart-arrow-down text-2xl md:text-base mb-1 md:mb-0 md:mr-2"></i>
+              <i class="pi pi-shopping-bag text-2xl md:text-base mb-1 md:mb-0 md:mr-2"></i>
 
               <!-- Texto: Visible solo en pantallas medianas y grandes -->
               <span class="text-sm md:text-base hidden md:block lg:block">Mis productos</span>
@@ -114,11 +108,11 @@
 
           @if (authService.isAuthenticatedUser()) {
           <li>
-            <p-button type="button" severity="secondary" label="Usuario" icon="pi pi-user" (onClick)="toggle($event)" />
+            <p-button type="button" severity="secondary" label="{{authService.currentUser()!.fullname}}" icon="pi pi-user" (onClick)="toggle($event)" />
 
             <p-popover #op>
               <p class="mb-3" (click)="toggle($event)">
-                <a [routerLink]="['/productos']"> <i class="pi pi-cart-arrow-down me-2"></i>
+                <a [routerLink]="['/productos']"> <i class="pi pi-shopping-bag me-2"></i>
                   Mis productos</a>
               </p>
               <p class="mb-3" (click)="toggle($event)">
