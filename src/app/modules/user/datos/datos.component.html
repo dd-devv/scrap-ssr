@@ -1,0 +1,139 @@
+<!-- update-profile.component.html -->
+<div class="flex flex-col justify-center items-center h-screen md:h-5/6 w-full p-4">
+  <div class="w-full sm:w-4/5 md:w-2/3 lg:w-5/12">
+    <p-card class="shadow-md my-8">
+      <h3 class="heading-3 font-bold text-center mt-4 mb-6">
+        Mis datos
+      </h3>
+
+      @if (isLoading && !userData) {
+      <div class="flex justify-center p-4">
+        <i class="pi pi-spin pi-spinner text-3xl"></i>
+      </div>
+      } @else if (userData) {
+      <!-- Formulario principal -->
+      <form [formGroup]="updateForm" (ngSubmit)="onSubmit()" autocomplete="off">
+        <p-floatlabel variant="on">
+          <input pInputText id="fullname" formControlName="fullname" fluid="true" />
+          <label for="fullname"><i class="pi pi-user me-1"></i> Nombres</label>
+        </p-floatlabel>
+
+        @if (isFieldInvalid(updateForm, 'fullname')) {
+        <small class="text-red-500">
+          {{ getErrorMessage(updateForm, 'fullname') }}
+        </small>
+        }
+
+        <p-floatlabel variant="on" class="mt-6">
+          <input pInputText id="email" formControlName="email" fluid="true" />
+          <label for="email"><i class="pi pi-envelope me-1"></i> Correo</label>
+        </p-floatlabel>
+
+        @if (isFieldInvalid(updateForm, 'email')) {
+        <small class="text-red-500">
+          {{ getErrorMessage(updateForm, 'email') }}
+        </small>
+        }
+
+        <p-floatlabel variant="on" class="mt-6">
+          <p-inputmask id="whatsapp" formControlName="whatsapp" mask="999 999 999" styleClass="w-full" />
+          <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label>
+        </p-floatlabel>
+
+        @if (isFieldInvalid(updateForm, 'whatsapp')) {
+        <small class="text-red-500">
+          {{ getErrorMessage(updateForm, 'whatsapp') }}
+        </small>
+        }
+
+        <div class="flex justify-between mt-6">
+          <p-button type="submit" label="Actualizar" icon="pi pi-check" [loading]="isLoading"
+            [disabled]="updateForm.invalid || isLoading || showPasswordChangeForm" />
+          <p-button type="button" label="Contraseña" icon="pi pi-lock" severity="secondary" (onClick)="togglePasswordChangeForm()" />
+        </div>
+      </form>
+
+      <!-- Formulario de cambio de contraseña -->
+      @if (showPasswordChangeForm) {
+      <div class="mt-6 p-4 border-t border-gray-200">
+        <h4 class="font-semibold mb-4">Cambiar Contraseña</h4>
+
+        <form [formGroup]="passwordChangeForm" (ngSubmit)="changePassword()">
+          <p-floatlabel variant="on">
+            <p-password formControlName="currentPassword" inputId="currentPassword" [toggleMask]="true" fluid="true"
+              feedback="false" class="font-mono" />
+            <label for="currentPassword"><i class="pi pi-key me-1"></i> Contraseña Actual</label>
+          </p-floatlabel>
+
+          @if (isFieldInvalid(passwordChangeForm, 'currentPassword')) {
+          <small class="text-red-500">
+            {{ getErrorMessage(passwordChangeForm, 'currentPassword') }}
+          </small>
+          }
+
+          <p-floatlabel variant="on" class="mt-6">
+            <p-password formControlName="newPassword" inputId="newPassword" [toggleMask]="true" fluid="true"
+              [feedback]="true" class="font-mono" />
+            <label for="newPassword"><i class="pi pi-key me-1"></i> Nueva Contraseña</label>
+          </p-floatlabel>
+
+          @if (isFieldInvalid(passwordChangeForm, 'newPassword')) {
+          <small class="text-red-500">
+            {{ getErrorMessage(passwordChangeForm, 'newPassword') }}
+          </small>
+          }
+
+          <div class="flex justify-between mt-6">
+            <p-button type="submit" label="Actualizar" icon="pi pi-key" [loading]="isLoadingPass"
+              [disabled]="passwordChangeForm.invalid || isLoadingPass" />
+            <p-button type="button" label="Cancelar" severity="secondary" (onClick)="togglePasswordChangeForm()" />
+          </div>
+        </form>
+      </div>
+      }
+      }
+    </p-card>
+  </div>
+</div>
+
+<!-- Modal para verificación de WhatsApp -->
+<p-dialog
+  [(visible)]="showWhatsappVerificationModal"
+  [modal]="true"
+  [closable]="false"
+  [draggable]="false"
+  [resizable]="false"
+  header="Verificación de WhatsApp"
+  [style]="{width: '450px'}"
+  [breakpoints]="{'576px': '90vw'}">
+
+  <div class="flex flex-col items-center p-4">
+    <i class="pi pi-whatsapp text-5xl text-green-500 mb-4"></i>
+    <p class="text-center mb-4">
+      Hemos enviado un código de verificación a tu nuevo número de WhatsApp.
+      Por favor, ingrésalo para confirmar tu número.
+    </p>
+
+    <form [formGroup]="verificationForm" (ngSubmit)="verifyWhatsappCode()" class="w-full">
+
+      <div class="card flex justify-center mt-2 mb-6">
+        <p-inputotp id="verificationCode" formControlName="verificationCode" [integerOnly]="true" [length]="6" />
+      </div>
+
+      @if (isFieldInvalid(verificationForm, 'verificationCode')) {
+      <small class="text-red-500 block text-center mb-4">
+        {{ getErrorMessage(verificationForm, 'verificationCode') }}
+      </small>
+      }
+
+      <div class="flex justify-between">
+        <p-button type="button" label="Cancelar" severity="secondary" (onClick)="cancelWhatsappChange()"
+          [disabled]="isLoading" />
+        <p-button type="submit" label="Verificar" [loading]="isLoading"
+          [disabled]="verificationForm.invalid || isLoading" />
+      </div>
+    </form>
+  </div>
+</p-dialog>
+
+<p-toast />

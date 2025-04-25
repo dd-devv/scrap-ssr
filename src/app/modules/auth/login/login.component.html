@@ -1,0 +1,54 @@
+<!-- login.component.html -->
+<div class="flex flex-col justify-center items-center h-screen md:h-96 w-full p-4">
+  <div class="w-full sm:w-4/5 md:w-2/3 lg:w-5/12">
+    <p-card class="shadow-md my-8">
+      <h3 class="heading-3 font-bold text-center mb-4">
+        Iniciar sesión
+      </h3>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <p-floatlabel variant="on">
+          <p-inputmask id="whatsapp" formControlName="whatsapp" mask="999 999 999" styleClass="w-full" />
+          <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label>
+        </p-floatlabel>
+
+        @if (isFieldInvalid('whatsapp')) {
+        <small class="text-red-500">
+          {{ getErrorMessage('whatsapp') }}
+        </small>
+        }
+
+        <p-floatlabel variant="on" class="mt-6">
+          <p-password formControlName="password" inputId="password" [toggleMask]="true" fluid="true" feedback="false"
+            class="font-mono" />
+          <label for="password"><i class="pi pi-key me-1"></i> Contraseña</label>
+        </p-floatlabel>
+
+        @if (isFieldInvalid('password')) {
+        <small class="text-red-500">
+          {{ getErrorMessage('password') }}
+        </small>
+        }
+
+        <div class="flex justify-center mt-6">
+          <p-button type="submit" label="Iniciar sesión" [loading]="isLoading"
+            [disabled]="loginForm.invalid || isLoading" />
+        </div>
+
+        <p class="mt-4 text-center underline text-purple-500 cursor-pointer">
+          <a [routerLink]="['/register']">
+            <i class="pi pi-user-plus me-1"></i> Crear cuenta
+          </a>
+        </p>
+
+        <p class="my-3 text-center text-sm cursor-pointer text-gray-400">
+          <a [routerLink]="['/forgot-password']">
+            Recuperar contraseña
+          </a>
+        </p>
+      </form>
+    </p-card>
+  </div>
+</div>
+
+<p-toast />

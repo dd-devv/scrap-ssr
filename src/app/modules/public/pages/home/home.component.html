@@ -1,0 +1,209 @@
+<main class="">
+  <!-- PREVIEW SERVICE -->
+  <section class="mt-10 mb-12">
+    <div class="text-center">
+      <h1 class="heading-1 max-w-[900px] mx-auto">
+        <span>AcllaBay: </span>
+        <span class="text-primary">Ahorra </span>
+        <span>sin perder tiempo</span>
+      </h1>
+      <p class="my-5 marfa-light-italic-md max-w-[600px] mx-auto">Monitorea tus productos favoritos. Recibe alertas
+        instantáneas
+        mediante WhatsApp cuando los precios bajen y compra inteligentemente.</p>
+        @if (!authService.isAuthenticated()) {
+          <p-button label="Empezar ahora" [routerLink]="['/register']" />
+        } @else {
+          <p-button label="Registrar productos" [routerLink]="['/productos']" />
+        }
+    </div>
+    <div class="mt-10 flex justify-center gap-4 max-h-[500px]">
+      <p-card class="max-w-[450px]">
+        <img alt="Card" class="w-full max-h-[450px] object-cover"
+          src="https://images.unsplash.com/photo-1590098563176-07884b06d7f7?q=80&w=2667&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+      </p-card>
+      <p-card class="max-w-[450px]">
+        <img alt="Card" class="w-full max-h-[450px] object-cover"
+          src="https://images.unsplash.com/photo-1590098563176-07884b06d7f7?q=80&w=2667&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+      </p-card>
+    </div>
+  </section>
+
+  <!-- ABOUT SERVICE -->
+  <section class="">
+    <div class="card flex flex-col items-center overflow-hidde">
+      <div class="flex flex-col items-center gap-2">
+        <span class="text-xl font-medium">Desplácese hacia abajo</span>
+        <span
+          class="animate-bounce h-8 w-8 bg-primary text-primary-contrast rounded-full inline-flex items-center justify-center">
+          <i class="pi pi-arrow-down"></i>
+        </span>
+      </div>
+
+      <div class="h-[6rem]"></div>
+
+      <div class="text-center">
+        <h1 class="text-4xl max-w-[600px] mx-auto">AcllaBay: Tu compañero <span class="text-primary">inteligente </span>
+          de compras</h1>
+        <p class="mt-5 text-1xl max-w-[600px] mx-auto">
+          Transforma tu experiencia de compra online con seguimiento personalizado de precios y alertas instantáneas
+          para que nunca pierdas una oferta.
+        </p>
+      </div>
+
+      <div class="h-[6rem]"></div>
+
+      <div class="flex flex-wrap justify-center gap-8">
+        <div pAnimateOnScroll enterClass="animate-enter fade-in-10 slide-in-from-l-8 animate-duration-1000"
+          leaveClass="animate-leave fade-out-0"
+          class="flex flex-col border border-surface shadow-lg justify-center items-center max-w-60 rounded-2xl p-8 gap-4">
+          <div class="rounded-full bg-primary text-primary-contrast w-12 h-12 flex items-center justify-center">
+            <i class="pi pi-link !text-2xl"></i>
+          </div>
+          <span class="text-2xl font-bold text-center">Seguimiento de URLs</span>
+          <span class="text-muted-color marfa-italic-sm">Agrega y monitorea cualquier producto de diferentes
+            tiendas online.</span>
+        </div>
+        <div pAnimateOnScroll enterClass="animate-enter fade-in-10 animate-duration-1000"
+          leaveClass="animate-leave fade-out-0"
+          class="flex flex-col border border-surface shadow-lg justify-center items-center max-w-60 rounded-2xl p-8 gap-4">
+          <div class="rounded-full bg-primary text-primary-contrast w-12 h-12 flex items-center justify-center">
+            <i class="pi pi-bell !text-2xl"></i>
+          </div>
+          <span class="text-2xl font-bold text-center">Alertas Instantáneas</span>
+          <span class="text-muted-color marfa-italic-sm">Notificaciones mediante WhatsApp cuando bajan los
+            precios.</span>
+        </div>
+        <div pAnimateOnScroll enterClass="animate-enter fade-in-10 slide-in-from-r-8 animate-duration-1000"
+          leaveClass="animate-leave fade-out-0"
+          class="flex flex-col border border-surface shadow-lg justify-center items-center max-w-60 rounded-2xl p-8 gap-4">
+          <div class="rounded-full bg-primary text-primary-contrast w-12 h-12 flex items-center justify-center">
+            <i class="pi pi-chart-line !text-2xl"></i>
+          </div>
+          <span class="text-2xl font-bold text-center">Historial de precios</span>
+          <span class="text-muted-color marfa-italic-sm">Visualiza el comportamiento histórico de precios de tus
+            productos.</span>
+        </div>
+      </div>
+
+      <div class="h-[6rem]"></div>
+
+      <div class="flex flex-wrap justify-center gap-8">
+        <div pAnimateOnScroll enterClass="animate-enter fade-in-10 slide-in-from-t-20 animate-duration-1000"
+          leaveClass="animate-leave fade-out-0"
+          class="flex flex-col border border-primary-200 shadow-lg justify-center items-center rounded-2xl p-4 gap-4">
+          @if (themeService.getStoredThemePreference()) {
+          <img src="../../../../../assets/images/graph-dark.png" alt="" class="rounded-2xl">
+          }
+          @if (!themeService.getStoredThemePreference()) {
+          <img src="../../../../../assets/images/graph-light.png" alt="" class="rounded-2xl">
+          }
+          <span class="text-2xl font-medium">Monitoreo de historial de precios</span>
+          <span class="text-muted-color text-center">Entérate cuando tu producto favorito está en el precio más
+            bajo.</span>
+        </div>
+
+        <div pAnimateOnScroll enterClass="animate-enter fade-in-10 slide-in-from-b-20 animate-duration-1000"
+          class="flex flex-col border border-primary-200 shadow-lg justify-center items-center w-96 rounded-2xl p-4 gap-4">
+          @if (themeService.getStoredThemePreference()) {
+          <img src="../../../../../assets/images/message-whatsapp-dark.png" alt="" class="rounded-2xl w-full">
+          }
+          @if (!themeService.getStoredThemePreference()) {
+          <img src="../../../../../assets/images/message-whatsapp-light.png" alt="" class="rounded-2xl w-full">
+          }
+          <span class="text-2xl font-medium">Notificaciones instantáneas por WhatsApp</span>
+          <span class="text-muted-color text-center">Recibe mensajes de whatsapp en el momento en que los productos
+            cambien de precio.</span>
+        </div>
+      </div>
+
+      <div class="h-[6rem]"></div>
+
+      <div class="flex flex-wrap justify-center gap-8">
+        <div pAnimateOnScroll enterClass="animate-enter fade-in-10 spin-in-45 slide-in-from-t-12 animate-duration-1000"
+          class="flex flex-col bg-primary text-primary-contrast border-primary shadow-lg justify-center items-center max-w-80 rounded-2xl p-8 gap-4">
+          <span class="bg-white/20 text-3xl font-bold rounded-xl px-4 py-2">
+            {{publicService.usersLenght() | numberShort}}
+          </span>
+          <h3 class="heading-3">Usuarios</h3>
+          <span class="text-center">Activos que usan y confían en nuestra plataforma.</span>
+        </div>
+        <div
+          pAnimateOnScroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-50 slide-in-from-t-20 animate-duration-1000' }"
+          class="flex flex-col bg-primary text-primary-contrast border-primary shadow-lg justify-center items-center max-w-80 rounded-2xl p-8 gap-4">
+          <span class="bg-white/20 text-3xl font-bold rounded-xl px-4 py-2">
+            7+
+          </span>
+          <h3 class="heading-3">Tiendas</h3>
+          <span class="text-center">Realizamos seguimientos en más de 7 tiendas populares.</span>
+        </div>
+        <div pAnimateOnScroll
+          enterClass="animate-enter fade-in-10 spin-in-[-45deg] slide-in-from-t-16 animate-duration-1000"
+          class="flex flex-col bg-primary text-primary-contrast border-primary shadow-lg justify-center items-center max-w-80 rounded-2xl p-8 gap-4">
+          <span class="bg-white/20 text-3xl font-bold rounded-xl px-4 py-2">
+            {{publicService.totalUrls() | numberShort}}
+          </span>
+          <h3 class="heading-3">Seguimientos</h3>
+          <span class="text-center">Activos en las distintas tiendas para nuestros usuarios.</span>
+        </div>
+      </div>
+
+      <div class="h-[6rem]"></div>
+
+    </div>
+  </section>
+
+  <!-- OFFERS -->
+  <section class="mt-16 py-5">
+    @if (!productService.isLoading()) {
+    <div>
+      <h1 class="pb-5 text-2xl mx-auto text-center text-primary">Ofertas</h1>
+      <p-carousel [value]="productService.productsPublic()" [numVisible]="3" [numScroll]="3" [circular]="false"
+        [responsiveOptions]="responsiveOptions">
+        <ng-template let-product pTemplate="item">
+          <div class="border border-surface rounded-border m-2 p-4">
+            <div class="mb-4">
+              <div class="relative mx-auto">
+                <img [src]="product.image" [alt]="product.productTitle"
+                  class="w-full rounded-border h-[250px] object-cover" />
+                <p-tag [value]="'-'+product.discountPercentage + '% Desc.'" severity="secondary" class="absolute"
+                  [ngStyle]="{ 'left.px': 5, 'top.px': 5 }" />
+              </div>
+            </div>
+            <div class="mb-4 font-medium line-clamp-2 h-12">{{ product.productTitle }}</div>
+            <div class="flex justify-between items-center">
+              <div class="flex flex-col">
+                <div class="mt-0 font-semibold text-xl text-primary">{{ product.currentPrice | currency:'S/ ' }}</div>
+                <div class="text-sm text-gray-500 line-through">{{ product.previousPrice | currency:'S/ ' }}</div>
+              </div>
+
+              <div class="flex items-center">
+                <img src="../../../../../assets/svg/{{product.url|extractDomain}}.svg"
+                  alt="Logo {{product.url|extractDomain}}">
+                <a [href]="product.url" target="_blank">
+                  <p-button icon="pi pi-shopping-cart" label="Ver" styleClass="ml-2" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-carousel>
+    </div>
+    }
+  </section>
+
+  <!-- Shops -->
+  <section class="mt-16">
+    
+    <p-card class="max-w-[450px]">
+      <h4 class="pb-5 text-2xl mx-auto text-center">Tiendas disponibles</h4>
+      <div  class="grid grid-cols-6 gap-4  my-0 md:my-10">
+        <div *ngFor="let shop of shops" class="flex justify-center">
+          <a [href]="shop.url" target="_blank"> 
+            <img [src]="shop.logo" alt="Logo de ..." style="height: 100px;">
+          </a>
+        </div>
+      </div>
+    </p-card>
+
+  </section>
+</main>

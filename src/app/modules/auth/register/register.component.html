@@ -1,0 +1,71 @@
+<!-- register.component.html -->
+<div class="flex flex-col justify-center items-center h-screen md:h-5/6 w-full p-4">
+  <div class="w-full sm:w-4/5 md:w-2/3 lg:w-5/12">
+    <p-card class="shadow-md my-8">
+      <h3 class="heading-3 font-bold text-center mb-4">
+        Registro de usuarios
+      </h3>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+        <p-floatlabel variant="on">
+          <input pInputText id="fullname" formControlName="fullname" fluid="true" />
+          <label for="fullname"><i class="pi pi-user me-1"></i> Nombres</label>
+        </p-floatlabel>
+
+        @if (isFieldInvalid('fullname')) {
+        <small class="text-red-500">
+          {{ getErrorMessage('fullname') }}
+        </small>
+        }
+
+        <p-floatlabel variant="on" class="mt-6">
+          <input pInputText id="email" formControlName="email" fluid="true" />
+          <label for="email"><i class="pi pi-envelope me-1"></i> Correo</label>
+        </p-floatlabel>
+
+        @if (isFieldInvalid('email')) {
+        <small class="text-red-500">
+          {{ getErrorMessage('email') }}
+        </small>
+        }
+
+        <p-floatlabel variant="on" class="mt-6">
+          <p-inputmask id="whatsapp" formControlName="whatsapp" mask="999 999 999" styleClass="w-full" />
+          <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label>
+        </p-floatlabel>
+
+        @if (isFieldInvalid('whatsapp')) {
+        <small class="text-red-500">
+          {{ getErrorMessage('whatsapp') }}
+        </small>
+        }
+
+        <p-floatlabel variant="on" class="mt-6">
+          <p-password formControlName="password" inputId="password" [toggleMask]="true" fluid="true" feedback="false"
+            class="font-mono" />
+          <label for="password"><i class="pi pi-key me-1"></i> Contraseña</label>
+        </p-floatlabel>
+
+        @if (isFieldInvalid('password')) {
+        <small class="text-red-500">
+          {{ getErrorMessage('password') }}
+        </small>
+        }
+
+        <div class="flex justify-center mt-6">
+          <p-button type="submit" label="Registrar" [loading]="isLoading"
+            [disabled]="registerForm.invalid || isLoading" />
+        </div>
+
+        <p class="mt-4 text-center underline text-purple-500 cursor-pointer">
+          <a [routerLink]="['/login']">
+            Iniciar sesión
+          </a>
+        </p>
+      </form>
+    </p-card>
+  </div>
+</div>
+
+<p-toast />

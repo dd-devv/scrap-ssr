@@ -1,0 +1,157 @@
+/* You can add global styles to this file, and also import other style files */
+@import "primeicons/primeicons.css";
+
+@layer tailwind-base, primeng, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+/* Importación de fuentes */
+@font-face {
+  font-family: 'Marfa';
+  src: url('./assets/fonts/marfa.woff2') format('woff2-variations');
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Terra';
+  src: url('./assets/fonts/terra.woff2') format('woff2-variations');
+  font-weight: 300 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Estilos base */
+body {
+  font-family: 'Marfa', sans-serif;
+  font-variation-settings: 'wght' 300, 'ital' 0;
+}
+
+/* Aplicar Terra a todos los headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Terra', serif;
+  font-variation-settings: 'wght' 500;
+}
+
+/* Variaciones de peso para Marfa */
+.marfa-light {
+  font-variation-settings: 'wght' 200, 'ital' 0;
+}
+
+.marfa-regular {
+  font-variation-settings: 'wght' 300, 'ital' 0;
+}
+
+.marfa-medium {
+  font-variation-settings: 'wght' 500, 'ital' 0;
+}
+
+.marfa-semibold {
+  font-variation-settings: 'wght' 600, 'ital' 0;
+}
+
+.marfa-bold {
+  font-variation-settings: 'wght' 700, 'ital' 0;
+}
+
+.marfa-black {
+  font-variation-settings: 'wght' 900, 'ital' 0;
+}
+
+/* Variaciones de itálica para Marfa */
+.marfa-italic {
+  font-variation-settings: 'wght' 300, 'ital' 16;
+}
+
+.marfa-italic-md {
+  font-variation-settings: 'wght' 300, 'ital' 8;
+}
+
+.marfa-light-italic-md {
+  font-variation-settings: 'wght' 200, 'ital' 8;
+}
+
+.marfa-italic-sm {
+  font-variation-settings: 'wght' 300, 'ital' 4;
+}
+
+.marfa-light-italic-sm {
+  font-variation-settings: 'wght' 200, 'ital' 4;
+}
+
+/* Combinaciones comunes */
+.marfa-bold-italic {
+  font-variation-settings: 'wght' 700, 'ital' 16;
+}
+
+.marfa-light-italic {
+  font-variation-settings: 'wght' 200, 'ital' 16;
+}
+
+/* Variaciones de peso para Terra */
+.terra-light {
+  font-family: 'Terra', serif;
+  font-variation-settings: 'wght' 300;
+}
+
+.terra-regular {
+  font-family: 'Terra', serif;
+  font-variation-settings: 'wght' 400;
+}
+
+.terra-medium {
+  font-family: 'Terra', serif;
+  font-variation-settings: 'wght' 500;
+}
+
+.terra-semibold {
+  font-family: 'Terra', serif;
+  font-variation-settings: 'wght' 600;
+}
+
+/* Headings predefinidos con Terra */
+.heading-1 {
+  font-family: 'Terra', serif;
+  font-variation-settings: 'wght' 600;
+  font-size: 2.5rem;
+  line-height: 1.2;
+}
+
+.heading-2 {
+  font-family: 'Terra', serif;
+  font-variation-settings: 'wght' 500;
+  font-size: 2rem;
+  line-height: 1.3;
+}
+
+.heading-3 {
+  font-family: 'Terra', serif;
+  font-variation-settings: 'wght' 500;
+  font-size: 1.75rem;
+  line-height: 1.4;
+}
+
+.heading-4 {
+  font-family: 'Terra', serif;
+  font-variation-settings: 'wght' 500;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+/* Transiciones suaves */
+.transition-font {
+  transition: font-variation-settings 100ms ease;
+}

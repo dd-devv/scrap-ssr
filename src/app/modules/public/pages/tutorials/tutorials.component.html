@@ -1,0 +1,95 @@
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div class="bg-blue-000 p-4">
+
+        <section class="mb-8">
+            <h5 class="mb-4">¿Cómo crear una cuenta de usuario?</h5>
+            <div class="w-full aspect-video rounded-2xl shadow-[0_4px_10px_rgba(0,0,0,0.3)] overflow-hidden">
+                <div *ngIf="!mostrarVideoCrearCuenta" class="relative cursor-pointer" (click)="play_video_create_user()">
+                    <img src="../../../../../assets/images/create-user.png" alt="Video" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="pi pi-play-circle text-blue-600 text-6xl"></i>
+                    </div>
+                </div>
+                
+                <div *ngIf="mostrarVideoCrearCuenta" class="w-full aspect-video">
+                    <iframe 
+                        width="100%" 
+                        height="100%"
+                        src="https://www.youtube.com/embed/Bi_7sTekB7I?autoplay=1"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        class="w-full h-full">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+
+    </div>
+
+    <div class="bg-blue-000 p-4">
+        
+        <section class="mb-8">
+            <h5 class="mb-4">¿Cómo iniciar sesión?</h5>
+            <div class="w-full aspect-video rounded-2xl shadow-[0_4px_10px_rgba(0,0,0,0.3)] overflow-hidden">
+                <div *ngIf="!mostrarVideoIniciarSesion" class="relative cursor-pointer" (click)="play_video_login_user()">
+                    <img src="../../../../../assets/images/login-user.png" alt="Video" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="pi pi-play-circle text-blue-600 text-6xl"></i>
+                    </div>
+                </div>
+                <div *ngIf="mostrarVideoIniciarSesion" class="w-full aspect-video">
+                    <iframe 
+                        width="100%" 
+                        height="100%"
+                        src="https://www.youtube.com/embed/d2Dbibj-BXE?autoplay=1"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        class="w-full h-full">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <div class="bg-blue-0 p-4">
+        
+        <section class="mb-8">
+            <h5 class="mb-4">¿Cómo agregar los productos?</h5>
+            <div class="w-full aspect-video rounded-2xl shadow-[0_4px_10px_rgba(0,0,0,0.3)] overflow-hidden">
+                <div *ngIf="!mostrarVideoAgregarProducto" class="relative cursor-pointer" (click)="play_video_add_product()">
+                    <img src="../../../../../assets/images/add-product.png" alt="Video" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="pi pi-play-circle text-blue-600 text-6xl"></i>
+                    </div>
+                </div>
+                <div *ngIf="mostrarVideoAgregarProducto" class="w-full aspect-video">
+                    <iframe 
+                        width="100%" 
+                        height="100%"
+                        src="https://www.youtube.com/embed/Y4RnxxpUp-s?autoplay=1"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        class="w-full h-full">
+                    </iframe>
+                </div>
+            </div>
+            
+        </section>
+
+    </div>
+
+    <div class="bg-blue-400 p-4">
+
+        <section class="mb-8">
+            <h5 class="mb-4">¿Cómo hacer seguimiento del precio de mi producto?</h5>
+            
+        </section>
+
+    </div>
+</div>
+  

@@ -1,0 +1,52 @@
+@if (productService.isLoading()) {
+<div class="my-8">
+  <div class="card my-4">
+    <p-skeleton width="60%" height="2rem"></p-skeleton>
+  </div>
+
+  <div class="card my-4">
+    <p-skeleton height="20rem" class="mt-4"></p-skeleton>
+  </div>
+
+
+  <div class="card my-4">
+    <p-skeleton height="20rem" class="mt-4"></p-skeleton>
+  </div>
+</div>
+}
+
+@if (!productService.isLoading()){
+
+<div class="card my-6">
+  <h3>{{productService.priceHistory().productInfo.title}}</h3>
+  <p-chart type="line" [data]="data" [options]="options" class="h-[20rem]" />
+</div>
+
+<div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
+  <div class="card flex justify-center items-center h-96">
+    <img [src]="productService.priceHistory().productInfo.image" [alt]="productService.priceHistory().productInfo.title"
+      class="rounded-md object-contain max-h-full">
+  </div>
+
+  <div class="flex align-middle">
+    <p-card [header]="productService.priceHistory().productInfo.title">
+      <p class="m-0 text-sm">
+        {{productService.priceHistory().productInfo.description | slice:0:500}}...
+      </p>
+
+      <div class="mt-8 flex justify-center">
+        <p-message severity="contrast" class="font-semibold">Precio {{productService.priceHistory().productInfo.currentPrice | currency: 'S/
+          '}}</p-message>
+      </div>
+
+      <a href="{{productService.priceHistory().productInfo.url}}" target="_blank">
+        <div class="flex justify-center items-center mt-4">
+          <small class="me-2">Ir a la tienda</small>
+          <img src="../../../../assets/svg/{{productService.priceHistory().productInfo.url|extractDomain}}.svg"
+            alt="Logo {{productService.priceHistory().productInfo.url|extractDomain}}">
+        </div>
+      </a>
+    </p-card>
+  </div>
+</div>
+}

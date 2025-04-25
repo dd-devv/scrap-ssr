@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es-PE">
+
+<head>
+  <meta charset="utf-8">
+  <title>AcllaBay - Ahorra sin perder tiempo | Monitoreo de precios online</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="logo.svg">
+</head>
+<script>
+  try {
+    const darkMode = localStorage.getItem('isDarkTheme');
+    if (darkMode === 'true' || (darkMode === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('my-app-dark');
+    } else {
+      document.documentElement.classList.remove('my-app-dark');
+    }
+  } catch (e) {
+    document.documentElement.classList.add('my-app-dark');
+  }
+</script>
+
+<!-- HotJAR -->
+<script>
+  (function (c, s, q, u, a, r, e) {
+    c.hj = c.hj || function () { (c.hj.q = c.hj.q || []).push(arguments) };
+    c._hjSettings = { hjid: a };
+    r = s.getElementsByTagName('head')[0];
+    e = s.createElement('script');
+    e.async = true;
+    e.src = q + c._hjSettings.hjid + u;
+    r.appendChild(e);
+  })(window, document, 'https://static.hj.contentsquare.net/c/csq-', '.js', 5359416);
+</script>
+
+<body>
+  <app-root></app-root>
+</body>
+
+</html>
+<!-- mrk -->
