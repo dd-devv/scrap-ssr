@@ -123,29 +123,24 @@ export default class ProductService {
   }
 
   getPriceHistory(id: string): Observable<PriceHistory> {
-    this.isLoading.set(true);
 
-    // Check if we're in browser environment
-    if (typeof window === 'undefined' || !this.authToken) {
-      this.isLoading.set(false);
-      return of({} as PriceHistory);
-    }
+    this.isLoading.set(true);
 
     return this.http.get<PriceHistory>(`${this.apiUrl}scraping/price-history/${id}`, {
       headers: {
         Authorization: `Bearer ${this.authToken}`
       }
     })
-    .pipe(
-      tap(response => {
-        this.priceHistory.set(response);
-      }),
-      catchError(error => {
-        return throwError(() => ({
-          error: error.error
-        }));
-      }),
-      finalize(() => this.isLoading.set(false))
-    );
+      .pipe(
+        tap(response => {
+          this.priceHistory.set(response);
+        }),
+        catchError(error => {
+          return throwError(() => ({
+            error: error.error
+          }))
+        }),
+        tap(() => this.isLoading.set(false))
+      );
   }
 }
