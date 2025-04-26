@@ -48,6 +48,15 @@
             alt="Logo {{productService.priceHistory().productInfo.url|extractDomain}}">
         </div>
       </a>
+
+      <p class="text-center text-sm mt-4 text-red-500 border
+      border-red-500 rounded-md py-2 hover:bg-red-500
+      hover:text-white cursor-pointer" (click)="delete(productService.priceHistory().productInfo.urlId)">
+        <i class="pi pi-trash me-2 text-sm"></i>
+        <a>
+          Dejar de seguir
+        </a>
+      </p>
     </p-card>
   </div>
 

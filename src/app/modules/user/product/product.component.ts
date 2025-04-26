@@ -230,4 +230,12 @@ export default class ProductComponent implements OnInit {
       }
     });
   }
+
+    delete(urlId: string): void {
+    this.productService.deleteUrl(urlId).subscribe({
+      next: (res) => {
+        this.router.navigate(['/productos']);
+      }
+    });
+  }
 }
