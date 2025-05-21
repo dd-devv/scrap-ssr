@@ -94,10 +94,10 @@ export default class AuthService {
       );
   }
 
-  register(fullname: string, email: string, whatsapp: string, password: string): Observable<RegisterResponse> {
+  register(fullname: string, whatsapp: string, password: string): Observable<RegisterResponse> {
     const registerData: RegisterRequest = {
       fullname,
-      email,
+      // email,
       whatsapp,
       password
     };

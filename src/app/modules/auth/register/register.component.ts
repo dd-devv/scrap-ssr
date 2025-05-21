@@ -47,15 +47,15 @@ export default class RegisterComponent implements OnInit {
 
   initForm(): void {
     this.registerForm = this.fb.group({
-      fullname: ['', [
+      fullname: ['name', [
         Validators.required,
         Validators.minLength(6)
       ]],
-      email: ['', [
-        Validators.required,
-        Validators.email,
-        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
-      ]],
+      // email: ['', [
+      //   Validators.required,
+      //   Validators.email,
+      //   Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+      // ]],
       whatsapp: ['9', {
         validators: [
           Validators.required,
@@ -127,14 +127,14 @@ export default class RegisterComponent implements OnInit {
     this.isLoading = true;
 
     const fullnameValue = this.registerForm.get('fullname')?.value;
-    const emailValue = this.registerForm.get('email')?.value;
+    // const emailValue = this.registerForm.get('email')?.value;
     const whatsappValue = this.registerForm.get('whatsapp')?.value;
     const passwordValue = this.registerForm.get('password')?.value;
 
     // Eliminar espacios del número de WhatsApp
     const whatsapp = whatsappValue?.replace(/\s/g, '');
 
-    this.authService.register(fullnameValue, emailValue, whatsapp, passwordValue)
+    this.authService.register(fullnameValue, whatsapp, passwordValue)
       .subscribe({
         next: (res) => {
           this.messageService.add({ severity: 'success', summary: 'Éxito', detail: res.message, life: 3000 });
@@ -165,10 +165,10 @@ export default class RegisterComponent implements OnInit {
     const errors = field.errors;
 
     // Mensajes de error para email
-    if (fieldName === 'email') {
-      if (errors['required']) return 'El correo electrónico es requerido';
-      if (errors['email'] || errors['pattern']) return 'Ingrese un correo electrónico válido';
-    }
+    // if (fieldName === 'email') {
+    //   if (errors['required']) return 'El correo electrónico es requerido';
+    //   if (errors['email'] || errors['pattern']) return 'Ingrese un correo electrónico válido';
+    // }
 
     // Mensajes de error para WhatsApp
     if (fieldName === 'whatsapp') {
@@ -202,7 +202,7 @@ export default class RegisterComponent implements OnInit {
 
   // Getters para acceso rápido a los controles del formulario
   get fullname() { return this.registerForm.get('fullname'); }
-  get email() { return this.registerForm.get('email'); }
+  // get email() { return this.registerForm.get('email'); }
   get whatsapp() { return this.registerForm.get('whatsapp'); }
   get password() { return this.registerForm.get('password'); }
 }

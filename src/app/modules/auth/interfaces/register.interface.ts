@@ -13,7 +13,7 @@ export interface UpdateResponse {
 
 export interface RegisterRequest {
   fullname: string;
-  email: string;
+  // email: string;
   whatsapp: string;
   password: string;
 }

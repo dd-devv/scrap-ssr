@@ -6,9 +6,9 @@
         Registro de usuarios
       </h3>
 
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
 
-        <p-floatlabel variant="on">
+        <!-- <p-floatlabel variant="on">
           <input pInputText id="fullname" formControlName="fullname" fluid="true" />
           <label for="fullname"><i class="pi pi-user me-1"></i> Nombres</label>
         </p-floatlabel>
@@ -17,9 +17,9 @@
         <small class="text-red-500">
           {{ getErrorMessage('fullname') }}
         </small>
-        }
+        } -->
 
-        <p-floatlabel variant="on" class="mt-6">
+        <!-- <p-floatlabel variant="on" class="mt-6">
           <input pInputText id="email" formControlName="email" fluid="true" />
           <label for="email"><i class="pi pi-envelope me-1"></i> Correo</label>
         </p-floatlabel>
@@ -28,7 +28,7 @@
         <small class="text-red-500">
           {{ getErrorMessage('email') }}
         </small>
-        }
+        } -->
 
         <p-floatlabel variant="on" class="mt-6">
           <p-inputmask id="whatsapp" formControlName="whatsapp" mask="999 999 999" styleClass="w-full" />
@@ -54,13 +54,13 @@
         }
 
         <div class="flex justify-center mt-6">
-          <p-button type="submit" label="Registrar" [loading]="isLoading"
+          <p-button type="submit" label="Registrar" icon="pi pi-plus" [loading]="isLoading"
             [disabled]="registerForm.invalid || isLoading" />
         </div>
 
-        <p class="mt-4 text-center underline text-purple-500 cursor-pointer">
+        <p class="mt-4 text-center text-sm hover:underline cursor-pointer">
           <a [routerLink]="['/login']">
-            Iniciar sesión
+            Ya tienes cuenta?, iniciar sesión
           </a>
         </p>
       </form>
