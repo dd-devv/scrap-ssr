@@ -13,10 +13,14 @@ export class ExtractDomainPipe implements PipeTransform {
     'platanitos',
     'oechsle',
     'mercadolibre',
-    'plazavea'
+    'plazavea',
+    'vivanda',
+    'promart',
+    'mifarma',
+    'inkafarma',
   ];
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
 
   transform(url: string): string | null {
     if (!url) return null;

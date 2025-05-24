@@ -103,7 +103,11 @@ export default class ProductsComponent implements OnInit {
       'platanitos',
       'oechsle',
       'mercadolibre',
-      'plazavea'
+      'plazavea',
+      'vivanda',
+      'promart',
+      'mifarma',
+      'inkafarma',
     ];
 
     const isDomainSupported = supportedDomains.some(domain =>
