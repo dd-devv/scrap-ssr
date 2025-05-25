@@ -16,3 +16,7 @@
     column-count: 1;
   }
 }
+
+.invisible {
+  visibility: hidden;
+}
