@@ -98,6 +98,9 @@ export default class ProductsComponent implements OnInit {
 
   evaluateUrl() {
     const supportedDomains = [
+      'sodimac',
+      'tottus',
+      'linio',
       'falabella',
       'ripley',
       'platanitos',

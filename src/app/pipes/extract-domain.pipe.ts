@@ -8,6 +8,9 @@ import { PLATFORM_ID, Inject } from '@angular/core';
 })
 export class ExtractDomainPipe implements PipeTransform {
   private readonly supportedDomains = [
+    'sodimac',
+    'tottus',
+    'linio',
     'falabella',
     'ripley',
     'platanitos',
