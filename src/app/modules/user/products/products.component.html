@@ -115,7 +115,7 @@
         <ng-template #title> {{product.productTitle | titlecase}} </ng-template>
         <ng-template #subtitle>
           <div class="flex items-center">
-            <img src="../../../../assets/svg/{{product.url|extractDomain}}.svg"
+            <img class="h-5" src="../../../../assets/svg/{{product.url|extractDomain}}.svg"
               alt="Logo {{product.url|extractDomain}}">
             <small class="ms-2">Actualización ({{product.lastUpdate | timeAgo}})</small>
           </div>
@@ -313,7 +313,7 @@
           tooltipPosition="bottom"
         >
           <img class="h-5"
-            src="../../../../assets/svg/vivanda-logo.svg"
+            src="../../../../assets/svg/vivanda.svg"
             alt="Logo vivanda"
           />
         </p-button>
