@@ -1,3 +1,4 @@
+import { TimeAgoPipe } from './../../../pipes/timeAgo.pipe';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule, CurrencyPipe, isPlatformBrowser, SlicePipe } from '@angular/common';
@@ -24,9 +25,11 @@ import { Meta, Title } from '@angular/platform-browser'; // Importar Meta y Titl
     ChartModule,
     ConfirmDialog,
     Skeleton,
-    ExtractDomainPipe
+    ExtractDomainPipe,
+    TimeAgoPipe
   ],
   providers: [ConfirmationService],
+  styleUrl: './product.component.css',
   templateUrl: './product.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -48,27 +51,48 @@ export default class ProductComponent implements OnInit {
   constructor(private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.route.paramMap.pipe(
-      tap(params => {
-        const id = params.get('id');
-        this.productId.set(id);
-      }),
-      switchMap(() => {
-        const id = this.productId() ?? '';
-        return this.productService.getPriceHistory(id);
-      }),
-      // Añadir este operador para procesar la respuesta
-      tap(response => {
-        if (response && response.priceHistory) {
-          this.updateChart(response.priceHistory);
+    // this.route.paramMap.pipe(
+    //   tap(params => {
+    //     const id = params.get('id');
+    //     this.productId.set(id);
+    //   }),
+    //   switchMap(() => {
+    //     const id = this.productId() ?? '';
+    //     return this.productService.getPriceHistory(id);
+    //   }),
+    //   // Añadir este operador para procesar la respuesta
+    //   tap(response => {
+    //     if (response && response.priceHistory) {
+    //       this.updateChart(response.priceHistory);
 
-          // Actualizar meta tags con la información del producto
-          if (response.productInfo) {
-            this.updateMetaTags(response.productInfo);
-          }
+    //       // Actualizar meta tags con la información del producto
+    //       if (response.productInfo) {
+    //         this.updateMetaTags(response.productInfo);
+    //       }
+    //     }
+    //   })
+    // ).subscribe();
+    this.route.paramMap.pipe(
+    tap(params => {
+      const id = params.get('id');
+      console.log('ID recibido por ruta:', id); // <-- Aquí
+      this.productId.set(id);
+    }),
+    switchMap(() => {
+      const id = this.productId() ?? '';
+      return this.productService.getPriceHistory(id);
+    }),
+    tap(response => {
+      console.log('Respuesta de getPriceHistory:', response); // <-- Aquí
+      if (response && response.priceHistory) {
+        this.updateChart(response.priceHistory);
+
+        if (response.productInfo) {
+          this.updateMetaTags(response.productInfo);
         }
-      })
-    ).subscribe();
+      }
+    })
+  ).subscribe();
 
     // Inicializar el gráfico con datos vacíos
     this.initChart();
@@ -202,25 +226,42 @@ export default class ProductComponent implements OnInit {
       this.cd.markForCheck();
     }
   }
-  confirm(title: string, url: string, urlId: string) {
+  confirm(url: string, urlId: string) {
     this.urlId = urlId;
     this.confirmationService.confirm({
-      header: `¿Comprar ${title}?`,
-      message: 'Por favor confirma para dejar de hacer seguimiento al producto',
+      header: `¿Seguro que quieres dejar de seguir este producto?`,
+      message: 'Perderás las alertas de bajada de precio 😢',
       accept: () => {
         // Abrir URL en una nueva pestaña de manera segura y compatible con SSR
-        if (typeof window !== 'undefined') {
-          const newWindow = window.open(url, '_blank');
-          if (newWindow) {
-            newWindow.focus();
-          }
-        }
-
         this.deleteUrl();
       },
       reject: () => {
       },
     });
+  }
+  fecha(fecha: string | Date): string {
+    const date = new Date(fecha); // Convierte string o Date a un Date válido
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+  // Método para encontrar el primer elemento de un arreglo
+  findFirst(arr: any[]): any {
+    console.log("arr findFirst",arr[0][0])
+    return arr.length > 0 ? arr[0][0] : null;
+  }
+  findLast(arr: any[]): any {
+    return arr.length > 0 ? arr[0][arr[0].length-1] : null;
+  }
+  
+
+  findMin(arr: number[]): string | number {
+    return arr.reduce((min, current) => (current < min ? current : min), arr[0]);
+  }
+  // Método para encontrar el menor numero de un arreglo
+  findMax(arr: number[]): number {
+    return arr.reduce((max, current) => (current > max ? current : max), arr[0]);
   }
 
   deleteUrl(): void {
@@ -231,7 +272,7 @@ export default class ProductComponent implements OnInit {
     });
   }
 
-    delete(urlId: string): void {
+  delete(urlId: string): void {
     this.productService.deleteUrl(urlId).subscribe({
       next: (res) => {
         this.router.navigate(['/productos']);
