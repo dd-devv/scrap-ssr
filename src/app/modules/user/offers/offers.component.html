@@ -1,6 +1,6 @@
 <div class="min-h-80 py-2">
   @if (productService.isLoading()) {
-  <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
     @for (item of [1,2,3,4,5,6]; track $index) {
     <div class="p-4">
       <p-card [style]="{ width: '100%', overflow: 'hidden', border: '1px solid var(--surface-300)' }">
@@ -37,15 +37,17 @@
   </div>
   }
 
-  <div class="masonry-grid my-4">
+  <div class=" my-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
     @for (product of productService.productsPublic(); track $index) {
-    <div class="masonry-item">
-      <p-card [style]="{ width: '100%', overflow: 'hidden' }">
-        <ng-template #header>
-          <img [alt]="product.productTitle" class="w-full" [src]="product.image" [routerLink]="['/ofertas', product.urlId]" />
+    <div class=" cursor-pointer" [routerLink]="['/ofertas', product.urlId] ">
+      <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%' }">
+        <ng-template #header >
+          <img  [alt]="product.productTitle" class="h-72 md:h-[362px] xl:h-[302px] m-auto" [src]="product.image" [routerLink]="['/ofertas', product.urlId]" />
         </ng-template>
-        <ng-template #title> {{product.productTitle | titlecase}}
-          <p-badge [value]="product.discountPercentage+'% de ahorro'" severity="contrast" />
+        <ng-template #title> {{truncateText(product.productTitle) | titlecase}}
+          <div class="mt-2 "> 
+            <p-badge [value]="product.discountPercentage+'% de ahorro'" severity="contrast" />
+          </div>
         </ng-template>
         <ng-template #subtitle>
           <div class="flex items-center">
@@ -54,20 +56,20 @@
             <small class="ms-2">Actualización ({{product.lastUpdate | timeAgo}})</small>
           </div>
         </ng-template>
-        <h2>
-          Precio actual: {{product.currentPrice | currency: 'S/ '}}
+        <h2 class="text-xl" >
+          {{product.currentPrice | currency: 'S/ '}}
         </h2>
-        <h3 class="text-sm marfa-italic-md">
-          Precio anterior: {{product.previousPrice | currency: 'S/ '}}
+        <h3 class="text-sm marfa-italic-md mb-3">
+          Antes: <samp class="line-through">{{product.previousPrice | currency: 'S/'}}</samp> 
         </h3>
 
-        <ng-template #footer>
+        <!-- <ng-template #footer>
           <div class="flex gap-4 mt-1">
             <p-button label="Detalles" icon="pi pi-chart-scatter" severity="secondary" class="w-full" [outlined]="true"
               styleClass="w-full" [routerLink]="['/ofertas', product.urlId]" />
             <p-button label="Comprar" icon="pi pi-cart-plus" class="w-full" styleClass="w-full" (click)="redirect(product.url)" />
           </div>
-        </ng-template>
+        </ng-template> -->
       </p-card>
     </div>
     }
