@@ -67,8 +67,9 @@
   </p-dialog>
 
   @if (componentLoading()) {
-  <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    @for (item of [1,2,3,4,5,6]; track $index) {
+  <div class="my-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+    
+    @for (item of [1,2,3,4,5,6,7,8]; track $index) {
     <div class="p-4">
       <p-card [style]="{ width: '100%', overflow: 'hidden', border: '1px solid var(--surface-300)' }">
         <ng-template #header>
@@ -94,9 +95,11 @@
 
         <ng-template #footer>
           <div class="flex gap-4 mt-1">
-            <p-button label="Detalles" icon="pi pi-eye" severity="secondary" class="w-full" [outlined]="true"
-              disabled />
-            <p-button label="Comprar" icon="pi pi-cart-plus" class="w-full" styleClass="w-full" disabled />
+            <!-- <p-button label="Detalles" icon="pi pi-eye" severity="secondary" class="w-full" [outlined]="true"
+              disabled /> -->
+            <p-button label="Detalles" icon="pi pi-chart-scatter" class="w-full" styleClass="w-full" 
+              disabled/>
+            <!-- <p-button label="Comprar" icon="pi pi-cart-plus" class="w-full" styleClass="w-full" disabled /> -->
           </div>
         </ng-template>
       </p-card>
@@ -105,12 +108,19 @@
   </div>
   }
 
-  <div class="masonry-grid my-4">
+  <!-- <div class="masonry-grid my-4"> -->
+    <div class=" my-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
     @for (product of productService.productsUser(); track $index) {
     <div class="masonry-item">
-      <p-card [style]="{ width: '100%', overflow: 'hidden' }">
+      <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%' }">
         <ng-template #header>
-          <img [alt]="product.productTitle" class="w-full cursor-pointer" [src]="product.image" [routerLink]="['/producto', product.urlId ]"/>
+          <div class="bg-white">
+            <img 
+            [alt]="product.productTitle" 
+            class="h-72 md:h-[362px] xl:h-[302px] w-full m-auto cursor-pointer object-contain" 
+            [src]="product.image" 
+            [routerLink]="['/producto', product.urlId ]"/>
+          </div>
         </ng-template>
         <ng-template #title> {{product.productTitle | titlecase}} </ng-template>
         <ng-template #subtitle>
@@ -120,18 +130,27 @@
             <small class="ms-2">Actualización ({{product.lastUpdate | timeAgo}})</small>
           </div>
         </ng-template>
-        <h2>
+        <!-- <h2>
           Precio actual: {{product.currentPrice | currency: 'S/ '}}
+        </h2> -->
+        <h2 class="text-2xl" >
+          {{product.currentPrice | currency: 'S/ '}}
         </h2>
-        <h3 class="text-surface-500" [ngClass]="{'text-green-600': product.currentPrice === product.lowestPrice}">
+        <!-- <h3 class="text-surface-500" [ngClass]="{'text-green-600': product.currentPrice === product.lowestPrice}">
           Precio mínimo: {{product.lowestPrice | currency: 'S/ '}}
+        </h3> -->
+        <h3 class="text-surface-500" [ngClass]="{'text-green-600': product.currentPrice === product.lowestPrice}">
+          Antes: <samp class="line-through">{{product.lowestPrice | currency: 'S/'}}</samp> 
         </h3>
         <ng-template #footer>
           <div class="flex gap-4 mt-1">
-            <p-button label="Detalles" icon="pi pi-eye" severity="secondary" class="w-full" [outlined]="true"
+            <!-- <p-button label="Detalles" icon="pi pi-eye" severity="secondary" class="w-full" [outlined]="true"
               styleClass="w-full" [routerLink]="['/producto', product.urlId ]" />
             <p-button label="Comprar" icon="pi pi-cart-plus" class="w-full" styleClass="w-full"
-              (click)="confirm(product.productTitle, product.url, product.urlId)" />
+              (click)="confirm(product.productTitle, product.url, product.urlId)" /> -->
+
+            <p-button label="Detalles" icon="pi pi-chart-scatter" class="w-full" styleClass="w-full" 
+              [routerLink]="['/producto', product.urlId ]" />
           </div>
         </ng-template>
       </p-card>
