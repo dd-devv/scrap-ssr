@@ -17,6 +17,7 @@ export class ExtractDomainPipe implements PipeTransform {
     'oechsle',
     'mercadolibre',
     'plazavea',
+    'shopstar',
     'vivanda',
     'promart',
     'mifarma',

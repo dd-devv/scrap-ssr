@@ -107,6 +107,7 @@ export default class ProductsComponent implements OnInit {
       'oechsle',
       'mercadolibre',
       'plazavea',
+      'shopstar',
       'vivanda',
       'promart',
       'mifarma',
