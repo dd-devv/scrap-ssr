@@ -18,8 +18,6 @@ import { Meta, Title } from '@angular/platform-browser'; // Importar Meta y Titl
   standalone: true,
   imports: [
     CommonModule,
-    Card,
-    SlicePipe,
     CurrencyPipe,
     Button,
     ChartModule,
@@ -254,7 +252,7 @@ export default class ProductComponent implements OnInit {
   findLast(arr: any[]): any {
     return arr.length > 0 ? arr[0][arr[0].length-1] : null;
   }
-  
+
 
   findMin(arr: number[]): string | number {
     return arr.reduce((min, current) => (current < min ? current : min), arr[0]);
