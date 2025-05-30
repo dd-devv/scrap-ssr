@@ -252,6 +252,40 @@ export default class ProductComponent implements OnInit {
   findLast(arr: any[]): any {
     return arr.length > 0 ? arr[0][arr[0].length-1] : null;
   }
+  calcularMediana(precios: number[]): number {
+    const ordenados = [...precios].sort((a, b) => a - b);
+    const mitad = Math.floor(ordenados.length / 2);
+
+    if (ordenados.length === 0) return 0;
+
+    return ordenados.length % 2 === 0
+      ? (ordenados[mitad - 1] + ordenados[mitad]) / 2
+      : ordenados[mitad];
+  }
+  //metodo para con el precio promedio y el precio actual, calcular el porcentaje de descuento
+  calcularDescuento(precioPromedio: number, precioActual: number): string { 
+    if (precioPromedio <= precioActual) return 'Sin descuento';
+    const descuento = ((precioPromedio - precioActual) / precioPromedio) * 100;
+    return `${descuento.toFixed(2)}%`;
+  }
+  obtenerEstadoDelPrecio(
+    precioActual: number,
+    preciosHistoricos: number[]
+  ): String {
+    if (preciosHistoricos.length === 0) return 'rojo';
+
+    const mediana = this.calcularMediana(preciosHistoricos);
+    const minimo = Math.min(...preciosHistoricos);
+
+    // if (precioActual <= minimo && precioActual != mediana) {
+    if (precioActual <= minimo) {
+      return 'verde'; // 🟢 Precio mínimo histórico
+    } else if (precioActual <= mediana * 1.05) {
+      return 'amarillo'; // 🟡 Precio cercano al habitual
+    } else {
+      return 'rojo'; // 🔴 Precio alto
+    }
+  }
 
 
   findMin(arr: number[]): string | number {

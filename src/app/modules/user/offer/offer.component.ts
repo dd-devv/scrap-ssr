@@ -162,6 +162,36 @@ export default class OfferComponent implements OnInit {
     return arr.reduce((max, current) => (current > max ? current : max), arr[0]);
   }
 
+  calcularMediana(precios: number[]): number {
+    const ordenados = [...precios].sort((a, b) => a - b);
+    const mitad = Math.floor(ordenados.length / 2);
+
+    if (ordenados.length === 0) return 0;
+
+    return ordenados.length % 2 === 0
+      ? (ordenados[mitad - 1] + ordenados[mitad]) / 2
+      : ordenados[mitad];
+  }
+
+  obtenerEstadoDelPrecio(
+    precioActual: number,
+    preciosHistoricos: number[]
+  ): String {
+    if (preciosHistoricos.length === 0) return 'rojo';
+
+    const mediana = this.calcularMediana(preciosHistoricos);
+    const minimo = Math.min(...preciosHistoricos);
+    
+    // if (precioActual <= minimo && precioActual != mediana) {
+    if (precioActual <= minimo) {
+      return 'verde'; // 🟢 Precio mínimo histórico
+    } else if (precioActual <= mediana * 1.05) {
+      return 'amarillo'; // 🟡 Precio cercano al habitual
+    } else {
+      return 'rojo'; // 🔴 Precio alto
+    }
+  }
+
   initChart() {
     if (isPlatformBrowser(this.platformId)) {
       const documentStyle = getComputedStyle(document.documentElement);
