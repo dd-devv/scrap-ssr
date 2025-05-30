@@ -9,20 +9,27 @@ import ProductService from '../services/product.service';
 import { switchMap, tap } from 'rxjs';
 import { Message } from 'primeng/message';
 import { Meta, Title } from '@angular/platform-browser'; // Importamos Meta y Title
+import { TimeAgoPipe } from './../../../pipes/timeAgo.pipe';
+import { Button } from 'primeng/button';
+
 
 @Component({
   selector: 'app-offer',
+  standalone: true,
   imports: [
     CommonModule,
     Card,
     SlicePipe,
     CurrencyPipe,
+    Button,
     ChartModule,
     Skeleton,
     ExtractDomainPipe,
-    Message
+    Message,
+    TimeAgoPipe
   ],
   providers: [],
+  styleUrl: './offer.component.css',
   templateUrl: './offer.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -136,6 +143,23 @@ export default class OfferComponent implements OnInit {
 
       this.cd.markForCheck();
     }
+  }
+  // Método para encontrar el primer elemento de un arreglo
+  findFirst(arr: any[]): any {
+    console.log("arr findFirst",arr[0][0])
+    return arr.length > 0 ? arr[0][0] : null;
+  }
+  findLast(arr: any[]): any {
+    return arr.length > 0 ? arr[0][arr[0].length-1] : null;
+  }
+
+
+  findMin(arr: number[]): string | number {
+    return arr.reduce((min, current) => (current < min ? current : min), arr[0]);
+  }
+  // Método para encontrar el menor numero de un arreglo
+  findMax(arr: number[]): number {
+    return arr.reduce((max, current) => (current > max ? current : max), arr[0]);
   }
 
   initChart() {

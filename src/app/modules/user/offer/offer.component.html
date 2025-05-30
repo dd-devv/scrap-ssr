@@ -16,37 +16,179 @@
 }
 
 @if (!productService.isLoading()){
-
-<div class="card my-6">
-  <h3>{{productService.priceHistory().productInfo.title}}</h3>
-  <p-chart type="line" [data]="data" [options]="options" class="h-[20rem]" />
-</div>
-
+@let product = productService.priceHistory();
 <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
+  <!-- imagen del producto  -->
   <div class="card flex justify-center items-center h-96">
-    <img [src]="productService.priceHistory().productInfo.image" [alt]="productService.priceHistory().productInfo.title"
-      class="rounded-md object-contain max-h-full">
+    <img
+    [src]="productService.priceHistory().productInfo.image"
+    [alt]="productService.priceHistory().productInfo.title"
+      
+      class="rounded-md object-contain max-h-full"
+    />
   </div>
 
-  <div class="flex align-middle">
-    <p-card [header]="productService.priceHistory().productInfo.title">
-      <p class="m-0 text-sm">
-        {{productService.priceHistory().productInfo.description | slice:0:500}}...
-      </p>
-
-      <div class="mt-8 flex justify-center">
-        <p-message severity="contrast" class="font-semibold">Precio {{productService.priceHistory().productInfo.currentPrice | currency: 'S/
-          '}}</p-message>
+  <!-- información del producto -->
+  <div class="flex flex-col ">
+    <div class="xd">
+      <h1 class="m-0 text-2xl">
+        {{
+          productService.priceHistory().productInfo.title
+        }}
+      </h1>
+      <h1 class="mt-3 mb-3 text-3xl">
+        {{
+          productService.priceHistory().productInfo.currentPrice
+            | currency : "S/ "
+        }}
+      </h1>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div class="info-content">
+          <h4 class="text-sm font-extralight">Precio más bajo</h4>
+          <h3 class="text-lg font-bold">
+              {{ findMin(productService.priceHistory().priceHistory.prices[0]) | currency : "S/ " }}
+          </h3>
+        </div>
+        <div class="info-content">
+          <h4 class="text-sm font-extralight">Tienda</h4>
+          <h3 class="text-lg font-bold flex gap-1">
+            {{
+              productService.priceHistory().productInfo.url | extractDomain | titlecase
+            }}
+            <img
+              src="../../../../assets/svg/{{
+                productService.priceHistory().productInfo.url | extractDomain
+              }}.svg"
+              alt="Logo {{
+                productService.priceHistory().productInfo.url | extractDomain
+              }}"
+            />
+          </h3>
+        </div>
+        <div class="info-content">
+          <h4 class="text-sm font-extralight">Descuento</h4>
+          <!-- hay que calcular precio medio  -->
+          <h3 class="text-lg font-bold">{{product.priceHistory.changes[0]?.percentageChange || 'Sin descuento'}}</h3>
+        </div>
+        <div class="info-content">
+          <h4 class="text-sm font-extralight">Actualizado hace</h4>
+          <h3 class="text-lg font-bold">{{ findLast(productService.priceHistory().priceHistory.dates) | timeAgo }}</h3>
+        </div>
       </div>
+      <!-- <a href="#section2" class="m-[10px]" icon="pi pi-eye">Ver grafica</a> -->
 
-      <a href="{{productService.priceHistory().productInfo.url}}" target="_blank">
-        <div class="flex justify-center items-center mt-4">
-          <small class="me-2">Ir a la tienda</small>
-          <img src="../../../../assets/svg/{{productService.priceHistory().productInfo.url|extractDomain}}.svg"
-            alt="Logo {{productService.priceHistory().productInfo.url|extractDomain}}">
+      <a
+        href="{{ productService.priceHistory().productInfo.url }}"
+        target="_blank"
+      >
+        <div class="mt-5 flex justify-center">
+          <p-button
+            severity="contrast"
+            label="Comprar en tienda"
+            icon="pi pi-cart-plus"
+            class="w-full"
+            styleClass="w-full"
+          />
         </div>
       </a>
-    </p-card>
+      <!-- <p
+        class="text-center text-sm mt-4 text-red-500 border border-red-500 rounded-md py-2 hover:bg-red-500 hover:text-white cursor-pointer"
+        (click)="
+          confirm(
+            productService.priceHistory().productInfo.url,
+            productService.priceHistory().productInfo.urlId
+          )
+        "
+      >
+        <i class="pi pi-trash me-2 text-sm"></i>
+        <a> Dejar de seguir </a>
+      </p> -->
+    </div>
   </div>
 </div>
+<div id="section2" class="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-4">
+  <!-- tabla y titulo del producto -->
+  <div class="my-6">
+    <!-- <h3>Historial de precios</h3> -->
+    <p-chart type="line" [data]="data" [options]="options" class="h-[20rem]" />
+  </div>
+
+  <div class="flex flex-col w-full">
+    <div class="xd">
+      <h1 class="mt-6 mb-6 text-2xl text-center">Información de seguimiento</h1>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div class="info-content">
+          <h4 class="text-sm font-extralight">Inicio de seguimiento</h4>
+          <h3 class="text-lg font-bold">{{ findFirst(productService.priceHistory().priceHistory.dates) | date : 'dd/MM/yy '}}</h3>
+        </div>
+        <!-- <div class="info-content">
+          <h4 class="text-sm font-extralight">Precio Promedio</h4>
+          <h3 class="text-lg font-bold">s/56.00</h3>
+        </div> -->
+      </div>
+      <h1 class="mt-7 mb-6 text-2xl text-center">Recomendacion de compra</h1>
+      <div class="flex flex-col gap-2">
+        <div class="flex flex-row ">
+          <div class="punto2"></div>
+          <div>
+            <h3 class="text-lg">Aún no es el momento ideal</h3>
+            <p>Espera un poco más, nosotros te avisaremos cuando baje de verdad.</p>
+          </div>
+        </div>
+        <div class="flex flex-row">
+          <div class="punto2 puntoAmarrillo"></div>
+          <div>
+            <h3 class="text-lg">Precio habitual</h3>
+            <p>No está mal, pero podría bajar más. Si no tienes apuro, vale la pena esperar.</p>
+          </div>
+        </div>
+        <div class="flex flex-row">
+          <div class="punto2 puntoVerde"></div>
+          <div>
+            <h3 class="text-lg">¡Precio mínimo histórico!</h3>
+            <p>Es ahora o nunca. Aprovecha esta oferta antes de que se acabe.</p>
+          </div>
+        </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- confirm dialog -->
+<!-- <p-confirmdialog #cd>
+  <ng-template
+    #headless
+    let-message
+    let-onAccept="onAccept"
+    let-onReject="onReject"
+  >
+    <div class="flex flex-col items-center p-8 rounded">
+      <div
+        class="rounded-full bg-primary text-primary-contrast inline-flex justify-center items-center h-24 w-24 -mt-20"
+      >
+        <i class="pi pi-check !text-5xl"></i>
+      </div>
+      <span class="font-bold text-xl block mb-2 mt-6">{{
+        message.header
+      }}</span>
+      <p class="mb-0 text-sm">{{ message.message }}</p>
+      <div class="flex items-center gap-2 mt-6">
+        <p-button
+          label="Confirmar"
+          (onClick)="onAccept()"
+          styleClass="w-32"
+        ></p-button>
+        <p-button
+          label="Cancelar"
+          [outlined]="true"
+          (onClick)="onReject()"
+          styleClass="w-32"
+        ></p-button>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmdialog> -->
+<!-- </div> -->
 }
