@@ -188,6 +188,13 @@ export default class ProductsComponent implements OnInit {
     });
   }
 
+  truncateText(text: string, length: number = 40): string {
+    if (text.length <= length) {
+      return text;
+    }
+    return text.substring(0, length) + '...';
+  }
+
   insertSubscription() {
     this.loadingSubscription.set(true);
     this.subscriptionService.registerSubcription(this.montoSubscription, this.tipoSubscription).subscribe({

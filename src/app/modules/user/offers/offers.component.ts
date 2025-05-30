@@ -42,7 +42,7 @@ export default class OffersComponent {
     }
   }
   //metodo para acortar el texto de la oferta a 80 caracteres
-  truncateText(text: string, length: number = 80): string {
+  truncateText(text: string, length: number = 40): string {
     if (text.length <= length) {
       return text;
     }
