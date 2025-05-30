@@ -41,8 +41,8 @@
     (click)="readNotification(notification._id, notification.urlId)">
     <!-- Indicador de no leído -->
     <div class="relative mr-3">
-      <div class="h-14 w-14 rounded-full flex items-center justify-center">
-        <img [src]="notification.image" class="rounded-md" />
+      <div class="h-14 w-14  flex items-center justify-center overflow-hidden bg-white rounded-md">
+        <img [src]="notification.image" class="h-full w-full  object-contain" />
       </div>
       <div class="absolute -top-1 h-3 w-3">
         @if (getNotificationPriceUp(notification.description)) {
