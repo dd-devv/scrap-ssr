@@ -18,14 +18,11 @@ import { Button } from 'primeng/button';
   standalone: true,
   imports: [
     CommonModule,
-    Card,
-    SlicePipe,
     CurrencyPipe,
     Button,
     ChartModule,
     Skeleton,
     ExtractDomainPipe,
-    Message,
     TimeAgoPipe
   ],
   providers: [],
@@ -181,7 +178,7 @@ export default class OfferComponent implements OnInit {
 
     const mediana = this.calcularMediana(preciosHistoricos);
     const minimo = Math.min(...preciosHistoricos);
-    
+
     // if (precioActual <= minimo && precioActual != mediana) {
     if (precioActual <= minimo) {
       return 'verde'; // 🟢 Precio mínimo histórico

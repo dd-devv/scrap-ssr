@@ -1,0 +1,156 @@
+<!-- feedback-widget.component.html -->
+<div class="fixed bottom-20 right-4 z-50">
+  <!-- Botón flotante -->
+  @if (!isOpen) {
+  <button (click)="toggleWidget()"
+    class="group bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-l-lg rounded-tr-lg shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-2">
+    <i class="pi pi-comment text-lg"></i>
+    <span class="font-medium hidden group-hover:block">Feedback</span>
+  </button>
+  }
+
+  <!-- Modal de feedback -->
+  @if (isOpen) {
+  <div class="bg-white rounded-lg shadow-2xl w-80 max-h-96 overflow-hidden">
+
+    <!-- Header con botón de cerrar -->
+    <div class="bg-blue-600 text-white p-3 flex justify-between items-center">
+      <span class="font-medium">Feedback</span>
+      <button (click)="toggleWidget()" class="text-white hover:bg-blue-700 rounded-full p-1 transition-colors">
+        <i class="pi pi-times text-sm"></i>
+      </button>
+    </div>
+
+    <!-- Contenido del modal -->
+    <div class="p-4">
+
+      <!-- Paso 1: Calificación de experiencia -->
+      @if (currentStep === 1) {
+      <div class="space-y-4">
+        <h3 class="text-sm font-medium text-gray-800 mb-4">
+          ¿Cómo fue tu experiencia usando nuestra plataforma?
+        </h3>
+
+        <div class="flex justify-center">
+          <p-rating [(ngModel)]="feedbackData.experience"
+            (onRate)="onRatingExperienceChange($event.value, 'experience')" [stars]="5" />
+        </div>
+
+        <div class="flex justify-between text-xs text-gray-500 px-2">
+          <span>Muy mal</span>
+          <span>Excelente</span>
+        </div>
+
+        <div class="flex justify-end mt-6">
+          <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right" (click)="nextStep()"
+            [disabled]="!isStepValid()" styleClass="p-button-sm">
+          </p-button>
+        </div>
+      </div>
+      }
+
+      <!-- Paso 2: Comentarios sobre experiencia -->
+      @if (currentStep === 2) {
+      <div class="space-y-4">
+        <h3 class="text-sm font-medium text-gray-800 mb-4">
+          Cuéntanos cómo fue tu experiencia o alguna sugerencia de mejora
+        </h3>
+
+        <textarea [(ngModel)]="feedbackData.comment_experience" placeholder="Escribe un comentario..."
+          class="w-full p-3 border border-gray-300 rounded-md resize-none text-sm" rows="4">
+              </textarea>
+
+        <div class="flex justify-end mt-6">
+          <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right" (click)="nextStep()"
+            styleClass="p-button-sm">
+          </p-button>
+        </div>
+      </div>
+      }
+
+      <!-- Paso 3: Aspectos a mejorar -->
+      @if (currentStep === 3) {
+      <div class="space-y-4">
+        <h3 class="text-sm font-medium text-gray-800 mb-4">
+          ¿Qué aspectos de nuestra plataforma consideras que podríamos mejorar?
+        </h3>
+
+        <textarea [(ngModel)]="feedbackData.updates" placeholder="Escribe un comentario..."
+          class="w-full p-3 border border-gray-300 rounded-md resize-none text-sm" rows="3">
+              </textarea>
+
+        <div class="flex justify-end mt-6">
+          <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right" (click)="nextStep()"
+            [disabled]="!isStepValid()" styleClass="p-button-sm">
+          </p-button>
+        </div>
+      </div>
+      }
+
+      <!-- Paso 4: Funcionalidades -->
+      @if (currentStep === 4) {
+      <div class="space-y-4">
+        <h3 class="text-sm font-medium text-gray-800 mb-4">
+          ¿Qué funcionalidad agregarías o quitarías de nuestra plataforma?
+        </h3>
+
+        <textarea [(ngModel)]="feedbackData.add_or_remove" placeholder="Escribe un comentario..."
+          class="w-full p-3 border border-gray-300 rounded-md resize-none text-sm" rows="4">
+              </textarea>
+
+        <div class="flex justify-end mt-6">
+          <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right" (click)="nextStep()"
+            styleClass="p-button-sm">
+          </p-button>
+        </div>
+      </div>
+      }
+
+      <!-- Paso 5: Calificación del servicio -->
+      @if (currentStep === 5) {
+      <div class="space-y-4">
+        <h3 class="text-sm font-medium text-gray-800 mb-4 text-center">
+          Califica nuestro servicio
+        </h3>
+
+        <div class="flex justify-center">
+          <p-rating [(ngModel)]="feedbackData.calification"
+            (onRate)="onRatingCalificationChange($event.value, 'calification')" [stars]="5">
+          </p-rating>
+        </div>
+
+        <div class="flex justify-between text-xs text-gray-500 px-2">
+          <span>Muy mal</span>
+          <span>Excelente</span>
+        </div>
+
+        <div class="flex justify-end mt-6">
+          <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right" (click)="submitFeedback()"
+            [disabled]="!isStepValid()" styleClass="p-button-sm">
+          </p-button>
+        </div>
+      </div>
+      }
+
+      <!-- Paso 6: Mensaje de agradecimiento -->
+      @if (currentStep === 7) {
+      <div class="text-center space-y-4 py-6">
+        <i class="pi pi-check-circle text-4xl text-green-500"></i>
+        <h3 class="text-lg font-medium text-gray-800">
+          ¡Gracias por tus respuestas!
+        </h3>
+        <p class="text-sm text-gray-600">
+          Nos ayudará a brindarte un mejor servicio
+        </p>
+
+        <p-button label="Cerrar" (click)="closeFeedback()" styleClass="p-button-sm w-full mt-4">
+        </p-button>
+      </div>
+      }
+
+    </div>
+  </div>
+  }
+</div>
+
+<p-toast />
