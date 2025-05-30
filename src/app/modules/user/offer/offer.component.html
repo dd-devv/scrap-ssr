@@ -19,13 +19,12 @@
 @let product = productService.priceHistory();
 <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
   <!-- imagen del producto  -->
-  <div class="card flex justify-center items-center h-96">
-    <img
-    [src]="productService.priceHistory().productInfo.image"
-    [alt]="productService.priceHistory().productInfo.title"
-      
-      class="rounded-md object-contain max-h-full"
-    />
+  <div class="card flex justify-center items-center h-96 bg-white rounded-xl">
+      <img
+      [src]="productService.priceHistory().productInfo.image"
+      [alt]="productService.priceHistory().productInfo.title"
+        class="rounded-md object-contain max-h-full"
+      />
   </div>
 
   <!-- información del producto -->
