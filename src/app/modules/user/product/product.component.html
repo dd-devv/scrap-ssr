@@ -52,17 +52,20 @@
         <div class="info-content">
           <h4 class="text-sm font-extralight">Tienda</h4>
           <h3 class="text-lg font-bold flex gap-1">
-            {{
+            <!-- {{
               productService.priceHistory().productInfo.url | extractDomain | titlecase
-            }}
-            <img
+            }} -->
+            <div title="{{productService.priceHistory().productInfo.url | extractDomain | titlecase}}">
+              <img
               src="../../../../assets/svg/{{
                 productService.priceHistory().productInfo.url | extractDomain
               }}.svg"
               alt="Logo {{
                 productService.priceHistory().productInfo.url | extractDomain
               }}"
-            />
+              
+              />
+            </div>
           </h3>
         </div>
         <div class="info-content">
