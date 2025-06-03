@@ -262,6 +262,28 @@ export default class ProductComponent implements OnInit {
       ? (ordenados[mitad - 1] + ordenados[mitad]) / 2
       : ordenados[mitad];
   }
+
+  calcularPrecioPromedioPonderado(fechas: Date[], precios: number[]): number {
+    if (fechas.length !== precios.length || fechas.length < 2) {
+      throw new Error("Los arreglos deben tener igual longitud y al menos 2 elementos");
+    }
+
+    let sumaPesoPrecio = 0;
+    let sumaDuracion = 0;
+
+    for (let i = 0; i < fechas.length - 1; i++) {
+      const fechaInicio = new Date(fechas[i]);
+      const fechaFin = new Date(fechas[i + 1]);
+      
+      const duracion = (fechaFin.getTime() - fechaInicio.getTime()) / 1000; // duración en segundos
+
+      sumaPesoPrecio += precios[i] * duracion;
+      sumaDuracion += duracion;
+    }
+
+    return sumaDuracion === 0 ? 0 : sumaPesoPrecio / sumaDuracion;
+  }
+
   //metodo para con el precio promedio y el precio actual, calcular el porcentaje de descuento
   calcularDescuento(precioPromedio: number, precioActual: number): string { 
     if (precioPromedio <= precioActual) return 'Sin descuento';

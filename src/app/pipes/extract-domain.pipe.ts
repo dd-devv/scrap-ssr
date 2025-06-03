@@ -1,7 +1,8 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Injectable, Pipe, PipeTransform } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, Inject } from '@angular/core';
 
+@Injectable()
 @Pipe({
   name: 'extractDomain',
   pure: true

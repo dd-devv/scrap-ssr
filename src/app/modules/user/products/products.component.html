@@ -31,7 +31,24 @@
   } -->
 
   </div>
-
+  <!-- Filtro por tienda -->
+  <div class="mb-4 mt-3">
+    <p-dropdown 
+      [options]="availableStores" 
+      [(ngModel)]="selectedStore"
+      (onChange)="applyFilter()"
+      [showClear]="true"
+      placeholder="Filtrar por tienda"
+      appendTo="body"
+      styleClass="w-full md:w-64">
+      <ng-template pTemplate="item" let-store>
+        <div class="flex items-center gap-2">
+          <img class="h-6" src="../../../../assets/svg/{{store}}.svg" alt="Logo {{store}}">
+          <span>{{ store | titlecase }}</span>
+        </div>
+      </ng-template>
+    </p-dropdown>
+  </div>
   <!-- Modal de suscripción -->
   <p-dialog header="Límite alcanzado" [modal]="true" [(visible)]="visibleSubscription" [style]="{ width: '25rem' }">
 
@@ -110,7 +127,10 @@
 
   <!-- <div class="masonry-grid my-4"> -->
     <div class=" my-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-    @for (product of productService.productsUser(); track $index) {
+  @for (product of filteredProducts; track $index) {
+      <!-- @let arrDate = productService.priceHistory().priceHistory.dates[0];
+      @let arrPrices = productService.priceHistory().priceHistory.prices[0]; -->
+
     <div class="masonry-item">
       <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%' }">
         <ng-template #header>
@@ -134,7 +154,7 @@
           {{product.currentPrice | currency: 'S/ '}}
         </h2>
         <h3 class="text-surface-500" [ngClass]="{'text-green-600': product.currentPrice === product.lowestPrice}">
-          Antes: <samp class="line-through">{{product.lowestPrice | currency: 'S/'}}</samp> 
+          Precio mínimo: <samp class="">{{product.lowestPrice | currency: 'S/'}}</samp> 
         </h3>
         <ng-template #footer>
             <div class="flex gap-4 mt-1">

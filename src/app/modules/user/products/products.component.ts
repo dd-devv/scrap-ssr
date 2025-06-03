@@ -20,6 +20,7 @@ import { SubscriptionService } from '../services/subscription.service';
 import { Skeleton } from 'primeng/skeleton';
 import { Message } from 'primeng/message';
 import { ExtractDomainPipe } from '../../../pipes/extract-domain.pipe';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-products',
@@ -42,9 +43,10 @@ import { ExtractDomainPipe } from '../../../pipes/extract-domain.pipe';
     TimeAgoPipe,
     Skeleton,
     Message,
-    ExtractDomainPipe
+    ExtractDomainPipe,
+    DropdownModule
   ],
-  providers: [MessageService, ConfirmationService],
+  providers: [MessageService, ConfirmationService, ExtractDomainPipe],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,25 +57,29 @@ export default class ProductsComponent implements OnInit {
   subscriptionService = inject(SubscriptionService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
+  extractDomainPipe = inject(ExtractDomainPipe);
+  
   visible = signal(false);
   visibleSubscription = signal(false);
   loading = signal(false);
   disabled = signal(false);
   componentLoading = signal(true);
-
+  
+  // Filtro por tienda
+  selectedStore: string | null = null;
+  availableStores: string[] = [];
+  
   url: string = '';
   urlId: string = '';
-
+  
   montoSubscription: number = 10;
   tipoSubscription: string = 'Basic';
   loadingSubscription = signal(false);
 
   ngOnInit(): void {
-    // Solo cargar productos en el lado del cliente
     if (typeof window !== 'undefined') {
       this.loadProducts();
     } else {
-      // Estamos en SSR, solo marcar como no cargando
       this.componentLoading.set(false);
     }
   }
@@ -81,7 +87,10 @@ export default class ProductsComponent implements OnInit {
   loadProducts() {
     this.componentLoading.set(true);
     this.productService.getLatestResults().subscribe({
-      next: () => this.componentLoading.set(false),
+      next: () => {
+        this.componentLoading.set(false);
+        this.loadStores();
+      },
       error: (err) => {
         console.error('Error loading products:', err);
         this.componentLoading.set(false);
@@ -94,6 +103,29 @@ export default class ProductsComponent implements OnInit {
       },
       complete: () => this.componentLoading.set(false)
     });
+  }
+
+  // Métodos para el filtro por tienda
+  loadStores() {
+    const stores = new Set<string>();
+    this.productService.productsUser().forEach(product => {
+      const domain = this.extractDomainPipe.transform(product.url);
+      if (domain) stores.add(domain);
+    });
+    this.availableStores = Array.from(stores).sort();
+  }
+
+  get filteredProducts() {
+    if (!this.selectedStore) {
+      return this.productService.productsUser();
+    }
+    return this.productService.productsUser().filter(product => 
+      this.extractDomainPipe.transform(product.url) === this.selectedStore
+    );
+  }
+
+  applyFilter() {
+    // El getter filteredProducts se actualiza automáticamente
   }
 
   evaluateUrl() {
@@ -128,10 +160,9 @@ export default class ProductsComponent implements OnInit {
         this.loading.set(false);
         this.url = '';
         this.closeDialog();
-        this.productService.getLatestResults().subscribe();
+        this.loadProducts();
         this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registrado correctamente', life: 3000 });
       },
-
       error: (err) => {
         this.loading.set(false);
         this.messageService.add({ severity: 'error', summary: 'Error!', detail: 'Error al registrar', life: 3000 });
@@ -161,18 +192,15 @@ export default class ProductsComponent implements OnInit {
       header: `¿Comprar ${title}?`,
       message: 'Por favor confirma para dejar de hacer seguimiento al producto',
       accept: () => {
-        // Abrir URL en una nueva pestaña de manera segura y compatible con SSR
         if (typeof window !== 'undefined') {
           const newWindow = window.open(url, '_blank');
           if (newWindow) {
             newWindow.focus();
           }
         }
-
         this.deleteUrl();
       },
-      reject: () => {
-      },
+      reject: () => {},
     });
   }
 
@@ -180,7 +208,7 @@ export default class ProductsComponent implements OnInit {
     this.productService.deleteUrl(this.urlId).subscribe({
       next: (res) => {
         this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Producto quitado con éxito', life: 3000 });
-        this.productService.getLatestResults().subscribe();
+        this.loadProducts();
       },
       error: (err) => {
         this.messageService.add({ severity: 'error', summary: 'Error!', detail: 'Error al eliminar el producto', life: 3000 });
@@ -193,6 +221,27 @@ export default class ProductsComponent implements OnInit {
       return text;
     }
     return text.substring(0, length) + '...';
+  }
+
+  calcularPrecioPromedioPonderado(fechas: Date[], precios: number[]): number {
+    if (fechas.length !== precios.length || fechas.length < 2) {
+      throw new Error("Los arreglos deben tener igual longitud y al menos 2 elementos");
+    }
+
+    let sumaPesoPrecio = 0;
+    let sumaDuracion = 0;
+
+    for (let i = 0; i < fechas.length - 1; i++) {
+      const fechaInicio = new Date(fechas[i]);
+      const fechaFin = new Date(fechas[i + 1]);
+      
+      const duracion = (fechaFin.getTime() - fechaInicio.getTime()) / 1000;
+
+      sumaPesoPrecio += precios[i] * duracion;
+      sumaDuracion += duracion;
+    }
+
+    return sumaDuracion === 0 ? 0 : sumaPesoPrecio / sumaDuracion;
   }
 
   insertSubscription() {

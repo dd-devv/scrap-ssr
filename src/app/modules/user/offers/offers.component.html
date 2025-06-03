@@ -1,7 +1,25 @@
 <div class="min-h-80 py-2">
+  <!-- Filtro por tienda -->
+  <div class="mb-4">
+    <p-dropdown 
+      [options]="availableStores" 
+      [(ngModel)]="selectedStore"
+      [showClear]="true"
+      placeholder="Filtrar por tienda"
+      appendTo="body"
+      styleClass="w-full md:w-64">
+      <ng-template pTemplate="item" let-store>
+        <div class="flex items-center gap-2">
+          <img class="h-6" src="../../../../assets/svg/{{store}}.svg" alt="Logo {{store}}">
+          <span>{{ store | titlecase }}</span>
+        </div>
+      </ng-template>
+    </p-dropdown>
+  </div>
+
   @if (productService.isLoading()) {
-  <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-    @for (item of [1,2,3,4,5,6]; track $index) {
+  <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+    @for (item of [1,2,3,4,5,6,7,8]; track $index) {
     <div class="p-4">
       <p-card [style]="{ width: '100%', overflow: 'hidden', border: '1px solid var(--surface-300)' }">
         <ng-template #header>
@@ -38,11 +56,10 @@
   }
 
   <div class=" my-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-    @for (product of productService.productsPublic(); track $index) {
+    @for (product of filteredProducts; track $index) {
     <div class=" cursor-pointer" [routerLink]="['/ofertas', product.urlId] ">
       <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%' }">
         <ng-template #header >
-          <!-- <img  [alt]="product.productTitle" class="h-72 md:h-[362px] xl:h-[302px] m-auto" [src]="product.image" [routerLink]="['/ofertas', product.urlId]" /> -->
           <div class="bg-white">
             <img 
               [alt]="product.productTitle" 
@@ -69,14 +86,6 @@
         <h3 class="text-sm marfa-italic-md mb-3">
           Antes: <samp class="line-through">{{product.previousPrice | currency: 'S/'}}</samp> 
         </h3>
-
-        <!-- <ng-template #footer>
-          <div class="flex gap-4 mt-1">
-            <p-button label="Detalles" icon="pi pi-chart-scatter" severity="secondary" class="w-full" [outlined]="true"
-              styleClass="w-full" [routerLink]="['/ofertas', product.urlId]" />
-            <p-button label="Comprar" icon="pi pi-cart-plus" class="w-full" styleClass="w-full" (click)="redirect(product.url)" />
-          </div>
-        </ng-template> -->
       </p-card>
     </div>
     }
