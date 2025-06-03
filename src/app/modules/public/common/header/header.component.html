@@ -39,26 +39,29 @@
           <li>
             <a [routerLink]="(['/'])" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: true}" pRipple
               [pTooltip]="'Inicio'" tooltipEvent="focus" tooltipPosition="top" life="500"
-              class="flex flex-col md:flex-row items-center justify-center px-3 py-2 rounded-md">
+              class="flex flex-col md:flex-row items-center justify-center px-1 rounded-md">
 
               <!-- Ícono: Visible solo en pantallas pequeñas y medianas -->
-              <i class="pi pi-home text-2xl md:text-base mb-1 md:mb-0 md:mr-2 sm:block"></i>
+              <i class="pi pi-home text-xl md:text-base mb-1 md:mb-0 md:mr-2 sm:block"></i>
 
               <!-- Texto: Visible solo en pantallas medianas y grandes -->
-              <span class="text-sm md:text-base hidden md:block lg:block">Inicio</span>
+              <!-- <span class="text-sm md:text-base hidden md:block lg:block">Inicio</span> -->
+              <span class="text-xs sm:text-sm md:text-base">Inicio</span>
             </a>
           </li>
 
           <li>
             <a [routerLink]="(['/ofertas'])" routerLinkActive="text-primary" pRipple [pTooltip]="'Ofertas'"
               tooltipEvent="focus" tooltipPosition="top" life="500"
-              class="flex flex-col md:flex-row items-center justify-center px-3 py-2 rounded-md">
+              class="flex flex-col md:flex-row items-center justify-center px-1 rounded-md">
 
               <!-- Ícono: Visible solo en pantallas pequeñas y medianas -->
-              <i class="pi pi-tag text-2xl md:text-base mb-1 md:mb-0 md:mr-2 sm:block"></i>
+              <i class="pi pi-tag text-xl md:text-base mb-1 md:mb-0 md:mr-2 sm:block"></i>
 
               <!-- Texto: Visible solo en pantallas medianas y grandes -->
-              <span class="text-sm md:text-base hidden md:block lg:block">Ofertas</span>
+              <!-- <span class="text-sm md:text-base hidden md:block lg:block">Ofertas</span> -->
+              <span class="text-xs sm:text-sm md:text-base">Ofertas</span>
+
             </a>
           </li>
 
@@ -66,26 +69,30 @@
           <li>
             <a [routerLink]="(['/notificaciones'])" routerLinkActive="text-primary" pRipple [pTooltip]="'Alertas'"
               tooltipEvent="focus" tooltipPosition="top" life="500"
-              class="flex flex-col md:flex-row items-center justify-center px-3 py-2 rounded-md">
+              class="flex flex-col md:flex-row items-center justify-center px-1 rounded-md">
 
               <!-- Ícono: Visible solo en pantallas pequeñas y medianas -->
               <i class="pi pi-bell
-               text-2xl md:text-base mb-1 md:mb-0 md:mr-2 sm:block"></i>
+               text-xl md:text-base mb-1 md:mb-0 md:mr-2 sm:block"></i>
 
               <!-- Texto: Visible solo en pantallas medianas y grandes -->
               <span class="text-sm md:text-base hidden md:block lg:block">Alertas</span>
+              <span class="text-xs sm:text-sm md:text-base">Alertas</span>
+
             </a>
           </li>
           <li>
             <a [routerLink]="(['/productos'])" routerLinkActive="text-primary" pRipple [pTooltip]="'Mis productos'"
               tooltipEvent="focus" tooltipPosition="top" life="500"
-              class="flex flex-col md:flex-row items-center justify-center px-3 py-2 rounded-md">
+              class="flex flex-col md:flex-row items-center justify-center px-1 rounded-md">
 
               <!-- Ícono: Visible solo en pantallas pequeñas y medianas -->
-              <i class="pi pi-shopping-bag text-2xl md:text-base mb-1 md:mb-0 md:mr-2"></i>
+              <i class="pi pi-shopping-bag text-xl md:text-base mb-1 md:mb-0 md:mr-2"></i>
 
               <!-- Texto: Visible solo en pantallas medianas y grandes -->
-              <span class="text-sm md:text-base hidden md:block lg:block">Mis productos</span>
+              <!-- <span class="text-sm md:text-base hidden md:block lg:block">Mis productos</span> -->
+              <span class="text-xs sm:text-sm md:text-base">productos</span>
+
             </a>
           </li>
           }
@@ -94,21 +101,45 @@
           <li>
             <a [routerLink]="(['/login'])" routerLinkActive="text-primary" pRipple [pTooltip]="'Ingresar'"
               tooltipEvent="focus" tooltipPosition="top" life="500"
-              class="flex flex-col md:flex-row items-center justify-center px-3 py-2 rounded-md">
+              class="flex flex-col md:flex-row items-center justify-center px-1 rounded-md">
 
               <!-- Ícono: Visible solo en pantallas pequeñas y medianas -->
-              <i class="pi pi-user text-2xl md:text-base mb-1 md:mb-0 md:mr-2"></i>
+              <i class="pi pi-user text-xl md:text-base mb-1 md:mb-0 md:mr-2"></i>
 
               <!-- Texto: Visible solo en pantallas medianas y grandes -->
-              <span class="text-sm md:text-base hidden md:block lg:block">Ingresar</span>
+              <!-- <span class="text-sm md:text-base hidden md:block lg:block">Ingresar</span> -->
+              <span class="text-xs sm:text-sm md:text-base">Ingresar</span>
+
             </a>
           </li>
           }
 
           @if (authService.isAuthenticatedUser()) {
-          <li>
-            <p-button type="button" severity="secondary" label="{{authService.currentUser()!.fullname}}" icon="pi pi-user" (onClick)="toggle($event)" />
+          <li class="flex items-center">
+            <!-- Botón solo con ícono para pantallas pequeñas -->
+            <div class="block sm:hidden">
+              <p-button
+                type="button"
+                severity="secondary"
+                icon="pi pi-user"
+                (onClick)="toggle($event)"
+                pTooltip="{{ authService.currentUser()!.fullname }}"
+                tooltipPosition="bottom"
+              ></p-button>
+            </div>
 
+            <!-- Botón con label para pantallas medianas en adelante -->
+            <div class="hidden sm:block">
+              <p-button
+                type="button"
+                severity="secondary"
+                [label]="authService.currentUser()!.fullname"
+                icon="pi pi-user"
+                (onClick)="toggle($event)"
+              ></p-button>
+            </div>
+
+            <!-- Popover -->
             <p-popover #op>
               <p class="mb-3" (click)="toggle($event)">
                 <a [routerLink]="['/productos']"> <i class="pi pi-shopping-bag me-2"></i>
