@@ -38,8 +38,50 @@ export const Shops: Shop[] = [
   },
   {
     id: 6,
-    name: 'Ripley',
-    logo: 'assets/svg/ripley.svg',
-    url: 'https://simple.ripley.com.pe/',
+    name: 'Promart',
+    logo: 'assets/svg/promart.svg',
+    url: 'https://www.promart.pe/',
+  },
+  {
+    id: 7,
+    name: 'Sodimac',
+    logo: 'assets/svg/sodimac.svg',
+    url: 'https://www.sodimac.com.pe/',
+  },
+  {
+    id: 8,
+    name: 'Tottus',
+    logo: 'assets/svg/tottus.svg',
+    url: 'https://www.tottus.com.pe/',
+  },
+  {
+    id: 9,
+    name: 'Linio',
+    logo: 'assets/svg/linio.svg',
+    url: 'https://www.linio.com.pe/',
+  },
+  {
+    id: 10,
+    name: 'Shopstar',
+    logo: 'assets/svg/shopstar.svg',
+    url: 'https://shopstar.pe/',
+  },
+  {
+    id: 11,
+    name: 'Vivanda',
+    logo: 'assets/svg/vivanda.svg',
+    url: 'https://www.vivanda.com.pe/',
+  },
+  {
+    id: 12,
+    name: 'Mifarma',
+    logo: 'assets/svg/mifarma.svg',
+    url: 'https://www.mifarma.com.pe/',
+  },
+  {
+    id: 13,
+    name: 'Inkafarma',
+    logo: 'assets/svg/inkafarma.svg',
+    url: 'https://inkafarma.pe/',
   },
 ];
