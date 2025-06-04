@@ -10,6 +10,10 @@ import { ExtractDomainPipe } from '../../../pipes/extract-domain.pipe';
 import { RouterLink } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
+import { Tooltip } from 'primeng/tooltip';
+import AuthService from '../../auth/services/auth.service';
+import { Toast } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-offers',
@@ -25,9 +29,11 @@ import { FormsModule } from '@angular/forms';
     ExtractDomainPipe,
     RouterLink,
     DropdownModule,
-    FormsModule
+    FormsModule,
+    Tooltip,
+    Toast
   ],
-  providers: [ExtractDomainPipe],
+  providers: [ExtractDomainPipe, MessageService],
   templateUrl: './offers.component.html',
   styleUrl: './offers.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +41,8 @@ import { FormsModule } from '@angular/forms';
 export default class OffersComponent {
   productService = inject(ProductService);
   extractDomainPipe = inject(ExtractDomainPipe);
+  private messageService = inject(MessageService);
+  authService = inject(AuthService);
   selectedStore: string | null = null;
   availableStores: string[] = [];
 
@@ -69,7 +77,7 @@ export default class OffersComponent {
   //   if (!this.selectedStore) {
   //     return this.productService.productsPublic();
   //   }
-  //   return this.productService.productsPublic().filter(product => 
+  //   return this.productService.productsPublic().filter(product =>
   //     this.extractDomain(product.url) === this.selectedStore
   //   );
   // }
@@ -77,7 +85,7 @@ export default class OffersComponent {
     if (!this.selectedStore) {
       return this.productService.productsPublic();
     }
-    return this.productService.productsPublic().filter(product => 
+    return this.productService.productsPublic().filter(product =>
       this.extractDomainPipe.transform(product.url) === this.selectedStore
     );
   }
@@ -96,5 +104,18 @@ export default class OffersComponent {
       return text;
     }
     return text.substring(0, length) + '...';
+  }
+
+  addUrlForMe(sourceJobId: string, urlId: string) {
+    this.productService.addUrlForMe(sourceJobId, urlId).subscribe({
+      next: (response) => {
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Agregado a tu seguimiento', life: 3000 });
+        this.productService.getLatestResultsPublic().subscribe();
+      },
+      error: (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error, life: 3000 });
+      }
+    });
+
   }
 }

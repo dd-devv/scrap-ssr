@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { TokenStorageService } from '../../auth/services/tokenStorage.service';
 import { environment } from '../../../../environments/environment';
-import { DeleteURLResp, PriceHistory, Product, ProductPublic, RegisterProductReq, RegisterProductRes } from '../interfaces';
+import { AddUrlForMeReq, DeleteURLResp, PriceHistory, Product, ProductPublic, RegisterProductReq, RegisterProductRes } from '../interfaces';
 import { catchError, Observable, of, tap, throwError, finalize } from 'rxjs';
 
 @Injectable({
@@ -31,6 +31,29 @@ export default class ProductService {
     };
 
     return this.http.post<RegisterProductRes>(`${this.apiUrl}scraping/job`, registerData, {
+      headers: {
+        Authorization: `Bearer ${this.authToken}`
+      }
+    })
+      .pipe(
+        tap(response => {
+          return response;
+        }),
+        catchError(error => {
+          return throwError(() => ({
+            error: error.error
+          }));
+        })
+      );
+  }
+
+  addUrlForMe(sourceJobId: string, urlId: string): Observable<RegisterProductRes> {
+    const addData: AddUrlForMeReq = {
+      sourceJobId,
+      urlId
+    };
+
+    return this.http.post<RegisterProductRes>(`${this.apiUrl}scraping/add-job-me`, addData, {
       headers: {
         Authorization: `Bearer ${this.authToken}`
       }
@@ -80,19 +103,19 @@ export default class ProductService {
         Authorization: `Bearer ${this.authToken}`
       }
     })
-    .pipe(
-      tap(response => {
-        const sortedProducts = [...response].sort((a, b) =>
-          a.productTitle.localeCompare(b.productTitle)
-        );
-        this.productsUser.set(sortedProducts);
-      }),
-      catchError(error => {
-        console.error('Error fetching products:', error);
-        return of([]);
-      }),
-      finalize(() => this.isLoading.set(false)) // Always set loading to false when done
-    );
+      .pipe(
+        tap(response => {
+          const sortedProducts = [...response].sort((a, b) =>
+            a.productTitle.localeCompare(b.productTitle)
+          );
+          this.productsUser.set(sortedProducts);
+        }),
+        catchError(error => {
+          console.error('Error fetching products:', error);
+          return of([]);
+        }),
+        finalize(() => this.isLoading.set(false)) // Always set loading to false when done
+      );
   }
 
   getLatestResultsPublic(): Observable<ProductPublic[]> {
@@ -109,17 +132,17 @@ export default class ProductService {
         Authorization: `Bearer ${this.authToken}`
       }
     })
-    .pipe(
-      tap(response => {
-        this.productsPublic.set(response);
-      }),
-      catchError(error => {
-        return throwError(() => ({
-          error: error.error
-        }));
-      }),
-      finalize(() => this.isLoading.set(false))
-    );
+      .pipe(
+        tap(response => {
+          this.productsPublic.set(response);
+        }),
+        catchError(error => {
+          return throwError(() => ({
+            error: error.error
+          }));
+        }),
+        finalize(() => this.isLoading.set(false))
+      );
   }
 
   getPriceHistory(id: string): Observable<PriceHistory> {

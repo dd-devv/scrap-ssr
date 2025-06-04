@@ -1,13 +1,8 @@
 <div class="min-h-80 py-2">
   <!-- Filtro por tienda -->
   <div class="mb-4">
-    <p-dropdown 
-      [options]="availableStores" 
-      [(ngModel)]="selectedStore"
-      [showClear]="true"
-      placeholder="Filtrar por tienda"
-      appendTo="body"
-      styleClass="w-full md:w-64">
+    <p-dropdown [options]="availableStores" [(ngModel)]="selectedStore" [showClear]="true"
+      placeholder="Filtrar por tienda" appendTo="body" styleClass="w-full md:w-64">
       <ng-template pTemplate="item" let-store>
         <div class="flex items-center gap-2">
           <img class="h-6" src="../../../../assets/svg/{{store}}.svg" alt="Logo {{store}}">
@@ -57,37 +52,51 @@
 
   <div class=" my-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
     @for (product of filteredProducts; track $index) {
-    <div class=" cursor-pointer" [routerLink]="['/ofertas', product.urlId] ">
+    <div>
       <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%' }">
-        <ng-template #header >
+        <ng-template #header>
           <div class="bg-white">
-            <img 
-              [alt]="product.productTitle" 
-              class="h-72 md:h-[362px] xl:h-[302px] w-full m-auto cursor-pointer object-contain" 
-              [src]="product.image" 
-              [routerLink]="['/ofertas', product.urlId ]"/>
+            <img [alt]="product.productTitle"
+              class="h-72 md:h-[362px] xl:h-[302px] w-full m-auto cursor-pointer object-contain" [src]="product.image"
+              [routerLink]="['/ofertas', product.urlId ]" />
           </div>
         </ng-template>
         <ng-template #title> {{truncateText(product.productTitle) | titlecase}}
-          <div class="mt-2 "> 
+          <div class="mt-2 flex align-middle">
             <p-badge [value]="product.discountPercentage+'% de ahorro'" severity="contrast" />
+
+            @if (authService.isAuthenticatedUser()) {
+            <a class="ml-3 text-red-500 cursor-pointer" pTooltip="Empezar a seguir" tooltipPosition="bottom"
+              (click)="addUrlForMe(product.job, product.urlId)">
+              <i class="pi pi-heart text-lg"></i>
+            </a>
+            } @else {
+            <a class="ml-3 text-red-500 cursor-pointer" pTooltip="Empezar a seguir" tooltipPosition="bottom"
+              [routerLink]="['/login']">
+              <i class="pi pi-heart text-lg"></i>
+            </a>
+            }
           </div>
         </ng-template>
         <ng-template #subtitle>
-          <div class="flex items-center">
+          <div class="flex items-center cursor-pointer" [routerLink]="['/ofertas', product.urlId]">
             <img class="h-6" src="../../../../assets/svg/{{product.url|extractDomain}}.svg"
               alt="Logo {{product.url|extractDomain}}">
             <small class="ms-2">Actualización ({{product.lastUpdate | timeAgo}})</small>
           </div>
         </ng-template>
-        <h2 class="text-2xl" >
-          {{product.currentPrice | currency: 'S/ '}}
-        </h2>
-        <h3 class="text-sm marfa-italic-md mb-3">
-          Antes: <samp class="line-through">{{product.previousPrice | currency: 'S/'}}</samp> 
-        </h3>
+        <div class="cursor-pointer" [routerLink]="['/ofertas', product.urlId]">
+          <h2 class="text-2xl">
+            {{product.currentPrice | currency: 'S/ '}}
+          </h2>
+          <h3 class="text-sm marfa-italic-md mb-3">
+            Antes: <samp class="line-through">{{product.previousPrice | currency: 'S/'}}</samp>
+          </h3>
+        </div>
       </p-card>
     </div>
     }
   </div>
 </div>
+
+<p-toast />

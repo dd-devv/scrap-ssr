@@ -14,6 +14,11 @@ export interface RegisterProductReq {
   frequency: string;
 }
 
+export interface AddUrlForMeReq {
+  sourceJobId:      string;
+  urlId: string;
+}
+
 export interface Product {
   jobId:        string;
   productTitle: string;
@@ -32,6 +37,7 @@ export interface ProductPublic {
   image:              string;
   url:                string;
   urlId:              string;
+  job:              string;
   lowestPrice:        number;
   previousPrice:      number;
   discountPercentage: number;

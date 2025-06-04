@@ -274,7 +274,7 @@ export default class ProductComponent implements OnInit {
     for (let i = 0; i < fechas.length - 1; i++) {
       const fechaInicio = new Date(fechas[i]);
       const fechaFin = new Date(fechas[i + 1]);
-      
+
       const duracion = (fechaFin.getTime() - fechaInicio.getTime()) / 1000; // duración en segundos
 
       sumaPesoPrecio += precios[i] * duracion;
@@ -285,7 +285,7 @@ export default class ProductComponent implements OnInit {
   }
 
   //metodo para con el precio promedio y el precio actual, calcular el porcentaje de descuento
-  calcularDescuento(precioPromedio: number, precioActual: number): string { 
+  calcularDescuento(precioPromedio: number, precioActual: number): string {
     if (precioPromedio <= precioActual) return 'Sin descuento';
     const descuento = ((precioPromedio - precioActual) / precioPromedio) * 100;
     return `${descuento.toFixed(2)}%`;
