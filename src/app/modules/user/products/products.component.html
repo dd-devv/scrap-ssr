@@ -142,7 +142,12 @@
             [routerLink]="['/producto', product.urlId ]"/>
           </div>
         </ng-template>
-        <ng-template #title> {{ truncateText(product.productTitle) | titlecase}} </ng-template>
+        <ng-template #title> 
+          <div class="h-16">
+
+            {{ truncateText(product.productTitle) | titlecase}}
+          </div>
+        </ng-template>
         <ng-template #subtitle>
           <div class="flex items-center">
             <img class="h-5" src="../../../../assets/svg/{{product.url|extractDomain}}.svg"
