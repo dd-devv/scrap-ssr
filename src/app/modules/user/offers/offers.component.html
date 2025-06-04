@@ -61,7 +61,10 @@
               [routerLink]="['/ofertas', product.urlId ]" />
           </div>
         </ng-template>
-        <ng-template #title> {{truncateText(product.productTitle) | titlecase}}
+        <ng-template #title> 
+          <div class="h-16">
+            {{truncateText(product.productTitle) | titlecase}}
+          </div>
           <div class="mt-2 flex align-middle">
             <p-badge [value]="product.discountPercentage+'% de ahorro'" severity="contrast" />
 

@@ -119,6 +119,12 @@ export default class HomeComponent implements OnInit {
   goApp() {
     console.log('Go App');
   }
+  truncateText(text: string, length: number = 40): string {
+    if (text.length <= length) {
+      return text;
+    }
+    return text.substring(0, length) + '...';
+  }
 
   getSeverity(status: string): 'success' | 'warn' | 'danger' | undefined {
     switch (status) {

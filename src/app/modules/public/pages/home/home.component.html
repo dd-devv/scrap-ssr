@@ -156,16 +156,16 @@
               <div class="relative mx-auto">
                 <img [src]="product.image" [alt]="product.productTitle"
                   class="w-full rounded-border h-[250px] object-cover" />
-                <p-tag [value]="'-'+product.discountPercentage + '% Desc.'" class="absolute"
+                <p-tag [value]="'-'+product.discountPercentage + '% Desc.'" class="absolute bg-black text-green-400"
                   [ngStyle]="{ 'left.px': 5, 'top.px': 5 }" />
               </div>
             </div>
 
-            <div class="mb-4 font-medium line-clamp-2 h-12">{{ product.productTitle }}</div>
+            <div class="mb-4 font-semibold text-2xl line-clamp-2 h-16">{{ truncateText(product.productTitle) }}</div>
 
             <div class="flex justify-between items-center">
               <div class="flex flex-col">
-                <div class="heading-4 mt-0 text-green-700">{{ product.currentPrice | currency:'S/ ' }}</div>
+                <div class=" text-2xl mt-0 text-green-700">{{ product.currentPrice | currency:'S/ ' }}</div>
                 <div class="text-sm text-gray-500 line-through">{{ product.previousPrice | currency:'S/ ' }}</div>
               </div>
               <img class="h-6" src="../../../../../assets/svg/{{product.url|extractDomain}}.svg" alt="Logo {{product.url|extractDomain}}">
