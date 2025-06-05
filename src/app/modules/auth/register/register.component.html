@@ -5,6 +5,9 @@
       <h3 class="heading-3 font-bold text-center mb-4">
         Registro de usuarios
       </h3>
+      <p class="text-balance text-center">
+        El uso de esta pagina es exclusivo para Perú con el codigo de área <span class="font-extrabold">+51</span>, pronto estaremos habilitando otros países, esperamos su comprensión.
+      </p>
 
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
 
@@ -44,7 +47,7 @@
         <p-floatlabel variant="on" class="mt-6">
           <p-password formControlName="password" inputId="password" [toggleMask]="true" fluid="true" feedback="false"
             class="font-mono" />
-          <label for="password"><i class="pi pi-key me-1"></i> Contraseña</label>
+          <label for="password"><i class="pi pi-key me-1"></i> Crear contraseña</label>
         </p-floatlabel>
 
         @if (isFieldInvalid('password')) {
