@@ -40,8 +40,10 @@
       </div>
 
       <!-- Navigation Items -->
-      <nav class="flex flex-grow  lg:justify-start">
-        <ul class="flex w-full justify-evenly md:justify-start space-x-2 items-center">
+      <nav class="flex flex-grow lg:justify-start">
+        <ul
+          class="flex w-full justify-evenly md:justify-start space-x-2 items-center"
+        >
           <!-- inicio -->
           <li>
             <a
@@ -134,81 +136,87 @@
               <span class="text-xs sm:text-sm md:text-base">Productos</span>
             </a>
           </li>
-          } @if (!authService.isAuthenticatedUser()) {
-          <li>
-            <a
-              [routerLink]="['/login']"
-              routerLinkActive="text-primary"
-              pRipple
-              [pTooltip]="'Ingresar'"
-              tooltipEvent="focus"
-              tooltipPosition="top"
-              life="500"
-              class="flex flex-col md:flex-row items-center justify-center px-1 rounded-md"
-            >
-              <!-- Ícono: Visible solo en pantallas pequeñas y medianas -->
-              <i
-                class="pi pi-user text-xl md:text-base mb-1 md:mb-0 md:mr-2"
-              ></i>
-
-              <!-- Texto: Visible solo en pantallas medianas y grandes -->
-              <!-- <span class="text-sm md:text-base hidden md:block lg:block">Ingresar</span> -->
-              <span class="text-xs sm:text-sm md:text-base">Ingresar</span>
-            </a>
-          </li>
-          } 
-          
+          }
         </ul>
+        @if (!authService.isAuthenticatedUser()) {
+        <div class="flex items-center ml-1">
+          <div class="block sm:hidden">
+            <p-button
+              type="button"
+              severity="primary"
+              icon="pi pi-user"
+              size="large"
+              [routerLink]="['/login']"
+              pTooltip="Ingresar"
+              tooltipPosition="bottom"
+            ></p-button>
+          </div>
+
+          <!-- Botón con label para pantallas medianas en adelante -->
+          <div class="hidden sm:block">
+            <p-button
+              type="button"
+              severity="primary"
+              icon="pi pi-user"
+              [routerLink]="['/login']"
+              [label]="'Ingresar'"
+              pTooltip="Ingresar"
+              tooltipPosition="bottom"
+            ></p-button>
+          </div>
+        </div>
+
+        }
       </nav>
       @if (authService.isAuthenticatedUser()) {
-          <div class="flex items-center ml-1">
-            <!-- Botón solo con ícono para pantallas pequeñas -->
-            <div class="block sm:hidden">
-              <p-button
-                type="button"
-                severity="secondary"
-                icon="pi pi-user"
-                (onClick)="toggle($event)"
-                pTooltip="{{ authService.currentUser()!.fullname }}"
-                tooltipPosition="bottom"
-              ></p-button>
-            </div>
+      <div class="flex items-center ml-1">
+        <!-- Botón solo con ícono para pantallas pequeñas -->
+        <div class="block sm:hidden ">
+          <p-button
+            type="button"
+            severity="secondary"
+            icon="pi pi-user"
+            (onClick)="toggle($event)"
+            pTooltip="{{ authService.currentUser()!.fullname }}"
+            tooltipPosition="bottom"
+          ></p-button>
+        </div>
 
-            <!-- Botón con label para pantallas medianas en adelante -->
-            <div class="hidden sm:block">
-              <p-button
-                type="button"
-                severity="secondary"
-                [label]="authService.currentUser()!.fullname"
-                icon="pi pi-user"
-                (onClick)="toggle($event)"
-              ></p-button>
-            </div>
+        <!-- Botón con label para pantallas medianas en adelante -->
+        <div class="hidden sm:block">
+          <p-button
+            type="button"
+            severity="secondary"
+            [label]="authService.currentUser()!.fullname"
+            icon="pi pi-user"
+            (onClick)="toggle($event)"
+          ></p-button>
+        </div>
 
-            <!-- Popover -->
-            <p-popover #op>
-              <p class="mb-3" (click)="toggle($event)">
-                <a [routerLink]="['/productos']">
-                  <i class="pi pi-shopping-bag me-2"></i> Mis productos</a
-                >
-              </p>
-              <p class="mb-3" (click)="toggle($event)">
-                <a [routerLink]="['/datos']">
-                  <i class="pi pi-user me-2"></i> Datos</a
-                >
-              </p>
-              <!-- <p class="mb-3">
+        <!-- Popover -->
+        <p-popover #op>
+          <p class="mb-3" (click)="toggle($event)">
+            <a [routerLink]="['/productos']">
+              <i class="pi pi-shopping-bag me-2"></i> Mis productos</a
+            >
+          </p>
+          <p class="mb-3" (click)="toggle($event)">
+            <a [routerLink]="['/datos']">
+              <i class="pi pi-user me-2"></i> Datos</a
+            >
+          </p>
+          <!-- <p class="mb-3">
                 <a href=""> <i class="pi pi-crown me-2"></i> Suscripciones</a>
               </p> -->
-              <p
-                class="text-red-500 cursor-pointer"
-                (click)="logout(); toggle($event)"
-              >
-                <a> <i class="pi pi-external-link me-2"></i> Salir</a>
-              </p>
-            </p-popover>
-          </div>
-          }
+          <p
+            class="text-red-500 cursor-pointer"
+            (click)="logout(); toggle($event)"
+          >
+            <a> <i class="pi pi-external-link me-2"></i> Salir</a>
+          </p>
+        </p-popover>
+      </div>
+      }
       <!-- @if (!authService.isAuthenticatedUser()) {
       <div class="flex-none">
         <p-button (onClick)="toggleTheme()" [icon]="(isDarkTheme$ | async) ? 'pi pi-sun' : 'pi pi-moon'" [text]="true"
