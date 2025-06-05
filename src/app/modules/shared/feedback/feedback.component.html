@@ -1,12 +1,18 @@
 <!-- feedback-widget.component.html -->
-<div class="fixed bottom-20 right-4 z-50">
+<div class="fixed bottom-20 right-4 z-50 ">
   <!-- Botón flotante -->
   @if (!isOpen) {
-  <button (click)="toggleWidget()"
-    class="group bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-l-lg rounded-tr-lg shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-2">
+  <!-- <button (click)="toggleWidget()"
+    class=" group bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-l-lg rounded-tr-lg shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-2">
     <i class="pi pi-comment text-lg"></i>
     <span class="font-medium hidden group-hover:block">Feedback</span>
-  </button>
+  </button> -->
+  <button (click)="toggleWidget()"
+  class="animate-bounce group bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-l-lg rounded-tr-lg shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 hover:animate-none">
+  <i class="pi pi-comment text-lg"></i>
+  <span class="font-medium hidden group-hover:block">Feedback</span>
+</button>
+
   }
 
   <!-- Modal de feedback -->

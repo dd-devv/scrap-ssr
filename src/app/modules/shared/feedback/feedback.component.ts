@@ -17,6 +17,7 @@ import { MessageService } from 'primeng/api';
   ],
   providers: [MessageService],
   templateUrl: './feedback.component.html',
+  styleUrl: './feedback.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FeedbackComponent implements OnInit {
