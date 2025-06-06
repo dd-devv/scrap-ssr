@@ -7,8 +7,16 @@
       </h3>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <p-floatlabel variant="on">
+        <!-- <p-floatlabel variant="on">
           <input pInputText id="whatsapp" formControlName="whatsapp" autocomplete="off" fluid="true" />
+          <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label>
+        </p-floatlabel> -->
+        
+        <p-floatlabel variant="on">
+          <input pInputText id="whatsapp" formControlName="whatsapp" autocomplete="off" fluid="true" 
+                (keypress)="onlyNumbers($event)" 
+                (input)="formatWhatsapp($event)" 
+                maxlength="11" />
           <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label>
         </p-floatlabel>
 

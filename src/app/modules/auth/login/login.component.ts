@@ -90,6 +90,33 @@ export default class LoginComponent implements OnInit, OnDestroy {
     return null;
   }
 
+  onlyNumbers(event: KeyboardEvent): boolean {
+  const charCode = (event.which) ? event.which : event.keyCode;
+  // Solo permitir teclas numéricas (0-9) y algunas teclas de control
+  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    event.preventDefault();
+    return false;
+  }
+  return true;
+}
+
+// Método para formatear y limitar el número
+formatWhatsapp(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.replace(/\D/g, ''); // Eliminar todo lo que no sea dígito
+  
+  // Limitar a 9 dígitos
+  if (value.length > 9) {
+    value = value.substring(0, 9);
+  }
+  
+  // Actualizar el valor en el formulario
+  this.loginForm.get('whatsapp')?.setValue(value, { emitEvent: true });
+  
+  // Forzar la actualización del valor en el input
+  input.value = value;
+}
+
   onSubmit(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
