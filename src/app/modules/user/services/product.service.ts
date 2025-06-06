@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { TokenStorageService } from '../../auth/services/tokenStorage.service';
 import { environment } from '../../../../environments/environment';
-import { AddUrlForMeReq, DeleteURLResp, PriceHistory, Product, ProductPublic, RegisterProductReq, RegisterProductRes } from '../interfaces';
+import { AddUrlForMeReq, DeleteURLResp, MyJobResp, PriceHistory, Product, ProductPublic, RegisterProductReq, RegisterProductRes } from '../interfaces';
 import { catchError, Observable, of, tap, throwError, finalize } from 'rxjs';
 
 @Injectable({
@@ -31,6 +31,25 @@ export default class ProductService {
     };
 
     return this.http.post<RegisterProductRes>(`${this.apiUrl}scraping/job`, registerData, {
+      headers: {
+        Authorization: `Bearer ${this.authToken}`
+      }
+    })
+      .pipe(
+        tap(response => {
+          return response;
+        }),
+        catchError(error => {
+          return throwError(() => ({
+            error: error.error
+          }));
+        })
+      );
+  }
+
+  getMyJob(urlId: string): Observable<MyJobResp> {
+
+    return this.http.get<MyJobResp>(`${this.apiUrl}scraping/my-job/${urlId}`, {
       headers: {
         Authorization: `Bearer ${this.authToken}`
       }

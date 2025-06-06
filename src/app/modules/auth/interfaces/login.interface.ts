@@ -14,5 +14,5 @@ export interface LoginResponse {
 
 export interface LoginRequest {
   whatsapp: string;
-  password: string;
+  code: string;
 }

@@ -46,10 +46,10 @@
         </small>
         }
 
-        <div class="flex justify-between mt-6">
-          <p-button type="submit" label="Actualizar" icon="pi pi-check" [loading]="isLoading"
+        <div class="flex justify-center mt-6">
+          <p-button type="submit" label="Actualizar datos" icon="pi pi-check" [loading]="isLoading"
             [disabled]="updateForm.invalid || isLoading || showPasswordChangeForm" />
-          <p-button type="button" label="Contraseña" icon="pi pi-lock" severity="secondary" (onClick)="togglePasswordChangeForm()" />
+          <!-- <p-button type="button" label="Contraseña" icon="pi pi-lock" severity="secondary" (onClick)="togglePasswordChangeForm()" /> -->
         </div>
       </form>
 

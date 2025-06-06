@@ -6,7 +6,6 @@ import AuthService from '../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
-import { InputMask } from 'primeng/inputmask';
 import { FloatLabel } from 'primeng/floatlabel';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
@@ -20,7 +19,6 @@ import { MessageService } from 'primeng/api';
     CommonModule,
     ReactiveFormsModule,
     CardModule,
-    InputMask,
     InputTextModule,
     FloatLabel,
     PasswordModule,
@@ -56,18 +54,14 @@ export default class RegisterComponent implements OnInit {
       //   Validators.email,
       //   Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
       // ]],
-      whatsapp: ['9', {
+      whatsapp: ['', {
         validators: [
           Validators.required,
           this.whatsappValidator
         ],
         asyncValidators: [this.whatsappAsyncValidator()],
         updateOn: 'blur'
-      }],
-      password: ['', [
-        Validators.required,
-        Validators.minLength(6)
-      ]]
+      }]
     });
   }
 
@@ -129,12 +123,11 @@ export default class RegisterComponent implements OnInit {
     const fullnameValue = this.registerForm.get('fullname')?.value;
     // const emailValue = this.registerForm.get('email')?.value;
     const whatsappValue = this.registerForm.get('whatsapp')?.value;
-    const passwordValue = this.registerForm.get('password')?.value;
 
     // Eliminar espacios del número de WhatsApp
     const whatsapp = whatsappValue?.replace(/\s/g, '');
 
-    this.authService.register(fullnameValue, whatsapp, passwordValue)
+    this.authService.register(fullnameValue, whatsapp)
       .subscribe({
         next: (res) => {
           this.messageService.add({ severity: 'success', summary: 'Éxito', detail: res.message, life: 3000 });
@@ -179,15 +172,6 @@ export default class RegisterComponent implements OnInit {
       if (errors['whatsappVerificationError']) return 'Error al verificar el número de WhatsApp';
     }
 
-    // Mensajes de error para Password
-    if (fieldName === 'password') {
-      if (errors['required']) return 'La contraseña es requerida';
-      if (errors['minlength']) {
-        const requiredLength = errors['minlength'].requiredLength;
-        return `La contraseña debe tener al menos ${requiredLength} caracteres`;
-      }
-    }
-
     // Mensajes de error para el nombre completo
     if (fieldName === 'fullname') {
       if (errors['required']) return 'El nombre completo es requerido';
@@ -204,5 +188,4 @@ export default class RegisterComponent implements OnInit {
   get fullname() { return this.registerForm.get('fullname'); }
   // get email() { return this.registerForm.get('email'); }
   get whatsapp() { return this.registerForm.get('whatsapp'); }
-  get password() { return this.registerForm.get('password'); }
 }

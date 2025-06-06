@@ -2,11 +2,12 @@
 <div class="flex flex-col justify-center items-center h-screen md:h-5/6 w-full p-4">
   <div class="w-full sm:w-4/5 md:w-2/3 lg:w-5/12">
     <p-card class="shadow-md my-8">
-      <h3 class="heading-3 font-bold text-center mb-4">
+      <h3 class="heading-3 font-bold text-center">
         Registro de usuarios
       </h3>
-      <p class="text-balance text-center">
-        El uso de esta pagina es exclusivo para Perú con el codigo de área <span class="font-extrabold">+51</span>, pronto estaremos habilitando otros países, esperamos su comprensión.
+
+      <p class="text-balance text-center mb-4">
+        El uso de esta pagina es exclusivo para Perú con 9 dígitos para el WhatsApp, sin código del país.
       </p>
 
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
@@ -33,26 +34,14 @@
         </small>
         } -->
 
-        <p-floatlabel variant="on" class="mt-6">
-          <p-inputmask id="whatsapp" formControlName="whatsapp" mask="999 999 999" styleClass="w-full" />
+        <p-floatlabel variant="on">
+          <input pInputText id="whatsapp" formControlName="whatsapp" autocomplete="off" fluid="true" />
           <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label>
         </p-floatlabel>
 
         @if (isFieldInvalid('whatsapp')) {
         <small class="text-red-500">
           {{ getErrorMessage('whatsapp') }}
-        </small>
-        }
-
-        <p-floatlabel variant="on" class="mt-6">
-          <p-password formControlName="password" inputId="password" [toggleMask]="true" fluid="true" feedback="false"
-            class="font-mono" />
-          <label for="password"><i class="pi pi-key me-1"></i> Crear contraseña</label>
-        </p-floatlabel>
-
-        @if (isFieldInvalid('password')) {
-        <small class="text-red-500">
-          {{ getErrorMessage('password') }}
         </small>
         }
 

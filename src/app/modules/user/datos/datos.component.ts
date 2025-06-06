@@ -75,7 +75,6 @@ export default class DatosComponent implements OnInit {
         Validators.minLength(6)
       ]],
       email: [this.userData.email, [
-        Validators.required,
         Validators.email,
         Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
       ]],

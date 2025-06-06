@@ -1,15 +1,16 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
-import { InputMask } from 'primeng/inputmask';
 import { FloatLabel } from "primeng/floatlabel";
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import AuthService from '../services/auth.service';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputOtpModule } from 'primeng/inputotp';
 
 @Component({
   selector: 'app-login',
@@ -17,17 +18,18 @@ import { MessageService } from 'primeng/api';
     CommonModule,
     ReactiveFormsModule,
     CardModule,
-    InputMask,
     FloatLabel,
     PasswordModule,
     ButtonModule,
     RouterLink,
-    Toast
+    Toast,
+    InputTextModule,
+    InputOtpModule
   ],
   providers: [MessageService],
   templateUrl: './login.component.html',
 })
-export default class LoginComponent implements OnInit {
+export default class LoginComponent implements OnInit, OnDestroy {
   // Inyección de dependencias con inject()
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
@@ -36,18 +38,31 @@ export default class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
   isLoading = false;
+  codeSended = signal(false);
+
+  // Variables para el contador
+  countdown = signal(0);
+  canResendCode = signal(true);
+  private countdownInterval: any = 30;
 
   ngOnInit(): void {
     this.initForm();
   }
 
+  ngOnDestroy(): void {
+    // Limpiar el intervalo cuando se destruye el componente
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
+  }
+
   initForm(): void {
     this.loginForm = this.fb.group({
-      whatsapp: ['9', [
+      whatsapp: ['', [
         Validators.required,
         this.whatsappValidator
       ]],
-      password: ['', [
+      code: ['', [
         Validators.required,
         Validators.minLength(6)
       ]]
@@ -84,12 +99,12 @@ export default class LoginComponent implements OnInit {
     this.isLoading = true;
 
     const whatsappValue = this.loginForm.get('whatsapp')?.value;
-    const passwordValue = this.loginForm.get('password')?.value;
+    const codeValue = this.loginForm.get('code')?.value;
 
     // Eliminar espacios del número de WhatsApp
     const whatsapp = whatsappValue?.replace(/\s/g, '');
 
-    this.authService.login(whatsapp, passwordValue)
+    this.authService.login(whatsapp, codeValue)
       .subscribe({
         next: (res) => {
           this.isLoading = false;
@@ -105,7 +120,6 @@ export default class LoginComponent implements OnInit {
               this.router.navigate(['/verify-whatsapp']);
             }, 2000);
           }
-
         }
       });
   }
@@ -131,19 +145,70 @@ export default class LoginComponent implements OnInit {
       if (errors['startsWith9']) return 'El número de WhatsApp debe comenzar con 9';
     }
 
-    // Mensajes de error para Password
-    if (fieldName === 'password') {
-      if (errors['required']) return 'La contraseña es requerida';
+    // Mensajes de error para code
+    if (fieldName === 'code') {
+      if (errors['required']) return 'El código es requerido';
       if (errors['minlength']) {
         const requiredLength = errors['minlength'].requiredLength;
-        return `La contraseña debe tener al menos ${requiredLength} caracteres`;
+        return `El código debe tener al menos ${requiredLength} caracteres`;
       }
     }
 
     return 'Campo inválido';
   }
 
+  requestLoginCode() {
+    // Verificar si se puede reenviar el código
+    if (!this.canResendCode()) {
+      return;
+    }
+
+    // Validar el campo WhatsApp antes de enviar
+    if (this.loginForm.get('whatsapp')?.invalid) {
+      this.loginForm.get('whatsapp')?.markAsTouched();
+      return;
+    }
+
+    const whatsappValue = this.loginForm.getRawValue().whatsapp;
+
+    this.authService.requestLoginCode(whatsappValue).subscribe({
+      next: (res) => {
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Código enviado', life: 3000 });
+        this.codeSended.set(true);
+        this.loginForm.get('whatsapp')?.disable();
+        this.startCountdown();
+      },
+      error: (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.message, life: 3000 });
+        this.codeSended.set(false);
+      }
+    });
+  }
+
+  private startCountdown(): void {
+    this.countdown.set(30);
+    this.canResendCode.set(false);
+
+    // Limpiar intervalo anterior si existe
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
+
+    this.countdownInterval = setInterval(() => {
+      const currentCount = this.countdown();
+
+      if (currentCount <= 1) {
+        this.countdown.set(0);
+        this.canResendCode.set(true);
+        clearInterval(this.countdownInterval);
+        this.countdownInterval = 30;
+      } else {
+        this.countdown.set(currentCount - 1);
+      }
+    }, 1000);
+  }
+
   // Getters para acceso rápido a los controles del formulario
   get whatsapp() { return this.loginForm.get('whatsapp'); }
-  get password() { return this.loginForm.get('password'); }
+  get code() { return this.loginForm.get('code'); }
 }

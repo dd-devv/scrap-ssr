@@ -15,7 +15,7 @@ export interface RegisterRequest {
   fullname: string;
   // email: string;
   whatsapp: string;
-  password: string;
+  // password: string;
 }
 
 export interface UpdateRequest {

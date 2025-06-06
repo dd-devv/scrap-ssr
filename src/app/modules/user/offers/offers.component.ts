@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import ProductService from '../services/product.service';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -14,6 +14,7 @@ import { Tooltip } from 'primeng/tooltip';
 import AuthService from '../../auth/services/auth.service';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { catchError, map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-offers',
@@ -46,10 +47,15 @@ export default class OffersComponent {
   selectedStore: string | null = null;
   availableStores: string[] = [];
 
+  products = this.productService.productsPublic;
+  isLoading = this.productService.isLoading;
+
+  estadosOfertas = signal<{ [key: string]: boolean }>({});
+
 
   loadStores() {
     const stores = new Set<string>();
-    this.productService.productsPublic().forEach(product => {
+    this.products().forEach(product => {
       const domain = this.extractDomainPipe.transform(product.url); // Usar el pipe
       if (domain) stores.add(domain);
     });
@@ -57,8 +63,22 @@ export default class OffersComponent {
   }
 
   ngOnInit(): void {
-    this.productService.getLatestResultsPublic().subscribe(() => {
-      this.loadStores();
+
+    this.obteneOfertas();
+  }
+
+  obteneOfertas() {
+    this.productService.getLatestResultsPublic().subscribe({
+      next: (res) => {
+        this.loadStores();
+        this.products().forEach(prod => {
+          this.cargarEstadoJobs(prod.urlId);
+        });
+
+      },
+      error: (err) => {
+        console.error('Error al cargar ofertas:', err);
+      }
     });
   }
 
@@ -83,9 +103,9 @@ export default class OffersComponent {
   // }
   get filteredProducts() {
     if (!this.selectedStore) {
-      return this.productService.productsPublic();
+      return this.products();
     }
-    return this.productService.productsPublic().filter(product =>
+    return this.products().filter(product =>
       this.extractDomainPipe.transform(product.url) === this.selectedStore
     );
   }
@@ -110,12 +130,47 @@ export default class OffersComponent {
     this.productService.addUrlForMe(sourceJobId, urlId).subscribe({
       next: (response) => {
         this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Agregado a tu seguimiento', life: 3000 });
-        this.productService.getLatestResultsPublic().subscribe();
+        this.obteneOfertas();
       },
       error: (error) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error, life: 3000 });
       }
     });
 
+  }
+
+  cargarEstadoJobs(urlId: string): void {
+    this.productService.getMyJob(urlId).subscribe({
+      next: (res) => {
+        // Actualizar la señal con el nuevo estado
+        this.estadosOfertas.update(estados => ({
+          ...estados,
+          [urlId]: res.myjob
+        }));
+      },
+      error: (err) => {
+        console.error('Error al obtener estado de comandas:', err);
+        // En caso de error, marcar como false
+        this.estadosOfertas.update(estados => ({
+          ...estados,
+          [urlId]: false
+        }));
+      }
+    });
+  }
+
+  // Método para obtener el estado (usa la señal)
+  getMyJob(urlId: string): boolean {
+    return this.estadosOfertas()[urlId] || false;
+  }
+
+  //Para dejar de seguir
+  deleteUrl(urlId: string): void {
+    this.productService.deleteUrl(urlId).subscribe({
+      next: (res) => {
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Dejaste de seguir', life: 3000 });
+        this.obteneOfertas();
+      }
+    });
   }
 }

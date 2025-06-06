@@ -41,10 +41,10 @@ export default class AuthService {
     }
   }
 
-  login(whatsapp: string, password: string): Observable<LoginResponse> {
+  login(whatsapp: string, code: string): Observable<LoginResponse> {
     const loginData: LoginRequest = {
       whatsapp,
-      password
+      code
     };
 
     return this.http.post<LoginResponse>(`${this.apiUrl}users/login`, loginData)
@@ -94,12 +94,11 @@ export default class AuthService {
       );
   }
 
-  register(fullname: string, whatsapp: string, password: string): Observable<RegisterResponse> {
+  register(fullname: string, whatsapp: string): Observable<RegisterResponse> {
     const registerData: RegisterRequest = {
       fullname,
       // email,
-      whatsapp,
-      password
+      whatsapp
     };
 
     return this.http.post<RegisterResponse>(`${this.apiUrl}users/register`, registerData)
@@ -142,7 +141,7 @@ export default class AuthService {
       );
   }
 
-  updatePassword(currentPassword: string, newPassword: string ): Observable<string> {
+  updatePassword(currentPassword: string, newPassword: string): Observable<string> {
     const passwordData: UpdatePasswordRequest = {
       currentPassword,
       newPassword
@@ -165,22 +164,37 @@ export default class AuthService {
 
   //Funcion para enviar codig de whatsapp apra actualizacion
   requestWhatsappVerificationCode(whatsapp: string): Observable<string> {
-      return this.http.post<string>(`${this.apiUrl}users/send-code-whatsapp`, { whatsapp }, {
-        headers: {
-          Authorization: `Bearer ${this.authToken}`
-        }
-      })
-        .pipe(
-          tap(response => {
-            return response;
-          }),
-          catchError(error => {
-            return throwError(() => ({
-              error: error.error
-            }));
-          })
-        );
-    }
+    return this.http.post<string>(`${this.apiUrl}users/send-code-whatsapp`, { whatsapp }, {
+      headers: {
+        Authorization: `Bearer ${this.authToken}`
+      }
+    })
+      .pipe(
+        tap(response => {
+          return response;
+        }),
+        catchError(error => {
+          return throwError(() => ({
+            error: error.error
+          }));
+        })
+      );
+  }
+
+  //Funcion para enviar codig de whatsapp para login
+  requestLoginCode(whatsapp: string): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}users/send-code-login`, { whatsapp })
+      .pipe(
+        tap(response => {
+          return response;
+        }),
+        catchError(error => {
+          return throwError(() => ({
+            error: error.error
+          }));
+        })
+      );
+  }
 
   verificar_whatsapp(telefono: string): Observable<any> {
     return this.http.post(this.apiUrl + 'users/verificar-whatsapp', { numero: telefono });

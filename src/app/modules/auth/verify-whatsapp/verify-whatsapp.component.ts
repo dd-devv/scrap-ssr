@@ -48,7 +48,7 @@ export default class VerifyWhatsappComponent {
 
         this.verifyng = false;
 
-        this.router.navigate(['/']);
+        this.router.navigate(['/datos']);
       },
       error: (err) => {
         this.messageService.add({

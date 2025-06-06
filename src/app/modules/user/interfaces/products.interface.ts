@@ -67,3 +67,8 @@ export interface DeleteURLResp {
   message:       string;
   remainingUrls: number;
 }
+
+export interface MyJobResp {
+  message:       string;
+  myjob: boolean;
+}
