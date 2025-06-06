@@ -82,25 +82,6 @@ export default class OffersComponent {
     });
   }
 
-
-  // extractDomain(url: string): string {
-  //   try {
-  //     const domain = new URL(url).hostname.replace('www.', '');
-  //     return domain.split('.')[0];
-  //   } catch {
-  //     return '';
-  //   }
-  // }
-
-
-  // get filteredProducts() {
-  //   if (!this.selectedStore) {
-  //     return this.productService.productsPublic();
-  //   }
-  //   return this.productService.productsPublic().filter(product =>
-  //     this.extractDomain(product.url) === this.selectedStore
-  //   );
-  // }
   get filteredProducts() {
     if (!this.selectedStore) {
       return this.products();
