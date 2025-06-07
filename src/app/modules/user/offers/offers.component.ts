@@ -116,6 +116,7 @@ export default class OffersComponent {
       },
       error: (error) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error, life: 3000 });
+        this.isLoading.set(false);
       },
       complete: () => {
         this.isLoading.set(false);
