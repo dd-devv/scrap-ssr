@@ -11,6 +11,9 @@ import { Message } from 'primeng/message';
 import { Meta, Title } from '@angular/platform-browser'; // Importamos Meta y Title
 import { TimeAgoPipe } from './../../../pipes/timeAgo.pipe';
 import { Button } from 'primeng/button';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+import AuthService from '../../auth/services/auth.service';
 
 
 @Component({
@@ -23,16 +26,19 @@ import { Button } from 'primeng/button';
     ChartModule,
     Skeleton,
     ExtractDomainPipe,
-    TimeAgoPipe
+    TimeAgoPipe,
+    ConfirmDialog
   ],
-  providers: [],
+  providers: [ConfirmationService],
   styleUrl: './offer.component.css',
   templateUrl: './offer.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class OfferComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private confirmationService = inject(ConfirmationService);
   productService = inject(ProductService);
+  authService = inject(AuthService);
   router = inject(Router);
   private meta = inject(Meta); // Inyectamos el servicio Meta
   private title = inject(Title); // Inyectamos el servicio Title
@@ -44,6 +50,8 @@ export default class OfferComponent implements OnInit {
   platformId = inject(PLATFORM_ID);
   urlId: string = '';
 
+  estadosOfertas = signal<{ [key: string]: boolean }>({});
+
   constructor(private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
@@ -51,6 +59,7 @@ export default class OfferComponent implements OnInit {
       tap(params => {
         const id = params.get('urlId');
         this.productId.set(id);
+        this.cargarEstadoJobs(id!);
       }),
       switchMap(() => {
         const id = this.productId() ?? '';
@@ -82,8 +91,8 @@ export default class OfferComponent implements OnInit {
 
     // Obtener una descripción limpia
     const description = productInfo.description ?
-        `${productInfo.description.slice(0, 150)}...` :
-        `Oferta especial: ${productInfo.title} a S/ ${productInfo.currentPrice} - Aprovecha esta oferta en AcllaBay`;
+      `${productInfo.description.slice(0, 150)}...` :
+      `Oferta especial: ${productInfo.title} a S/ ${productInfo.currentPrice} - Aprovecha esta oferta en AcllaBay`;
 
     // Generar la URL actual según la estructura de tu aplicación
     const currentUrl = `https://acllabay.com/oferta/${this.productId()}`;
@@ -119,7 +128,7 @@ export default class OfferComponent implements OnInit {
       const documentStyle = getComputedStyle(document.documentElement);
 
       // Formatear fechas para que sean más legibles
-      const formattedDates = priceHistory.dates[0].map((dateString: string) => {
+      const formattedDates = priceHistory.dates.map((dateString: string) => {
         const date = new Date(dateString);
         return `${date.getDate()}/${date.getMonth() + 1} ${date.getHours()}:${date.getMinutes()}`;
       });
@@ -129,7 +138,7 @@ export default class OfferComponent implements OnInit {
         datasets: [
           {
             label: 'Historial de precios',
-            data: priceHistory.prices[0],
+            data: priceHistory.prices,
             fill: true,
             borderColor: documentStyle.getPropertyValue('--p-green-500'),
             backgroundColor: 'rgba(34, 197, 94, 0.2)',
@@ -143,11 +152,10 @@ export default class OfferComponent implements OnInit {
   }
   // Método para encontrar el primer elemento de un arreglo
   findFirst(arr: any[]): any {
-    console.log("arr findFirst",arr[0][0])
     return arr.length > 0 ? arr[0][0] : null;
   }
   findLast(arr: any[]): any {
-    return arr.length > 0 ? arr[0][arr[0].length-1] : null;
+    return arr.length > 0 ? arr[0][arr[0].length - 1] : null;
   }
 
 
@@ -259,5 +267,51 @@ export default class OfferComponent implements OnInit {
       };
       this.cd.markForCheck();
     }
+  }
+
+  cargarEstadoJobs(urlId: string): void {
+    this.productService.getMyJob(urlId).subscribe({
+      next: (res) => {
+        // Actualizar la señal con el nuevo estado
+        this.estadosOfertas.update(estados => ({
+          ...estados,
+          [urlId]: res.myjob
+        }));
+      },
+      error: (err) => {
+        // En caso de error, marcar como false
+        this.estadosOfertas.update(estados => ({
+          ...estados,
+          [urlId]: false
+        }));
+      }
+    });
+  }
+
+  // Método para obtener el estado (usa la señal)
+  getMyJob(urlId: string): boolean {
+    return this.estadosOfertas()[urlId] || false;
+  }
+
+  confirm(url: string, urlId: string) {
+    this.urlId = urlId;
+    this.confirmationService.confirm({
+      header: `¿Seguro que quieres dejar de seguir este producto?`,
+      message: 'Perderás las alertas de bajada de precio 😢',
+      accept: () => {
+        // Abrir URL en una nueva pestaña de manera segura y compatible con SSR
+        this.deleteUrl();
+      },
+      reject: () => {
+      },
+    });
+  }
+
+  deleteUrl(): void {
+    this.productService.deleteUrl(this.urlId).subscribe({
+      next: (res) => {
+        this.router.navigate(['/ofertas']);
+      }
+    });
   }
 }

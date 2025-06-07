@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -7,6 +7,7 @@ import { InputOtp } from 'primeng/inputotp';
 import { Toast } from 'primeng/toast';
 import AuthService from '../services/auth.service';
 import { Router } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-verify-whatsapp',
@@ -17,6 +18,7 @@ import { Router } from '@angular/router';
 })
 export default class VerifyWhatsappComponent {
   authService = inject(AuthService);
+  PLATFORM_ID = inject(PLATFORM_ID);
   router = inject(Router);
   value: string = '';
   verifyng: boolean = false;
@@ -48,7 +50,13 @@ export default class VerifyWhatsappComponent {
 
         this.verifyng = false;
 
-        this.router.navigate(['/datos']);
+        this.router.navigate(['/productos']);
+
+        this.authService.checkAuthStatus();
+
+        if (isPlatformBrowser(PLATFORM_ID)) {
+          window.location.reload();
+        }
       },
       error: (err) => {
         this.messageService.add({

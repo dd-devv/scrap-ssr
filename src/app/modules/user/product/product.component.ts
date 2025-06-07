@@ -135,7 +135,7 @@ export default class ProductComponent implements OnInit {
       const documentStyle = getComputedStyle(document.documentElement);
 
       // Formatear fechas para que sean más legibles
-      const formattedDates = priceHistory.dates[0].map((dateString: string) => {
+      const formattedDates = priceHistory.dates.map((dateString: string) => {
         const date = new Date(dateString);
         return `${date.getDate()}/${date.getMonth() + 1} ${date.getHours()}:${date.getMinutes()}`;
       });
@@ -145,7 +145,7 @@ export default class ProductComponent implements OnInit {
         datasets: [
           {
             label: 'Historial de precios',
-            data: priceHistory.prices[0],
+            data: priceHistory.prices,
             fill: true,
             borderColor: documentStyle.getPropertyValue('--p-green-500'),
             backgroundColor: 'rgba(34, 197, 94, 0.2)',
@@ -224,6 +224,7 @@ export default class ProductComponent implements OnInit {
       this.cd.markForCheck();
     }
   }
+
   confirm(url: string, urlId: string) {
     this.urlId = urlId;
     this.confirmationService.confirm({
@@ -237,6 +238,7 @@ export default class ProductComponent implements OnInit {
       },
     });
   }
+
   fecha(fecha: string | Date): string {
     const date = new Date(fecha); // Convierte string o Date a un Date válido
     const day = String(date.getDate()).padStart(2, '0');
@@ -244,6 +246,7 @@ export default class ProductComponent implements OnInit {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   }
+
   // Método para encontrar el primer elemento de un arreglo
   findFirst(arr: any[]): any {
     console.log("arr findFirst",arr[0][0])

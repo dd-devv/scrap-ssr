@@ -135,7 +135,6 @@ export default class OffersComponent {
         }));
       },
       error: (err) => {
-        console.error('Error al obtener estado de comandas:', err);
         // En caso de error, marcar como false
         this.estadosOfertas.update(estados => ({
           ...estados,

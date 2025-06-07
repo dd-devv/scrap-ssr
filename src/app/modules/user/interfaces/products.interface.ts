@@ -49,9 +49,9 @@ export interface PriceHistory {
 }
 
 export interface PriceHistoryClass {
-  prices:  [number[]];
-  dates:  [ Date[]];
-  changes: any[];
+  prices:  number[];
+  dates:  Date[];
+  changes: any[];
 }
 
 export interface ProductInfo {
