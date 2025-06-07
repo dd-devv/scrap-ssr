@@ -108,6 +108,7 @@ export default class OffersComponent {
   }
 
   addUrlForMe(sourceJobId: string, urlId: string) {
+    this.isLoading.set(true);
     this.productService.addUrlForMe(sourceJobId, urlId).subscribe({
       next: (response) => {
         this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Agregado a tu seguimiento', life: 3000 });
@@ -115,6 +116,9 @@ export default class OffersComponent {
       },
       error: (error) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error, life: 3000 });
+      },
+      complete: () => {
+        this.isLoading.set(false);
       }
     });
 

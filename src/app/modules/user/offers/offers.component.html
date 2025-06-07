@@ -12,7 +12,7 @@
     </p-dropdown>
   </div>
 
-  @if (productService.isLoading()) {
+  @if (isLoading()) {
   <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
     @for (item of [1,2,3,4,5,6,7,8]; track $index) {
     <div class="p-4">
@@ -54,7 +54,7 @@
   </div>
   }
 
-  @else if (!productService.isLoading()) {
+  @else if (!isLoading()) {
   <div class="my-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
     @for (product of filteredProducts; track $index) {
     <div>
@@ -85,7 +85,7 @@
             </a>
             }
             } @else {
-            <a class="ml-3 text-red-500 cursor-pointer" pTooltip="Empezar a seguir" tooltipPosition="bottom"
+            <a class="ml-3 text-gray-500 cursor-pointer" pTooltip="Empezar a seguir" tooltipPosition="bottom"
               [routerLink]="['/login']">
               <i class="pi pi-heart text-lg"></i>
             </a>
