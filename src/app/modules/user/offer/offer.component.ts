@@ -188,6 +188,11 @@ export default class OfferComponent implements OnInit {
       return 'rojo'; // 🔴 Precio alto
     }
   }
+  calcularDescuento(precioPromedio: number, precioActual: number): string {
+    if (precioPromedio <= precioActual) return 'Sin descuento';
+    const descuento = ((precioPromedio - precioActual) / precioPromedio) * 100;
+    return `${descuento.toFixed(2)}%`;
+  }
 
   initChart() {
     if (isPlatformBrowser(this.platformId)) {

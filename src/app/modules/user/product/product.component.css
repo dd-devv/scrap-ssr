@@ -17,8 +17,16 @@
 }
 
 .info-content{
-  border-left: 1px solid #f7f7f7 !important;
-  padding-left: 10px !important;
+  /* border-left: 1px solid #f7f7f7 !important;
+  padding-left: 10px !important; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+.visibleCSS{
+  display: block !important;
+  
 }
 .punto{
   margin-top: 5px;
