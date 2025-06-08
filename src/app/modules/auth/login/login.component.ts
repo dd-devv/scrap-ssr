@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { FloatLabel } from "primeng/floatlabel";
@@ -40,6 +40,7 @@ export default class LoginComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute); // Añadido para obtener query params
   private messageService = inject(MessageService);
 
   loginForm!: FormGroup;
@@ -53,6 +54,7 @@ export default class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initForm();
+    this.handleQueryParams(); // Manejar query params al inicializar
   }
 
   ngOnDestroy(): void {
@@ -72,6 +74,42 @@ export default class LoginComponent implements OnInit, OnDestroy {
         Validators.required,
         Validators.minLength(6)
       ]]
+    });
+  }
+
+  // Nuevo método para manejar query params
+  private handleQueryParams(): void {
+    this.route.queryParams.subscribe(params => {
+      const whatsappParam = params['whatsapp'];
+
+      if (whatsappParam) {
+        // Establecer el valor del WhatsApp en el formulario
+        this.loginForm.get('whatsapp')?.setValue(whatsappParam);
+
+        // Deshabilitar el campo WhatsApp ya que viene de registro
+        this.loginForm.get('whatsapp')?.disable();
+
+        // Marcar que el código ya fue enviado
+        this.codeSended.set(true);
+
+        // Iniciar el contador
+        this.startCountdown();
+
+        // Mostrar mensaje informativo
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Código enviado',
+          detail: 'Se ha enviado un código de verificación a tu WhatsApp',
+          life: 4000
+        });
+
+        // Limpiar los query params para evitar problemas en recargas
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: {},
+          replaceUrl: true
+        });
+      }
     });
   }
 
@@ -97,31 +135,31 @@ export default class LoginComponent implements OnInit, OnDestroy {
   }
 
   onlyNumbers(event: KeyboardEvent): boolean {
-  const charCode = (event.which) ? event.which : event.keyCode;
-  // Solo permitir teclas numéricas (0-9) y algunas teclas de control
-  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-    event.preventDefault();
-    return false;
+    const charCode = (event.which) ? event.which : event.keyCode;
+    // Solo permitir teclas numéricas (0-9) y algunas teclas de control
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
   }
-  return true;
-}
 
-// Método para formatear y limitar el número
-formatWhatsapp(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  let value = input.value.replace(/\D/g, ''); // Eliminar todo lo que no sea dígito
-  
-  // Limitar a 9 dígitos
-  if (value.length > 9) {
-    value = value.substring(0, 9);
+  // Método para formatear y limitar el número
+  formatWhatsapp(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, ''); // Eliminar todo lo que no sea dígito
+
+    // Limitar a 9 dígitos
+    if (value.length > 9) {
+      value = value.substring(0, 9);
+    }
+
+    // Actualizar el valor en el formulario
+    this.loginForm.get('whatsapp')?.setValue(value, { emitEvent: true });
+
+    // Forzar la actualización del valor en el input
+    input.value = value;
   }
-  
-  // Actualizar el valor en el formulario
-  this.loginForm.get('whatsapp')?.setValue(value, { emitEvent: true });
-  
-  // Forzar la actualización del valor en el input
-  input.value = value;
-}
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
@@ -131,7 +169,8 @@ formatWhatsapp(event: Event): void {
 
     this.isLoading = true;
 
-    const whatsappValue = this.loginForm.get('whatsapp')?.value;
+    // Obtener valores, considerando que whatsapp puede estar deshabilitado
+    const whatsappValue = this.loginForm.get('whatsapp')?.value || this.loginForm.getRawValue().whatsapp;
     const codeValue = this.loginForm.get('code')?.value;
 
     // Eliminar espacios del número de WhatsApp
@@ -196,13 +235,16 @@ formatWhatsapp(event: Event): void {
       return;
     }
 
+    // Obtener el valor del WhatsApp (considerando que puede estar deshabilitado)
+    const whatsappValue = this.loginForm.get('whatsapp')?.value || this.loginForm.getRawValue().whatsapp;
+
     // Validar el campo WhatsApp antes de enviar
-    if (this.loginForm.get('whatsapp')?.invalid) {
-      this.loginForm.get('whatsapp')?.markAsTouched();
+    if (!whatsappValue || this.whatsappValidator({ value: whatsappValue } as AbstractControl)) {
+      if (!this.loginForm.get('whatsapp')?.disabled) {
+        this.loginForm.get('whatsapp')?.markAsTouched();
+      }
       return;
     }
-
-    const whatsappValue = this.loginForm.getRawValue().whatsapp;
 
     this.authService.requestLoginCode(whatsappValue).subscribe({
       next: (res) => {
@@ -216,6 +258,22 @@ formatWhatsapp(event: Event): void {
         this.codeSended.set(false);
       }
     });
+  }
+
+  // Nuevo método para permitir cambiar el número de WhatsApp
+  enableWhatsappEdit(): void {
+    this.loginForm.get('whatsapp')?.enable();
+    this.codeSended.set(false);
+    this.canResendCode.set(true);
+    this.countdown.set(0);
+
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+      this.countdownInterval = 30;
+    }
+
+    // Limpiar el código
+    this.loginForm.get('code')?.setValue('');
   }
 
   private startCountdown(): void {
@@ -242,64 +300,64 @@ formatWhatsapp(event: Event): void {
   }
 
   forceNumericKeyboard() {
-  setTimeout(() => {
-    const inputs = document.querySelectorAll('p-inputotp input');
-    inputs.forEach((input: Element, index: number) => {
-      const htmlInput = input as HTMLInputElement;
-      
-      // Configurar atributos para teclado numérico
-      htmlInput.type = 'tel';
-      htmlInput.inputMode = 'numeric';
-      htmlInput.pattern = '[0-9]*';
-      
-      // Manejador de eventos con tipado correcto
-      htmlInput.addEventListener('keydown', (e: KeyboardEvent) => {
-        // Permitir teclas de control (backspace, tab, flechas, etc.)
-        if ([8, 9, 13, 37, 38, 39, 40, 46].includes(e.keyCode)) {
-          // Si es backspace y el campo está vacío, mover al anterior
-          if (e.keyCode === 8 && htmlInput.value === '' && index > 0) {
+    setTimeout(() => {
+      const inputs = document.querySelectorAll('p-inputotp input');
+      inputs.forEach((input: Element, index: number) => {
+        const htmlInput = input as HTMLInputElement;
+
+        // Configurar atributos para teclado numérico
+        htmlInput.type = 'tel';
+        htmlInput.inputMode = 'numeric';
+        htmlInput.pattern = '[0-9]*';
+
+        // Manejador de eventos con tipado correcto
+        htmlInput.addEventListener('keydown', (e: KeyboardEvent) => {
+          // Permitir teclas de control (backspace, tab, flechas, etc.)
+          if ([8, 9, 13, 37, 38, 39, 40, 46].includes(e.keyCode)) {
+            // Si es backspace y el campo está vacío, mover al anterior
+            if (e.keyCode === 8 && htmlInput.value === '' && index > 0) {
+              setTimeout(() => {
+                const prevInput = inputs[index - 1] as HTMLInputElement;
+                prevInput.focus();
+              }, 0);
+            }
+            return;
+          }
+
+          // Permitir números (teclado principal y numpad)
+          if (!((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105))) {
+            e.preventDefault();
+          }
+        });
+
+        // Manejar el evento input para validación
+        htmlInput.addEventListener('input', (e: Event) => {
+          const target = e.target as HTMLInputElement;
+          target.value = target.value.replace(/\D/g, '');
+
+          // Auto-avanzar al siguiente campo si se ingresó un número
+          if (target.value && index < inputs.length - 1) {
             setTimeout(() => {
-              const prevInput = inputs[index - 1] as HTMLInputElement;
-              prevInput.focus();
+              const nextInput = inputs[index + 1] as HTMLInputElement;
+              nextInput.focus();
             }, 0);
           }
-          return;
-        }
-        
-        // Permitir números (teclado principal y numpad)
-        if (!((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105))) {
-          e.preventDefault();
-        }
-      });
-      
-      // Manejar el evento input para validación
-      htmlInput.addEventListener('input', (e: Event) => {
-        const target = e.target as HTMLInputElement;
-        target.value = target.value.replace(/\D/g, '');
-        
-        // Auto-avanzar al siguiente campo si se ingresó un número
-        if (target.value && index < inputs.length - 1) {
-          setTimeout(() => {
-            const nextInput = inputs[index + 1] as HTMLInputElement;
-            nextInput.focus();
-          }, 0);
-        }
-        
-        // Actualizar el valor en el formulario
-        this.updateOtpValue();
-      });
-    });
-  }, 0);
-}
 
-updateOtpValue() {
-  const inputs = document.querySelectorAll('p-inputotp input');
-  let otpValue = '';
-  inputs.forEach(input => {
-    otpValue += (input as HTMLInputElement).value;
-  });
-  this.loginForm.get('code')?.setValue(otpValue);
-}
+          // Actualizar el valor en el formulario
+          this.updateOtpValue();
+        });
+      });
+    }, 0);
+  }
+
+  updateOtpValue() {
+    const inputs = document.querySelectorAll('p-inputotp input');
+    let otpValue = '';
+    inputs.forEach(input => {
+      otpValue += (input as HTMLInputElement).value;
+    });
+    this.loginForm.get('code')?.setValue(otpValue);
+  }
 
   handleOtpInput(event: any) {
     // Asegurar que solo haya números
@@ -307,7 +365,7 @@ updateOtpValue() {
     if (event.value !== value) {
       this.loginForm.get('code')?.setValue(value);
     }
-    
+
     // Manejar navegación entre campos
     if (value.length === 6) {
       const inputs = document.querySelectorAll('p-inputotp input');
@@ -318,4 +376,9 @@ updateOtpValue() {
   // Getters para acceso rápido a los controles del formulario
   get whatsapp() { return this.loginForm.get('whatsapp'); }
   get code() { return this.loginForm.get('code'); }
+
+  // Getter para verificar si el WhatsApp está deshabilitado (viene de registro)
+  get isWhatsappFromRegister(): boolean {
+    return this.loginForm.get('whatsapp')?.disabled || false;
+  }
 }

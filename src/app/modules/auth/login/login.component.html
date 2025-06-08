@@ -1,6 +1,6 @@
 <!-- login.component.html -->
 <div class="flex flex-col justify-center items-center h-screen md:h-96 w-full p-4">
-  <div class="w-full sm:w-4/5 md:w-2/3 lg:w-[470px]">
+  <div class="w-full sm:w-4/5 md:w-2/3 lg:w-5/12">
     <p-card class="shadow-md my-8">
       <h3 class="heading-3 font-bold text-center mb-4">
         Iniciar sesión
@@ -31,7 +31,7 @@
 
           <p-inputgroup>
               <p-inputgroup-addon>
-                  <span>+51 </span>
+                  <span class="whitespace-nowrap me-2"><i class="pi pi-whatsapp mx-2"></i>+51 </span>
               </p-inputgroup-addon>
               <p-floatlabel>
                   <input pInputText id="whatsapp"  formControlName="whatsapp" autocomplete="off" fluid="true"
@@ -41,35 +41,34 @@
             (keypress)="onlyNumbers($event)"
             (input)="formatWhatsapp($event)"
             maxlength="11" />
-                  <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i>WhatsApp</label>
               </p-floatlabel>
           </p-inputgroup>
-          
+
         @if (isFieldInvalid('whatsapp')) {
                 <small class="text-red-500">
                   {{ getErrorMessage('whatsapp') }}
                 </small>
                 }
-        
+
 
         @if (codeSended()) {
         <p-floatlabel variant="on" class="mt-6">
           <div class="card flex justify-center">
             <p-inputotp id="code" formControlName="code" [integerOnly]="true" [length]="6" size="small" />
-            <!-- <p-inputotp id="code" formControlName="code" 
-              [integerOnly]="true" 
-              [length]="6" 
+            <!-- <p-inputotp id="code" formControlName="code"
+              [integerOnly]="true"
+              [length]="6"
               size="small"
               inputmode="numeric" /> -->
-          <!-- <p-inputotp id="code" formControlName="code" 
-            [integerOnly]="true" 
-            [length]="6" 
+          <!-- <p-inputotp id="code" formControlName="code"
+            [integerOnly]="true"
+            [length]="6"
             size="small"
             (onFocus)="forceNumericKeyboard()"
             class="numeric-otp" /> -->
-            <!-- <p-inputotp id="code" formControlName="code" 
-              [integerOnly]="true" 
-              [length]="6" 
+            <!-- <p-inputotp id="code" formControlName="code"
+              [integerOnly]="true"
+              [length]="6"
               size="small"
               (onFocus)="forceNumericKeyboard()"
               (onInput)="handleOtpInput($event)"
@@ -126,4 +125,4 @@
   </div>
 </div>
 
-<p-toast />
+<p-toast [breakpoints]="{ '780px': { width: '80%', right: '8' } }" />

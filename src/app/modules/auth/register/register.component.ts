@@ -141,7 +141,15 @@ export default class RegisterComponent implements OnInit {
           }, 2000);
         },
         error: (error) => {
+          console.log(error);
+
           this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error, life: 3000 });
+          if (error.error.error === 'Usuario ya existe') {
+            this.authService.requestLoginCode(whatsapp).subscribe();
+            this.router.navigate(['/login'], {
+              queryParams: { whatsapp: whatsapp }
+            });
+          }
           this.isLoading = false;
         }
       });
@@ -153,32 +161,32 @@ export default class RegisterComponent implements OnInit {
     return !!field && field.invalid && (field.dirty || field.touched);
   }
 
-    onlyNumbers(event: KeyboardEvent): boolean {
-  const charCode = (event.which) ? event.which : event.keyCode;
-  // Solo permitir teclas numéricas (0-9) y algunas teclas de control
-  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-    event.preventDefault();
-    return false;
+  onlyNumbers(event: KeyboardEvent): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    // Solo permitir teclas numéricas (0-9) y algunas teclas de control
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
   }
-  return true;
-}
 
-// Método para formatear y limitar el número
-formatWhatsapp(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  let value = input.value.replace(/\D/g, ''); // Eliminar todo lo que no sea dígito
-  
-  // Limitar a 9 dígitos
-  if (value.length > 9) {
-    value = value.substring(0, 9);
+  // Método para formatear y limitar el número
+  formatWhatsapp(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, ''); // Eliminar todo lo que no sea dígito
+
+    // Limitar a 9 dígitos
+    if (value.length > 9) {
+      value = value.substring(0, 9);
+    }
+
+    // Actualizar el valor en el formulario
+    this.registerForm.get('whatsapp')?.setValue(value, { emitEvent: true });
+
+    // Forzar la actualización del valor en el input
+    input.value = value;
   }
-  
-  // Actualizar el valor en el formulario
-  this.registerForm.get('whatsapp')?.setValue(value, { emitEvent: true });
-  
-  // Forzar la actualización del valor en el input
-  input.value = value;
-}
 
   // Método para obtener mensajes de error específicos según el tipo de error
   getErrorMessage(fieldName: string): string {
