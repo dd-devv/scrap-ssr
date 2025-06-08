@@ -27,6 +27,7 @@ import { InputOtpModule } from 'primeng/inputotp';
     InputOtpModule
   ],
   providers: [MessageService],
+  styleUrl: './login.component.css',
   templateUrl: './login.component.html',
 })
 export default class LoginComponent implements OnInit, OnDestroy {
@@ -233,6 +234,16 @@ formatWhatsapp(event: Event): void {
         this.countdown.set(currentCount - 1);
       }
     }, 1000);
+  }
+  forceNumericKeyboard() {
+    setTimeout(() => {
+      const inputs = document.querySelectorAll('p-inputotp input');
+      inputs.forEach(input => {
+        input.setAttribute('inputmode', 'numeric');
+        input.setAttribute('type', 'tel');
+        input.setAttribute('pattern', '[0-9]*');
+      });
+    }, 0);
   }
 
   // Getters para acceso rápido a los controles del formulario
