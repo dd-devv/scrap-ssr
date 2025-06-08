@@ -13,7 +13,16 @@
         </p-floatlabel> -->
 
         <p-floatlabel variant="on">
+          <!-- <input pInputText id="whatsapp" formControlName="whatsapp" autocomplete="off" fluid="true"
+                (keypress)="onlyNumbers($event)"
+                (input)="formatWhatsapp($event)"
+                maxlength="11" />
+          <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label> -->
+
           <input pInputText id="whatsapp" formControlName="whatsapp" autocomplete="off" fluid="true"
+                type="tel"
+                inputmode="numeric"
+                pattern="[0-9]*"
                 (keypress)="onlyNumbers($event)"
                 (input)="formatWhatsapp($event)"
                 maxlength="11" />
