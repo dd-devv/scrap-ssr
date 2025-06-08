@@ -235,15 +235,79 @@ formatWhatsapp(event: Event): void {
       }
     }, 1000);
   }
+
   forceNumericKeyboard() {
-    setTimeout(() => {
-      const inputs = document.querySelectorAll('p-inputotp input');
-      inputs.forEach(input => {
-        input.setAttribute('inputmode', 'numeric');
-        input.setAttribute('type', 'tel');
-        input.setAttribute('pattern', '[0-9]*');
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('p-inputotp input');
+    inputs.forEach((input: Element, index: number) => {
+      const htmlInput = input as HTMLInputElement;
+      
+      // Configurar atributos para teclado numérico
+      htmlInput.type = 'tel';
+      htmlInput.inputMode = 'numeric';
+      htmlInput.pattern = '[0-9]*';
+      
+      // Manejador de eventos con tipado correcto
+      htmlInput.addEventListener('keydown', (e: KeyboardEvent) => {
+        // Permitir teclas de control (backspace, tab, flechas, etc.)
+        if ([8, 9, 13, 37, 38, 39, 40, 46].includes(e.keyCode)) {
+          // Si es backspace y el campo está vacío, mover al anterior
+          if (e.keyCode === 8 && htmlInput.value === '' && index > 0) {
+            setTimeout(() => {
+              const prevInput = inputs[index - 1] as HTMLInputElement;
+              prevInput.focus();
+            }, 0);
+          }
+          return;
+        }
+        
+        // Permitir números (teclado principal y numpad)
+        if (!((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105))) {
+          e.preventDefault();
+        }
       });
-    }, 0);
+      
+      // Manejar el evento input para validación
+      htmlInput.addEventListener('input', (e: Event) => {
+        const target = e.target as HTMLInputElement;
+        target.value = target.value.replace(/\D/g, '');
+        
+        // Auto-avanzar al siguiente campo si se ingresó un número
+        if (target.value && index < inputs.length - 1) {
+          setTimeout(() => {
+            const nextInput = inputs[index + 1] as HTMLInputElement;
+            nextInput.focus();
+          }, 0);
+        }
+        
+        // Actualizar el valor en el formulario
+        this.updateOtpValue();
+      });
+    });
+  }, 0);
+}
+
+updateOtpValue() {
+  const inputs = document.querySelectorAll('p-inputotp input');
+  let otpValue = '';
+  inputs.forEach(input => {
+    otpValue += (input as HTMLInputElement).value;
+  });
+  this.loginForm.get('code')?.setValue(otpValue);
+}
+
+  handleOtpInput(event: any) {
+    // Asegurar que solo haya números
+    const value = event.value.replace(/\D/g, '');
+    if (event.value !== value) {
+      this.loginForm.get('code')?.setValue(value);
+    }
+    
+    // Manejar navegación entre campos
+    if (value.length === 6) {
+      const inputs = document.querySelectorAll('p-inputotp input');
+      (inputs[5] as HTMLInputElement).blur();
+    }
   }
 
   // Getters para acceso rápido a los controles del formulario

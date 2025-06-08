@@ -44,12 +44,19 @@
               [length]="6" 
               size="small"
               inputmode="numeric" /> -->
-          <p-inputotp id="code" formControlName="code" 
+          <!-- <p-inputotp id="code" formControlName="code" 
             [integerOnly]="true" 
             [length]="6" 
             size="small"
             (onFocus)="forceNumericKeyboard()"
-            class="numeric-otp" />
+            class="numeric-otp" /> -->
+            <p-inputotp id="code" formControlName="code" 
+              [integerOnly]="true" 
+              [length]="6" 
+              size="small"
+              (onFocus)="forceNumericKeyboard()"
+              (onInput)="handleOtpInput($event)"
+              class="numeric-otp" />
           </div>
         </p-floatlabel>
 
