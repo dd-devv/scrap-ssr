@@ -249,9 +249,10 @@ export default class ProductComponent implements OnInit {
 
   // Método para encontrar el primer elemento de un arreglo
   findFirst(arr: any[]): any {
-    console.log("arr findFirst",arr[0][0])
-    return arr.length > 0 ? arr[0][0] : null;
+    console.log("arr findFirst",arr[0])
+    return arr.length > 0 ? arr[0] : null;
   }
+
   findLast(arr: any[]): any {
     return arr.length > 0 ? arr[0][arr[0].length-1] : null;
   }
