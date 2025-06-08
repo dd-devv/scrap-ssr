@@ -38,7 +38,12 @@
         @if (codeSended()) {
         <p-floatlabel variant="on" class="mt-6">
           <div class="card flex justify-center">
-            <p-inputotp id="code" formControlName="code" [integerOnly]="true" [length]="6" size="small" />
+            <!-- <p-inputotp id="code" formControlName="code" [integerOnly]="true" [length]="6" size="small" /> -->
+            <p-inputotp id="code" formControlName="code" 
+              [integerOnly]="true" 
+              [length]="6" 
+              size="small"
+              inputmode="numeric" />
           </div>
         </p-floatlabel>
 
