@@ -12,6 +12,8 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 
 @Component({
   selector: 'app-register',
@@ -24,7 +26,9 @@ import { MessageService } from 'primeng/api';
     PasswordModule,
     ButtonModule,
     RouterLink,
-    Toast
+    Toast,
+    InputGroupModule,
+    InputGroupAddonModule
   ],
   providers: [MessageService],
   templateUrl: './register.component.html',

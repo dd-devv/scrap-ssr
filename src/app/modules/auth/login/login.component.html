@@ -1,6 +1,6 @@
 <!-- login.component.html -->
 <div class="flex flex-col justify-center items-center h-screen md:h-96 w-full p-4">
-  <div class="w-full sm:w-4/5 md:w-2/3 lg:w-80">
+  <div class="w-full sm:w-4/5 md:w-2/3 lg:w-[470px]">
     <p-card class="shadow-md my-8">
       <h3 class="heading-3 font-bold text-center mb-4">
         Iniciar sesión
@@ -12,28 +12,45 @@
           <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label>
         </p-floatlabel> -->
 
-        <p-floatlabel variant="on">
-          <!-- <input pInputText id="whatsapp" formControlName="whatsapp" autocomplete="off" fluid="true"
-                (keypress)="onlyNumbers($event)"
+            <!-- <input pInputText id="whatsapp" formControlName="whatsapp" autocomplete="off" fluid="true"
+            (keypress)="onlyNumbers($event)"
                 (input)="formatWhatsapp($event)"
                 maxlength="11" />
-          <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label> -->
+                <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label> -->
+          <!-- <p-floatlabel variant="on">
+            <input pInputText id="whatsapp" formControlName="whatsapp" autocomplete="off" fluid="true"
+            type="tel"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            (keypress)="onlyNumbers($event)"
+            (input)="formatWhatsapp($event)"
+            maxlength="11" />
+            <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label>
+          </p-floatlabel> -->
 
-          <input pInputText id="whatsapp" formControlName="whatsapp" autocomplete="off" fluid="true"
-                type="tel"
-                inputmode="numeric"
-                pattern="[0-9]*"
-                (keypress)="onlyNumbers($event)"
-                (input)="formatWhatsapp($event)"
-                maxlength="11" />
-          <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label>
-        </p-floatlabel>
 
+          <p-inputgroup>
+              <p-inputgroup-addon>
+                  <span>+51 </span>
+              </p-inputgroup-addon>
+              <p-floatlabel>
+                  <input pInputText id="whatsapp"  formControlName="whatsapp" autocomplete="off" fluid="true"
+            type="tel"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            (keypress)="onlyNumbers($event)"
+            (input)="formatWhatsapp($event)"
+            maxlength="11" />
+                  <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i>WhatsApp</label>
+              </p-floatlabel>
+          </p-inputgroup>
+          
         @if (isFieldInvalid('whatsapp')) {
-        <small class="text-red-500">
-          {{ getErrorMessage('whatsapp') }}
-        </small>
-        }
+                <small class="text-red-500">
+                  {{ getErrorMessage('whatsapp') }}
+                </small>
+                }
+        
 
         @if (codeSended()) {
         <p-floatlabel variant="on" class="mt-6">
@@ -68,7 +85,7 @@
           }
         </div>
         }
-
+        <!-- boton de iniciar sesion -->
         <div class="flex justify-center mt-6">
           @if (codeSended()) {
           <p-button type="submit" label="Iniciar sesión" [loading]="isLoading"

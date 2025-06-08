@@ -12,6 +12,9 @@ import { MessageService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputOtpModule } from 'primeng/inputotp';
 
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+
 @Component({
   selector: 'app-login',
   imports: [
@@ -24,7 +27,9 @@ import { InputOtpModule } from 'primeng/inputotp';
     RouterLink,
     Toast,
     InputTextModule,
-    InputOtpModule
+    InputOtpModule,
+    InputGroupModule,
+    InputGroupAddonModule
   ],
   providers: [MessageService],
   styleUrl: './login.component.css',

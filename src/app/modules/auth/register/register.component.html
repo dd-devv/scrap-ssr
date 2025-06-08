@@ -38,13 +38,13 @@
           <input pInputText id="whatsapp" formControlName="whatsapp" autocomplete="off" fluid="true" />
           <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label>
         </p-floatlabel> -->
-        <p-floatlabel variant="on">
-          <!-- <input pInputText id="whatsapp" formControlName="whatsapp" autocomplete="off" fluid="true"
-                (keypress)="onlyNumbers($event)"
-                (input)="formatWhatsapp($event)"
-                maxlength="11" />
-          <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label> -->
-
+        <!-- <input pInputText id="whatsapp" formControlName="whatsapp" autocomplete="off" fluid="true"
+        (keypress)="onlyNumbers($event)"
+        (input)="formatWhatsapp($event)"
+        maxlength="11" />
+        <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label> -->
+        
+        <!-- <p-floatlabel variant="on">
           <input pInputText id="whatsapp" formControlName="whatsapp" autocomplete="off" fluid="true"
                 type="tel"
                 inputmode="numeric"
@@ -53,7 +53,22 @@
                 (input)="formatWhatsapp($event)"
                 maxlength="11" />
           <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label>
-        </p-floatlabel>
+        </p-floatlabel> -->
+        <p-inputgroup>
+              <p-inputgroup-addon>
+                  <span>+51 </span>
+              </p-inputgroup-addon>
+              <p-floatlabel>
+                  <input pInputText id="whatsapp"  formControlName="whatsapp" autocomplete="off" fluid="true"
+            type="tel"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            (keypress)="onlyNumbers($event)"
+            (input)="formatWhatsapp($event)"
+            maxlength="11" />
+                  <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i>WhatsApp</label>
+              </p-floatlabel>
+          </p-inputgroup>
 
         @if (isFieldInvalid('whatsapp')) {
         <small class="text-red-500">
