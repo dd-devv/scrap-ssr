@@ -2,10 +2,12 @@
 <div class="flex flex-col justify-center items-center h-screen md:h-96 w-full p-4">
   <div class="w-full sm:w-4/5 md:w-2/3 lg:w-5/12">
     <p-card class="shadow-md my-8">
-      <h3 class="heading-3 font-bold text-center mb-4">
+      <h3 class="heading-3 font-bold text-center mb-2">
         Iniciar sesión
       </h3>
-
+      <p class="text-balance text-center mb-6">
+        Accede fácilmente con tu número de WhatsApp.
+      </p>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <!-- <p-floatlabel variant="on">
           <input pInputText id="whatsapp" formControlName="whatsapp" autocomplete="off" fluid="true" />
@@ -31,7 +33,7 @@
 
           <p-inputgroup>
               <p-inputgroup-addon>
-                  <span class="whitespace-nowrap me-2"><i class="pi pi-whatsapp mx-2"></i>+51 </span>
+                  +51
               </p-inputgroup-addon>
               <p-floatlabel>
                   <input pInputText id="whatsapp"  formControlName="whatsapp" autocomplete="off" fluid="true"
@@ -41,6 +43,7 @@
             (keypress)="onlyNumbers($event)"
             (input)="formatWhatsapp($event)"
             maxlength="11" />
+            <label for="whatsapp"><i class="pi pi-whatsapp me-1"></i> WhatsApp</label>
               </p-floatlabel>
           </p-inputgroup>
 
