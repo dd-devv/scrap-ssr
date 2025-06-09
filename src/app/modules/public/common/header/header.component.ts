@@ -27,6 +27,7 @@ import { HideHeaderDirective } from '../../../../directives/hide-header.directiv
     RouterLinkActive
   ],
   templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {

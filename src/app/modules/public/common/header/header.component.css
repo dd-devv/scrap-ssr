@@ -1,0 +1,9 @@
+ul li {
+  margin-left: 0 !important; /* Fuerza a eliminar cualquier margen izquierdo */
+}
+@media screen and (min-width: 768px) {
+  ul li {
+    margin-left: 10px !important; /* Asegura que en pantallas pequeñas no haya margen izquierdo */
+  }
+  
+}
