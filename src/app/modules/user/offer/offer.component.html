@@ -82,8 +82,27 @@ productService.priceHistory().priceHistory.prices);
       </div>
       <a href="{{ productService.priceHistory().productInfo.url }}" target="_blank">
         <div class="mt-5 flex justify-center">
-          <p-button severity="contrast" label="Comprar en tienda" icon="pi pi-cart-plus" class="w-full"
-            styleClass="w-full" />
+          <!-- <p-button severity="contrast" label="Comprar en tienda" icon="pi pi-cart-plus" class="w-full"
+            styleClass="w-full" /> -->
+          @if (estadoDelPrecio === 'verde') {
+            <!-- Botón animado para precio mínimo -->
+            <p-button
+              severity="success"
+              label="¡COMPRAR AHORA! - PRECIO MÍNIMO"
+              icon="pi pi-bolt"
+              class="w-full animate-pulse hover:animate-none"
+              styleClass="w-full font-bold shadow-lg shadow-green-500/50 hover:bg-green-500 "
+            />
+          } @else {
+            <!-- Botón normal para otros casos -->
+            <p-button
+              severity="contrast"
+              label="Comprar en tienda"
+              icon="pi pi-cart-plus"
+              class="w-full"
+              styleClass="w-full"
+            />
+          }
         </div>
       </a>
 
@@ -116,21 +135,21 @@ productService.priceHistory().priceHistory.prices);
         @if (estadoDelPrecio === 'verde') {
         <div class="flex flex-row">
           <div class="flex flex-col p-4 bg-green-600 bg-opacity-10 rounded-lg border border-green-600">
-            <h3 class="text-lg mb-1">¡Precio mínimo histórico!</h3>
+            <h3 class="text-xl mb-1">¡Precio mínimo histórico!</h3>
             <p>Es ahora o nunca. Aprovecha esta oferta antes de que se acabe.</p>
           </div>
         </div>
         } @else if (estadoDelPrecio === 'amarillo') {
         <div class="flex flex-row">
           <div class="flex flex-col p-4 bg-yellow-600 bg-opacity-10 rounded-lg border border-yellow-600">
-            <h3 class="text-lg mb-1">Precio habitual</h3>
+            <h3 class="text-xl mb-1">Precio habitual</h3>
             <p>No está mal, pero podría bajar más. Si no tienes apuro, vale la pena esperar.</p>
           </div>
         </div>
         } @else {
         <div class="flex flex-row">
           <div class="flex flex-col p-4 bg-red-600 bg-opacity-10 rounded-lg border border-red-600">
-            <h3 class="text-lg mb-1">Aún no es el momento ideal</h3>
+            <h3 class="text-xl mb-1">Aún no es el momento ideal</h3>
             <p>Espera un poco más, nosotros te avisaremos cuando baje de verdad.</p>
           </div>
         </div>
