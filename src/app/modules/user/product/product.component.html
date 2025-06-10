@@ -66,7 +66,7 @@
         </div>
 
       </div>
-      <p class="text-sm mb-2">Actualizado hace {{ findLast(productService.priceHistory().priceHistory.dates) | timeAgo }}</p>
+      <p class="text-sm mb-2">Actualizado {{ findLast(productService.priceHistory().priceHistory.dates) | timeAgo }}</p>
       <div class="info-content">
           <h3 class="text-lg font-bold flex flex-row items-center gap-2">
             <div class="my-2" title="{{productService.priceHistory().productInfo.url | extractDomain | titlecase}}">
