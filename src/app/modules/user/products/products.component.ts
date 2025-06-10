@@ -23,6 +23,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { PaginationComponent } from '../../shared/pagination/pagination.component';
 import { PaginatePipe } from '../../../pipes/paginate.pipe';
 import { Product } from '../interfaces';
+import { CarouselModule } from 'primeng/carousel'; // Agrega esto
 
 @Component({
   selector: 'app-products',
@@ -48,7 +49,8 @@ import { Product } from '../interfaces';
     ExtractDomainPipe,
     DropdownModule,
     PaginationComponent,
-    PaginatePipe
+    PaginatePipe,
+    CarouselModule
   ],
   providers: [MessageService, ConfirmationService, ExtractDomainPipe],
   templateUrl: './products.component.html',
@@ -90,9 +92,114 @@ export default class ProductsComponent implements OnInit {
   currentPage = 1;
   pageSize = 8;
 
+  supportedStores = [
+    {
+      name: 'Falabella',
+      logo: 'assets/svg/falabella.svg',
+      url: 'https://www.falabella.com.pe/falabella-pe',
+      domain: 'falabella'
+    },
+    {
+      name: 'Mercado Libre',
+      logo: 'assets/svg/mercadolibre.svg',
+      url: 'https://www.mercadolibre.com.pe/',
+      domain: 'mercadolibre'
+    },
+    {
+      name: 'Oechsle',
+      logo: 'assets/svg/oechsle.svg',
+      url: 'https://www.oechsle.pe/',
+      domain: 'oechsle'
+    },
+    {
+      name: 'Plaza Vea',
+      logo: 'assets/svg/plazavea.svg',
+      url: 'https://www.plazavea.com.pe/',
+      domain: 'plazavea'
+    },
+    {
+      name: 'Platanitos',
+      logo: 'assets/svg/platanitos.svg',
+      url: 'https://platanitos.com/pe',
+      domain: 'platanitos'
+    },
+    {
+      name: 'Promart',
+      logo: 'assets/svg/promart.svg',
+      url: 'https://www.promart.pe/',
+      domain: 'promart'
+    },
+    {
+      name: 'Sodimac',
+      logo: 'assets/svg/sodimac.svg',
+      url: 'http://sodimac.falabella.com.pe/sodimac-pe',
+      domain: 'sodimac'
+    },
+    {
+      name: 'Tottus',
+      logo: 'assets/svg/tottus.svg',
+      url: 'https://tottus.falabella.com.pe/tottus-pe',
+      domain: 'tottus'
+    },
+    {
+      name: 'Linio',
+      logo: 'assets/svg/linio.svg',
+      url: 'https://linio.falabella.com.pe/linio-pe',
+      domain: 'linio'
+    },
+    {
+      name: 'Inkafarma',
+      logo: 'assets/svg/inkafarma.svg',
+      url: 'https://inkafarma.pe/',
+      domain: 'inkafarma'
+    },
+    {
+      name: 'MiFarma',
+      logo: 'assets/svg/mifarma.svg',
+      url: 'https://www.mifarma.com.pe/',
+      domain: 'mifarma'
+    },
+    {
+      name: 'Vivanda',
+      logo: 'assets/svg/vivanda.svg',
+      url: 'https://www.vivanda.com.pe/',
+      domain: 'vivanda'
+    },
+    {
+      name: 'Shopstar',
+      logo: 'assets/svg/shopstar.svg',
+      url: 'https://www.shopstar.pe/',
+      domain: 'shopstar'
+    }
+  ];
+
+  // Opciones responsivas para el carousel
+  responsiveOptions = [
+    {
+      breakpoint: '1199px',
+      numVisible: 6,
+      numScroll: 1
+    },
+    {
+      breakpoint: '991px',
+      numVisible: 4,
+      numScroll: 1
+    },
+    {
+      breakpoint: '767px',
+      numVisible: 3,
+      numScroll: 1
+    }
+  ];
+
   ngOnInit(): void {
     if (typeof window !== 'undefined') {
       this.loadProducts();
+    }
+  }
+  openStore(url: string) {
+    if (typeof window !== 'undefined') {
+      window.open(url, '_blank');
     }
   }
 
@@ -153,7 +260,6 @@ export default class ProductsComponent implements OnInit {
       'tottus',
       'linio',
       'falabella',
-      'ripley',
       'platanitos',
       'oechsle',
       'mercadolibre',
