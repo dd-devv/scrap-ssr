@@ -5,8 +5,7 @@ import { AccordionModule } from 'primeng/accordion';
 @Component({
   selector: 'app-faqs',
   imports: [
-    AccordionModule,
-    RouterLink
+    AccordionModule
   ],
   templateUrl: './faqs.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

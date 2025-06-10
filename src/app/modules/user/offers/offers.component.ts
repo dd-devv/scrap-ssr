@@ -95,6 +95,7 @@ export default class OffersComponent {
   }
 
   applyFilter() {
+    this.currentPage = 1;
     if (!this.selectedStore) {
       this.filteredProducts.set(this.products());
       return;

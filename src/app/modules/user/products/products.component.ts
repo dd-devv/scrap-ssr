@@ -120,6 +120,7 @@ export default class ProductsComponent implements OnInit {
   }
 
   applyFilter() {
+    this.currentPage = 1;
     if (!this.selectedStore) {
       this.filteredProducts.set(this.products());
       return;
