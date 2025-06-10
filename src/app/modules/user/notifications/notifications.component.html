@@ -1,5 +1,5 @@
 <!-- Skeleton loader -->
-@if (notificationService.isLoading()) {
+@if (isLoading()) {
 <div class="my-4">
   @for (item of [1,2,3,4]; track $index) {
   <div class="flex items-start p-4 rounded-lg shadow-sm mb-4 border border-gray-300">
@@ -27,14 +27,14 @@
 </div>
 }
 
-@if (!notificationService.isLoading()) {
+@if (!isLoading()) {
 
-@if (notificationService.notificationsUser().length < 1) { <div class="my-4">
+@if (notifications().length < 1) { <div class="my-4">
   Sin notificaciones
   </div>
   } @else {
 
-  @for (notification of notificationService.notificationsUser(); track notification._id) {
+  @for (notification of notifications() | paginate:currentPage:pageSize; track notification._id) {
   <!-- Notificación no leída -->
   <div class="flex items-start p-4 my-6 rounded-lg shadow-sm mb-4 hover:shadow-lg cursor-pointer"
     [ngClass]="{'border-l-4 !border border-primary': notification.status == 1}"
@@ -65,4 +65,7 @@
   }
   }
 
+  @if (totalPages > 1) {
+  <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)" />
+  }
   }

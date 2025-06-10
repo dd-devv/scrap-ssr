@@ -33,14 +33,8 @@
   </div>
   <!-- Filtro por tienda -->
   <div class="mb-4 mt-3">
-    <p-dropdown
-      [options]="availableStores"
-      [(ngModel)]="selectedStore"
-      (onChange)="applyFilter()"
-      [showClear]="true"
-      placeholder="Filtrar por tienda"
-      appendTo="body"
-      styleClass="w-full md:w-64">
+    <p-dropdown [options]="availableStores" [(ngModel)]="selectedStore" (onChange)="applyFilter()" [showClear]="true"
+      placeholder="Filtrar por tienda" appendTo="body" styleClass="w-full md:w-64">
       <ng-template pTemplate="item" let-store>
         <div class="flex items-center gap-2">
           <img class="h-6" src="../../../../assets/svg/{{store}}.svg" alt="Logo {{store}}">
@@ -114,8 +108,7 @@
           <div class="flex gap-4 mt-1">
             <!-- <p-button label="Detalles" icon="pi pi-eye" severity="secondary" class="w-full" [outlined]="true"
               disabled /> -->
-            <p-button label="Detalles" icon="pi pi-chart-scatter" class="w-full" styleClass="w-full"
-              disabled/>
+            <p-button label="Detalles" icon="pi pi-chart-scatter" class="w-full" styleClass="w-full" disabled />
             <!-- <p-button label="Comprar" icon="pi pi-cart-plus" class="w-full" styleClass="w-full" disabled /> -->
           </div>
         </ng-template>
@@ -126,20 +119,19 @@
   }
 
   <!-- <div class="masonry-grid my-4"> -->
-    <div class=" my-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-  @for (product of filteredProducts; track $index) {
-      <!-- @let arrDate = productService.priceHistory().priceHistory.dates[0];
-      @let arrPrices = productService.priceHistory().priceHistory.prices[0]; -->
+  @if (!componentLoading()) {
+  <div class=" my-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+    @for (product of filteredProducts() | paginate:currentPage:pageSize; track $index) {
+    <!-- @let arrDate = productService.priceHistory().priceHistory.dates[0];
+          @let arrPrices = productService.priceHistory().priceHistory.prices[0]; -->
 
     <div class="masonry-item">
       <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%' }">
         <ng-template #header>
           <div class="bg-white">
-            <img
-            [alt]="product.productTitle"
-            class="h-72 md:h-[362px] xl:h-[302px] w-full m-auto cursor-pointer object-contain"
-            [src]="product.image"
-            [routerLink]="['/producto', product.urlId ]"/>
+            <img [alt]="product.productTitle"
+              class="h-72 md:h-[362px] xl:h-[302px] w-full m-auto cursor-pointer object-contain" [src]="product.image"
+              [routerLink]="['/producto', product.urlId ]" />
           </div>
         </ng-template>
         <ng-template #title>
@@ -151,26 +143,31 @@
         <ng-template #subtitle>
           <div class="flex items-center">
             <img class="h-5" src="../../../../assets/svg/{{product.url|extractDomain}}.svg"
-            alt="Logo {{product.url|extractDomain}}">
+              alt="Logo {{product.url|extractDomain}}">
             <small class="ms-2">Actualización ({{product.lastUpdate | timeAgo}})</small>
           </div>
         </ng-template>
-        <h2 class="text-2xl" >
+        <h2 class="text-2xl">
           {{product.currentPrice | currency: 'S/ '}}
         </h2>
         <h3 class="text-surface-500" [ngClass]="{'text-green-600': product.currentPrice === product.lowestPrice}">
           Precio mínimo: <samp class="">{{product.lowestPrice | currency: 'S/'}}</samp>
         </h3>
         <ng-template #footer>
-            <div class="flex gap-4 mt-1">
-              <p-button label="Detalles" icon="pi pi-chart-scatter" class="w-full" styleClass="w-full"
-                [routerLink]="['/producto', product.urlId ]" />
-            </div>
-          </ng-template>
+          <div class="flex gap-4 mt-1">
+            <p-button label="Detalles" icon="pi pi-chart-scatter" class="w-full" styleClass="w-full"
+              [routerLink]="['/producto', product.urlId ]" />
+          </div>
+        </ng-template>
       </p-card>
     </div>
     }
   </div>
+
+  @if (totalPages > 1) {
+  <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)" />
+  }
+  }
 
   <!-- Dialog de confirmar -->
   <p-confirmdialog #cd>
@@ -272,90 +269,45 @@
     <div class="card flex justify-around my-[-12px]">
       <!-- sodimac -->
       <a href="http://sodimac.falabella.com.pe/sodimac-pe" target="_blank">
-        <p-button
-          [outlined]="true"
-          [severity]="'secondary'"
-          pTooltip="Sodimac"
-          tooltipPosition="bottom"
-        >
-          <img class="h-5"
-            src="../../../../assets/svg/sodimac.svg"
-            alt="Sodimac"
-          />
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Sodimac" tooltipPosition="bottom">
+          <img class="h-5" src="../../../../assets/svg/sodimac.svg" alt="Sodimac" />
         </p-button>
       </a>
 
       <!-- tottus -->
       <a href="https://tottus.falabella.com.pe/tottus-pe" target="_blank">
-        <p-button
-          [outlined]="true"
-          [severity]="'secondary'"
-          pTooltip="Tottus"
-          tooltipPosition="bottom"
-        >
-          <img class="h-5"
-            src="../../../../assets/svg/tottus.svg"
-            alt="Tottus"
-          />
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Tottus" tooltipPosition="bottom">
+          <img class="h-5" src="../../../../assets/svg/tottus.svg" alt="Tottus" />
         </p-button>
       </a>
 
       <!-- Linio -->
       <a href="https://linio.falabella.com.pe/linio-pe" target="_blank">
-        <p-button
-          [outlined]="true"
-          [severity]="'secondary'"
-          pTooltip="Linio"
-          tooltipPosition="bottom"
-        >
-          <img class="h-5"
-            src="../../../../assets/svg/linio.svg"
-            alt="Logo linio"
-          />
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Linio" tooltipPosition="bottom">
+          <img class="h-5" src="../../../../assets/svg/linio.svg" alt="Logo linio" />
         </p-button>
       </a>
 
       <!-- Inkafarma -->
       <a href="https://inkafarma.pe/" target="_blank">
-        <p-button
-          [outlined]="true"
-          [severity]="'secondary'"
-          pTooltip="Inkafarma"
-          tooltipPosition="bottom"
-        >
-          <img class="h-5"
-            src="../../../../assets/svg/inkafarma.svg"
-            alt="Logo Inkafarma"
-          />
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Inkafarma" tooltipPosition="bottom">
+          <img class="h-5" src="../../../../assets/svg/inkafarma.svg" alt="Logo Inkafarma" />
         </p-button>
       </a>
 
 
 
       <!-- MiFarma -->
-      <a href="https://www.mifarma.com.pe/" target="_blank" >
-        <p-button
-          [outlined]="true"
-          [severity]="'secondary'"
-          pTooltip="MiFarma"
-          tooltipPosition="bottom"
-        >
+      <a href="https://www.mifarma.com.pe/" target="_blank">
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="MiFarma" tooltipPosition="bottom">
           <img class="h-5" src="../../../../assets/svg/mifarma.svg" alt="Logo Mifarma" />
         </p-button>
       </a>
 
       <!-- Vivanda -->
-      <a href="https://www.vivanda.com.pe/" target="_blank" >
-        <p-button
-          [outlined]="true"
-          [severity]="'secondary'"
-          pTooltip="Vivanda"
-          tooltipPosition="bottom"
-        >
-          <img class="h-5"
-            src="../../../../assets/svg/vivanda.svg"
-            alt="Logo vivanda"
-          />
+      <a href="https://www.vivanda.com.pe/" target="_blank">
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Vivanda" tooltipPosition="bottom">
+          <img class="h-5" src="../../../../assets/svg/vivanda.svg" alt="Logo vivanda" />
         </p-button>
       </a>
     </div>
@@ -365,7 +317,7 @@
 
 
       <!-- Shopstar -->
-      <a href="https://www.shopstar.pe/" target="_blank" >
+      <a href="https://www.shopstar.pe/" target="_blank">
         <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Shopstart" tooltipPosition="bottom">
           <img class="h-5" src="../../../../assets/svg/shopstar.svg" alt="Logo Shopstar">
         </p-button>
@@ -420,8 +372,8 @@
     </div>
 
     <div class="my-4 flex justify-center">
-      <p-button label="Registrar URL" icon="pi pi-plus" [disabled]="url.length < 5 || disabled()"
-        [loading]="loading()" (onClick)="registrarUrl()" />
+      <p-button label="Registrar URL" icon="pi pi-plus" [disabled]="url.length < 5 || disabled()" [loading]="loading()"
+        (onClick)="registrarUrl()" />
     </div>
   </p-dialog>
 </div>
