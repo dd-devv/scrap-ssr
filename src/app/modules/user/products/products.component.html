@@ -413,8 +413,8 @@
     </div>
     <div class="mt-8">
       <p-floatlabel variant="on">
-        <textarea pTextarea id="over_label" [(ngModel)]="url" (change)="evaluateUrl()" rows="6" [fluid]="true"
-          style="resize: none" class="h-full" [readOnly]="disabled()"></textarea>
+        <textarea pTextarea id="over_label" [(ngModel)]="url" (input)="evaluateUrl()" rows="4" [fluid]="true"
+          style="resize: none" class="h-full"></textarea>
         <label for="on_label"> <i class="pi pi-link"></i> Pega el URL del producto</label>
       </p-floatlabel>
     </div>
@@ -422,10 +422,6 @@
     <div class="my-4 flex justify-center">
       <p-button label="Registrar URL" icon="pi pi-plus" [disabled]="url.length < 5 || disabled()"
         [loading]="loading()" (onClick)="registrarUrl()" />
-    </div>
-
-    <div class="card">
-      <p-message severity="warn" closable>Puede que la imagen de producto no corresponda al del URL.</p-message>
     </div>
   </p-dialog>
 </div>

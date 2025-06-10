@@ -11,14 +11,13 @@ import ProductService from '../services/product.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
-import { CurrencyPipe, DatePipe, NgClass, TitleCasePipe } from '@angular/common';
+import { CurrencyPipe, NgClass, TitleCasePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { TimeAgoPipe } from '../../../pipes/timeAgo.pipe';
 import AuthService from '../../auth/services/auth.service';
 import { SubscriptionService } from '../services/subscription.service';
 import { Skeleton } from 'primeng/skeleton';
-import { Message } from 'primeng/message';
 import { ExtractDomainPipe } from '../../../pipes/extract-domain.pipe';
 import { DropdownModule } from 'primeng/dropdown';
 
@@ -42,7 +41,6 @@ import { DropdownModule } from 'primeng/dropdown';
     ConfirmDialog,
     TimeAgoPipe,
     Skeleton,
-    Message,
     ExtractDomainPipe,
     DropdownModule
   ],
@@ -58,20 +56,20 @@ export default class ProductsComponent implements OnInit {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   extractDomainPipe = inject(ExtractDomainPipe);
-  
+
   visible = signal(false);
   visibleSubscription = signal(false);
   loading = signal(false);
   disabled = signal(false);
   componentLoading = signal(true);
-  
+
   // Filtro por tienda
   selectedStore: string | null = null;
   availableStores: string[] = [];
-  
+
   url: string = '';
   urlId: string = '';
-  
+
   montoSubscription: number = 10;
   tipoSubscription: string = 'Basic';
   loadingSubscription = signal(false);
@@ -119,7 +117,7 @@ export default class ProductsComponent implements OnInit {
     if (!this.selectedStore) {
       return this.productService.productsUser();
     }
-    return this.productService.productsUser().filter(product => 
+    return this.productService.productsUser().filter(product =>
       this.extractDomainPipe.transform(product.url) === this.selectedStore
     );
   }
@@ -234,7 +232,7 @@ export default class ProductsComponent implements OnInit {
     for (let i = 0; i < fechas.length - 1; i++) {
       const fechaInicio = new Date(fechas[i]);
       const fechaFin = new Date(fechas[i + 1]);
-      
+
       const duracion = (fechaFin.getTime() - fechaInicio.getTime()) / 1000;
 
       sumaPesoPrecio += precios[i] * duracion;

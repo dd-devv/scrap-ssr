@@ -73,7 +73,6 @@ export default class ProductComponent implements OnInit {
     this.route.paramMap.pipe(
     tap(params => {
       const id = params.get('id');
-      console.log('ID recibido por ruta:', id); // <-- Aquí
       this.productId.set(id);
     }),
     switchMap(() => {
@@ -81,7 +80,6 @@ export default class ProductComponent implements OnInit {
       return this.productService.getPriceHistory(id);
     }),
     tap(response => {
-      console.log('Respuesta de getPriceHistory:', response); // <-- Aquí
       if (response && response.priceHistory) {
         this.updateChart(response.priceHistory);
 
@@ -249,12 +247,11 @@ export default class ProductComponent implements OnInit {
 
   // Método para encontrar el primer elemento de un arreglo
   findFirst(arr: any[]): any {
-    console.log("arr findFirst",arr[0])
     return arr.length > 0 ? arr[0] : null;
   }
 
   findLast(arr: any[]): any {
-    return arr.length > 0 ? arr[0][arr[0].length-1] : null;
+    return arr.length > 0 ? arr.at(-1) : null;
   }
   calcularMediana(precios: number[]): number {
     const ordenados = [...precios].sort((a, b) => a - b);
