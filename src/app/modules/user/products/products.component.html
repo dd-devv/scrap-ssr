@@ -1,7 +1,47 @@
 <div class="min-h-80 py-8">
-  <div class="flex justify-center">
 
-    <div class="grid gap-6 grid-cols-1">
+  <div class="flex justify-center">
+  <div class="my-4 flex flex-col justify-center gap-1 w-full lg:w-1/2">
+    <div class="flex gap-1 w-full">
+      <div class="w-full">
+        <p-floatlabel variant="on">
+          <input pInputText 
+                 id="over_label" 
+                 [(ngModel)]="url" 
+                 (input)="evaluateUrl()" 
+                 (paste)="onPaste($event)"
+                 (keyup)="evaluateUrl()"
+                 autocomplete="off" 
+                 class="w-full" />
+          <label for="on_label"> Pega el URL del producto...</label>
+        </p-floatlabel>
+      </div>
+          
+      <p-button label="Registrar" 
+                [disabled]="url.length < 5 || disabled()"
+                [loading]="loading()" 
+                (onClick)="registrarUrl()" />
+    </div>
+
+    <!-- Mensaje de error para tienda no soportada -->
+    <div *ngIf="showUnsupportedMessage()" 
+         class="mt-2 p-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md flex items-center gap-2">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>Esta tienda aún no es soportada. Por favor, usa una de las tiendas compatibles.</span>
+    </div>
+    
+    <!-- Mensaje de éxito para tienda soportada -->
+    <div *ngIf="showSupportedMessage()" 
+         class="mt-2 p-2 text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md flex items-center gap-2">
+      <i class="pi pi-check-circle"></i>
+      <span>¡Perfecto! Esta tienda es compatible.</span>
+    </div>
+  </div>
+</div>
+
+
+  <div class="flex justify-center">
+    <!-- <div class="grid gap-6 grid-cols-1">
       <div class="border border-solid border-green-500 rounded-md p-3 shadow cursor-pointer" pRipple
         style="--p-ripple-background: rgba(75, 175, 80, 0.3)" (click)="showDialog()">
         <div class="mb-2 flex justify-center">
@@ -12,7 +52,7 @@
         </p>
 
       </div>
-    </div>
+    </div> -->
     <!-- @if (subscriptionService.statusSubscription() || authService.currentUser()!.urls_scrap < 5) {
   }
 

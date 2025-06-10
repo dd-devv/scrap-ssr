@@ -11,7 +11,7 @@ import ProductService from '../services/product.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
-import { CurrencyPipe, NgClass, TitleCasePipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, NgClass, TitleCasePipe } from '@angular/common'; // Importa CommonModule aquí
 import { RouterLink } from '@angular/router';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { TimeAgoPipe } from '../../../pipes/timeAgo.pipe';
@@ -24,6 +24,7 @@ import { DropdownModule } from 'primeng/dropdown';
 @Component({
   selector: 'app-products',
   imports: [
+    CommonModule, // Agrega CommonModule aquí
     ButtonModule,
     Ripple,
     Dialog,
@@ -70,6 +71,10 @@ export default class ProductsComponent implements OnInit {
   url: string = '';
   urlId: string = '';
 
+    // Nuevas propiedades para la validación de URL
+  private hasUrl = signal(false);
+  private isSupported = signal(false);
+
   montoSubscription: number = 10;
   tipoSubscription: string = 'Basic';
   loadingSubscription = signal(false);
@@ -102,6 +107,7 @@ export default class ProductsComponent implements OnInit {
       complete: () => this.componentLoading.set(false)
     });
   }
+  
 
   // Métodos para el filtro por tienda
   loadStores() {
@@ -144,11 +150,55 @@ export default class ProductsComponent implements OnInit {
       'inkafarma',
     ];
 
+    const urlTrimmed = this.url.trim();
+    this.hasUrl.set(urlTrimmed.length > 0);
+
+    if (urlTrimmed.length === 0) {
+      this.disabled.set(false);
+      this.isSupported.set(false);
+      return;
+    }
+
+    // Verificar si es una URL válida
+    const isValidUrl = this.isValidHttpUrl(urlTrimmed);
+    
+    if (!isValidUrl) {
+      this.disabled.set(true);
+      this.isSupported.set(false);
+      return;
+    }
+
     const isDomainSupported = supportedDomains.some(domain =>
-      this.url.toLowerCase().includes(domain)
+      urlTrimmed.toLowerCase().includes(domain)
     );
 
     this.disabled.set(!isDomainSupported);
+    this.isSupported.set(isDomainSupported);
+  }
+
+  private isValidHttpUrl(string: string): boolean {
+    try {
+      const url = new URL(string);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  }
+
+  // Métodos para mostrar los mensajes
+  showUnsupportedMessage(): boolean {
+    return this.hasUrl() && !this.isSupported() && this.isValidHttpUrl(this.url.trim());
+  }
+
+  showSupportedMessage(): boolean {
+    return this.hasUrl() && this.isSupported();
+  }
+
+  // Método para manejar el evento paste
+  onPaste(event: ClipboardEvent) {
+    setTimeout(() => {
+      this.evaluateUrl();
+    }, 10);
   }
 
   registrarUrl() {
@@ -157,13 +207,25 @@ export default class ProductsComponent implements OnInit {
       next: (res) => {
         this.loading.set(false);
         this.url = '';
-        this.closeDialog();
+        this.hasUrl.set(false);
+        this.isSupported.set(false);
+        this.disabled.set(false);
         this.loadProducts();
-        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registrado correctamente', life: 3000 });
+        this.messageService.add({ 
+          severity: 'success', 
+          summary: 'Éxito', 
+          detail: 'Registrado correctamente', 
+          life: 3000 
+        });
       },
       error: (err) => {
         this.loading.set(false);
-        this.messageService.add({ severity: 'error', summary: 'Error!', detail: 'Error al registrar', life: 3000 });
+        this.messageService.add({ 
+          severity: 'error', 
+          summary: 'Error!', 
+          detail: 'Error al registrar', 
+          life: 3000 
+        });
       }
     });
   }
