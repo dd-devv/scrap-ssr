@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { Ripple } from 'primeng/ripple';
 import { Dialog } from 'primeng/dialog';
@@ -11,7 +11,7 @@ import ProductService from '../services/product.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
-import { CommonModule, CurrencyPipe, NgClass, TitleCasePipe } from '@angular/common'; // Importa CommonModule aquí
+import { CommonModule, isPlatformBrowser, CurrencyPipe, NgClass, TitleCasePipe } from '@angular/common'; // Importa CommonModule aquí
 import { RouterLink } from '@angular/router';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { TimeAgoPipe } from '../../../pipes/timeAgo.pipe';
@@ -20,6 +20,9 @@ import { SubscriptionService } from '../services/subscription.service';
 import { Skeleton } from 'primeng/skeleton';
 import { ExtractDomainPipe } from '../../../pipes/extract-domain.pipe';
 import { DropdownModule } from 'primeng/dropdown';
+import { PaginationComponent } from '../../shared/pagination/pagination.component';
+import { PaginatePipe } from '../../../pipes/paginate.pipe';
+import { Product } from '../interfaces';
 
 @Component({
   selector: 'app-products',
@@ -43,7 +46,9 @@ import { DropdownModule } from 'primeng/dropdown';
     TimeAgoPipe,
     Skeleton,
     ExtractDomainPipe,
-    DropdownModule
+    DropdownModule,
+    PaginationComponent,
+    PaginatePipe
   ],
   providers: [MessageService, ConfirmationService, ExtractDomainPipe],
   templateUrl: './products.component.html',
@@ -57,12 +62,15 @@ export default class ProductsComponent implements OnInit {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   extractDomainPipe = inject(ExtractDomainPipe);
+  private platformId = inject(PLATFORM_ID);
 
   visible = signal(false);
   visibleSubscription = signal(false);
   loading = signal(false);
   disabled = signal(false);
-  componentLoading = signal(true);
+  componentLoading = this.productService.isLoading;
+  products = this.productService.productsUser;
+  filteredProducts = signal<Product[]>([]);
 
   // Filtro por tienda
   selectedStore: string | null = null;
@@ -79,32 +87,30 @@ export default class ProductsComponent implements OnInit {
   tipoSubscription: string = 'Basic';
   loadingSubscription = signal(false);
 
+  currentPage = 1;
+  pageSize = 8;
+
   ngOnInit(): void {
     if (typeof window !== 'undefined') {
       this.loadProducts();
-    } else {
-      this.componentLoading.set(false);
     }
   }
 
   loadProducts() {
-    this.componentLoading.set(true);
     this.productService.getLatestResults().subscribe({
       next: () => {
-        this.componentLoading.set(false);
         this.loadStores();
+        this.filteredProducts.set(this.products());
       },
       error: (err) => {
         console.error('Error loading products:', err);
-        this.componentLoading.set(false);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: 'No se pudieron cargar los productos',
           life: 3000
         });
-      },
-      complete: () => this.componentLoading.set(false)
+      }
     });
   }
   
@@ -112,24 +118,33 @@ export default class ProductsComponent implements OnInit {
   // Métodos para el filtro por tienda
   loadStores() {
     const stores = new Set<string>();
-    this.productService.productsUser().forEach(product => {
+    this.products().forEach(product => {
       const domain = this.extractDomainPipe.transform(product.url);
       if (domain) stores.add(domain);
     });
     this.availableStores = Array.from(stores).sort();
   }
 
-  get filteredProducts() {
+  applyFilter() {
+    this.currentPage = 1;
     if (!this.selectedStore) {
-      return this.productService.productsUser();
+      this.filteredProducts.set(this.products());
+      return;
     }
-    return this.productService.productsUser().filter(product =>
+    this.filteredProducts.set(this.products().filter(product =>
       this.extractDomainPipe.transform(product.url) === this.selectedStore
-    );
+    ));
   }
 
-  applyFilter() {
-    // El getter filteredProducts se actualiza automáticamente
+  get totalPages(): number {
+    return Math.ceil(this.filteredProducts().length / this.pageSize);
+  }
+
+  onPageChange(page: number): void {
+    if (isPlatformBrowser(this.platformId)) {
+      window.scrollTo({ top: 10, behavior: 'smooth' });
+    }
+    this.currentPage = page;
   }
 
   evaluateUrl() {
@@ -260,7 +275,7 @@ export default class ProductsComponent implements OnInit {
         }
         this.deleteUrl();
       },
-      reject: () => {},
+      reject: () => { },
     });
   }
 

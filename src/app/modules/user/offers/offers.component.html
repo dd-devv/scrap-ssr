@@ -1,7 +1,7 @@
 <div class="min-h-80 py-2">
   <!-- Filtro por tienda -->
   <div class="mb-4">
-    <p-dropdown [options]="availableStores" [(ngModel)]="selectedStore" [showClear]="true"
+    <p-dropdown [options]="availableStores" [(ngModel)]="selectedStore" (onChange)="applyFilter()" [showClear]="true"
       placeholder="Filtrar por tienda" appendTo="body" styleClass="w-full md:w-64">
       <ng-template pTemplate="item" let-store>
         <div class="flex items-center gap-2">
@@ -56,7 +56,7 @@
 
   @else if (!isLoading()) {
   <div class="my-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-    @for (product of filteredProducts; track $index) {
+    @for (product of filteredProducts() | paginate:currentPage:pageSize; track $index) {
     <div>
       <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%' }">
         <ng-template #header>
@@ -136,7 +136,11 @@
     </div>
     }
   </div>
-}
+
+  @if (totalPages > 1) {
+  <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)" />
+  }
+  }
 </div>
 
 <p-toast [breakpoints]="{ '780px': { width: '80%', right: '8' } }" />

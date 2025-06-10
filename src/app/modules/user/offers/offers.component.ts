@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, PLATFORM_ID, signal } from '@angular/core';
 import ProductService from '../services/product.service';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { CurrencyPipe, NgClass, TitleCasePipe } from '@angular/common';
+import { CurrencyPipe, isPlatformBrowser, NgClass, TitleCasePipe } from '@angular/common';
 import { BadgeModule } from 'primeng/badge';
 import { TimeAgoPipe } from '../../../pipes/timeAgo.pipe';
 import { Skeleton } from 'primeng/skeleton';
@@ -15,6 +15,9 @@ import AuthService from '../../auth/services/auth.service';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { catchError, map, Observable, of } from 'rxjs';
+import { PaginationComponent } from '../../shared/pagination/pagination.component';
+import { PaginatePipe } from '../../../pipes/paginate.pipe';
+import { Product, ProductPublic } from '../interfaces';
 
 @Component({
   selector: 'app-offers',
@@ -32,7 +35,9 @@ import { catchError, map, Observable, of } from 'rxjs';
     DropdownModule,
     FormsModule,
     Tooltip,
-    Toast
+    Toast,
+    PaginationComponent,
+    PaginatePipe
   ],
   providers: [ExtractDomainPipe, MessageService],
   templateUrl: './offers.component.html',
@@ -44,14 +49,19 @@ export default class OffersComponent {
   extractDomainPipe = inject(ExtractDomainPipe);
   private messageService = inject(MessageService);
   authService = inject(AuthService);
+  private platformId = inject(PLATFORM_ID);
   selectedStore: string | null = null;
   availableStores: string[] = [];
 
+  componentLoading = this.productService.isLoading;
   products = this.productService.productsPublic;
+  filteredProducts = signal<ProductPublic[]>([]);
   isLoading = this.productService.isLoading;
 
   estadosOfertas = signal<{ [key: string]: boolean }>({});
 
+  currentPage = 1;
+  pageSize = 8;
 
   loadStores() {
     const stores = new Set<string>();
@@ -75,6 +85,8 @@ export default class OffersComponent {
           this.cargarEstadoJobs(prod.urlId);
         });
 
+        this.filteredProducts.set(this.products());
+
       },
       error: (err) => {
         console.error('Error al cargar ofertas:', err);
@@ -82,13 +94,26 @@ export default class OffersComponent {
     });
   }
 
-  get filteredProducts() {
+  applyFilter() {
+    this.currentPage = 1;
     if (!this.selectedStore) {
-      return this.products();
+      this.filteredProducts.set(this.products());
+      return;
     }
-    return this.products().filter(product =>
+    this.filteredProducts.set(this.products().filter(product =>
       this.extractDomainPipe.transform(product.url) === this.selectedStore
-    );
+    ));
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredProducts().length / this.pageSize);
+  }
+
+  onPageChange(page: number): void {
+    if (isPlatformBrowser(this.platformId)) {
+      window.scrollTo({ top: 10, behavior: 'smooth' });
+    }
+    this.currentPage = page;
   }
 
   redirect(url: string) {
