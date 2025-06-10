@@ -1,20 +1,37 @@
-<div class="flex flex-col justify-center items-center h-screen md:h-96 w-full p-4">
+<div class="flex flex-col justify-center items-center h-full md:h-96 w-full p-4">
   <div class="w-full sm:w-4/5 md:w-2/3 lg:w-5/12">
     <p-card class="shadow-md my-8">
       <h4 class="heading-3 font-bold text-center mb-4">
         Verificar número
       </h4>
 
-      <p class="text-center text-sm mb-4 text-gray-400">Ingresa el código de 6 dígitos que le enviamos a su WhatsApp</p>
+      <p class="text-center text-sm mb-1 text-gray-400">Ingresa el código de 6 dígitos que le enviamos a su WhatsApp</p>
 
-      <div class="card flex justify-center">
-        <p-inputotp [(ngModel)]="value" [integerOnly]="true" [length]="6" />
+      <!-- Reemplazo del p-inputotp por la implementación personalizada -->
+      <div class="otp-container">
+        <div class="otp-inputs">
+          <input *ngFor="let box of otpBoxes; let i = index" 
+                [(ngModel)]="otpValues[i]"
+                (input)="handleInput($event, i)"
+                (keydown)="handleKeyDown($event, i)"
+                (paste)="handlePaste($event)"
+                type="tel"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                maxlength="1"
+                class="otp-box"
+                [class.invalid]="isInvalid">
+        </div>
+
+        <div *ngIf="isInvalid" class="error-message">
+          Solo se permiten números del 0-9
+        </div>
       </div>
 
       <div class="mt-6 mb-3 flex justify-center">
         <p-button label="Verificar" icon="pi pi-check"
         iconPos="right" (onClick)="verifyCode()"
-          [disabled]="value.length < 6 || verifyng" [loading]="verifyng" />
+          [disabled]="!isOtpComplete() || verifyng" [loading]="verifyng" />
       </div>
 
     </p-card>

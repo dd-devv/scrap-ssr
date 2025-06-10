@@ -11,12 +11,13 @@ import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputOtpModule } from 'primeng/inputotp';
-
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -29,7 +30,8 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
     InputTextModule,
     InputOtpModule,
     InputGroupModule,
-    InputGroupAddonModule
+    InputGroupAddonModule,
+    FormsModule
   ],
   providers: [MessageService],
   styleUrl: './login.component.css',
@@ -51,6 +53,13 @@ export default class LoginComponent implements OnInit, OnDestroy {
   countdown = signal(0);
   canResendCode = signal(true);
   private countdownInterval: any = 30;
+
+  // Variables para el OTP Input
+  otpLength = 6;
+  otpBoxes = Array(this.otpLength).fill(0);
+  otpValues: string[] = Array(this.otpLength).fill('');
+  isInvalid = false;
+  lastBackspace = false;
 
   ngOnInit(): void {
     this.initForm();
@@ -75,6 +84,100 @@ export default class LoginComponent implements OnInit, OnDestroy {
         Validators.minLength(6)
       ]]
     });
+  }
+
+  // Métodos para el OTP Input
+handleInput(event: any, index: number): void {
+  const input = event.target;
+  let value = input.value;
+  
+  // Validar que sea número
+  if (!/^\d*$/.test(value)) {
+    this.isInvalid = true;
+    input.value = '';
+    this.otpValues[index] = '';
+    setTimeout(() => this.isInvalid = false, 1000);
+    return;
+  }
+  
+  // Limitar a un solo dígito
+  if (value.length > 1) {
+    value = value.slice(0, 1);
+    input.value = value;
+  }
+  
+  this.otpValues[index] = value;
+  this.updateOtpFormValue();
+  
+  // Si se ingresó un número y no es el último campo, mover al siguiente
+  if (value && index < this.otpLength - 1) {
+    const nextInput = document.querySelectorAll('.otp-box')[index + 1] as HTMLInputElement;
+    nextInput.focus();
+  }
+  
+  // Si el campo actual está vacío y no es el primero, mover al anterior
+  if (!value && index > 0) {
+    const prevInput = document.querySelectorAll('.otp-box')[index - 1] as HTMLInputElement;
+    prevInput.focus();
+  }
+}
+
+  handleKeyDown(event: KeyboardEvent, index: number): void {
+  const input = event.target as HTMLInputElement;
+  
+  // Manejar backspace
+  if (event.key === 'Backspace') {
+    // Si el campo está vacío, retroceder al anterior y borrar su valor
+    if (!input.value && index > 0) {
+      event.preventDefault();
+      const prevInput = document.querySelectorAll('.otp-box')[index - 1] as HTMLInputElement;
+      prevInput.value = '';
+      this.otpValues[index - 1] = '';
+      this.updateOtpFormValue();
+      prevInput.focus();
+    }
+    
+    // Limpiar el valor actual si hay algo
+    if (input.value) {
+      input.value = '';
+      this.otpValues[index] = '';
+      this.updateOtpFormValue();
+    }
+    return;
+  }
+  
+  // Permitir solo números, teclas de control y navegación
+  if (!/^\d$/.test(event.key) && 
+      !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(event.key)) {
+    event.preventDefault();
+    this.isInvalid = true;
+    setTimeout(() => this.isInvalid = false, 1000);
+  }
+}
+
+  handlePaste(event: ClipboardEvent): void {
+    event.preventDefault();
+    const pasteData = event.clipboardData?.getData('text/plain').replace(/\D/g, '');
+    
+    if (pasteData && pasteData.length === this.otpLength) {
+      for (let i = 0; i < this.otpLength; i++) {
+        this.otpValues[i] = pasteData[i];
+        const input = document.querySelectorAll('.otp-box')[i] as HTMLInputElement;
+        input.value = pasteData[i];
+      }
+      
+      this.updateOtpFormValue();
+      
+      // Enfocar el último campo
+      const lastInput = document.querySelectorAll('.otp-box')[this.otpLength - 1] as HTMLInputElement;
+      lastInput.focus();
+    }
+  }
+
+  
+
+  updateOtpFormValue(): void {
+    this.loginForm.get('code')?.setValue(this.otpValues.join(''));
   }
 
   // Nuevo método para manejar query params
@@ -135,13 +238,31 @@ export default class LoginComponent implements OnInit, OnDestroy {
   }
 
   onlyNumbers(event: KeyboardEvent): boolean {
-    const charCode = (event.which) ? event.which : event.keyCode;
-    // Solo permitir teclas numéricas (0-9) y algunas teclas de control
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      event.preventDefault();
-      return false;
+    const allowedKeys = [
+      8,  // backspace
+      9,  // tab
+      13, // enter
+      37, // left arrow
+      38, // up arrow
+      39, // right arrow
+      40, // down arrow
+      46  // delete
+    ];
+
+    const charCode = event.which || event.keyCode;
+    
+    // Permitir teclas de control
+    if (allowedKeys.includes(charCode)) {
+      return true;
     }
-    return true;
+
+    // Permitir solo números (teclado principal y numpad)
+    if ((charCode >= 48 && charCode <= 57) || (charCode >= 96 && charCode <= 105)) {
+      return true;
+    }
+
+    event.preventDefault();
+    return false;
   }
 
   // Método para formatear y limitar el número
@@ -274,6 +395,7 @@ export default class LoginComponent implements OnInit, OnDestroy {
 
     // Limpiar el código
     this.loginForm.get('code')?.setValue('');
+    this.otpValues = Array(this.otpLength).fill('');
   }
 
   private startCountdown(): void {
@@ -297,80 +419,6 @@ export default class LoginComponent implements OnInit, OnDestroy {
         this.countdown.set(currentCount - 1);
       }
     }, 1000);
-  }
-
-  forceNumericKeyboard() {
-    setTimeout(() => {
-      const inputs = document.querySelectorAll('p-inputotp input');
-      inputs.forEach((input: Element, index: number) => {
-        const htmlInput = input as HTMLInputElement;
-
-        // Configurar atributos para teclado numérico
-        htmlInput.type = 'tel';
-        htmlInput.inputMode = 'numeric';
-        htmlInput.pattern = '[0-9]*';
-
-        // Manejador de eventos con tipado correcto
-        htmlInput.addEventListener('keydown', (e: KeyboardEvent) => {
-          // Permitir teclas de control (backspace, tab, flechas, etc.)
-          if ([8, 9, 13, 37, 38, 39, 40, 46].includes(e.keyCode)) {
-            // Si es backspace y el campo está vacío, mover al anterior
-            if (e.keyCode === 8 && htmlInput.value === '' && index > 0) {
-              setTimeout(() => {
-                const prevInput = inputs[index - 1] as HTMLInputElement;
-                prevInput.focus();
-              }, 0);
-            }
-            return;
-          }
-
-          // Permitir números (teclado principal y numpad)
-          if (!((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105))) {
-            e.preventDefault();
-          }
-        });
-
-        // Manejar el evento input para validación
-        htmlInput.addEventListener('input', (e: Event) => {
-          const target = e.target as HTMLInputElement;
-          target.value = target.value.replace(/\D/g, '');
-
-          // Auto-avanzar al siguiente campo si se ingresó un número
-          if (target.value && index < inputs.length - 1) {
-            setTimeout(() => {
-              const nextInput = inputs[index + 1] as HTMLInputElement;
-              nextInput.focus();
-            }, 0);
-          }
-
-          // Actualizar el valor en el formulario
-          this.updateOtpValue();
-        });
-      });
-    }, 0);
-  }
-
-  updateOtpValue() {
-    const inputs = document.querySelectorAll('p-inputotp input');
-    let otpValue = '';
-    inputs.forEach(input => {
-      otpValue += (input as HTMLInputElement).value;
-    });
-    this.loginForm.get('code')?.setValue(otpValue);
-  }
-
-  handleOtpInput(event: any) {
-    // Asegurar que solo haya números
-    const value = event.value.replace(/\D/g, '');
-    if (event.value !== value) {
-      this.loginForm.get('code')?.setValue(value);
-    }
-
-    // Manejar navegación entre campos
-    if (value.length === 6) {
-      const inputs = document.querySelectorAll('p-inputotp input');
-      (inputs[5] as HTMLInputElement).blur();
-    }
   }
 
   // Getters para acceso rápido a los controles del formulario

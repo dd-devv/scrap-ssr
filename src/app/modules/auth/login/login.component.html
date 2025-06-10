@@ -1,5 +1,5 @@
 <!-- login.component.html -->
-<div class="flex flex-col justify-center items-center h-screen md:h-96 w-full p-4">
+<div class="flex flex-col justify-start items-center h-full md:h-96 w-full p-4 mt-5">
   <div class="w-full sm:w-4/5 md:w-2/3 lg:w-5/12">
     <p-card class="shadow-md my-8">
       <h3 class="heading-3 font-bold text-center mb-2">
@@ -54,28 +54,10 @@
                 }
 
 
-        @if (codeSended()) {
+        <!-- @if (codeSended()) {
         <p-floatlabel variant="on" class="mt-6">
           <div class="card flex justify-center">
             <p-inputotp id="code" formControlName="code" [integerOnly]="true" [length]="6" size="small" />
-            <!-- <p-inputotp id="code" formControlName="code"
-              [integerOnly]="true"
-              [length]="6"
-              size="small"
-              inputmode="numeric" /> -->
-          <!-- <p-inputotp id="code" formControlName="code"
-            [integerOnly]="true"
-            [length]="6"
-            size="small"
-            (onFocus)="forceNumericKeyboard()"
-            class="numeric-otp" /> -->
-            <!-- <p-inputotp id="code" formControlName="code"
-              [integerOnly]="true"
-              [length]="6"
-              size="small"
-              (onFocus)="forceNumericKeyboard()"
-              (onInput)="handleOtpInput($event)"
-              class="numeric-otp" /> -->
           </div>
         </p-floatlabel>
 
@@ -86,9 +68,33 @@
           </small>
           }
         </div>
+        } -->
+        @if (codeSended()) {
+        <div class="otp-container">
+          <h3 class="mb-1">Verificación de código</h3>
+          <p>Ingrese el código de 6 dígitos recibido</p>
+          
+          <div class="otp-inputs">
+            <input *ngFor="let box of otpBoxes; let i = index" 
+                  [(ngModel)]="otpValues[i]"
+                  (input)="handleInput($event, i)"
+                  (keydown)="handleKeyDown($event, i)"
+                  (paste)="handlePaste($event)"
+                  type="tel"
+                  inputmode="numeric"
+                  pattern="[0-9]*"
+                  maxlength="1"
+                  class="otp-box"
+                  [class.invalid]="isInvalid">
+          </div>
+
+          <div *ngIf="isInvalid" class="error-message">
+            Solo se permiten números del 0-9
+          </div>
+        </div>
         }
         <!-- boton de iniciar sesion -->
-        <div class="flex justify-center mt-6">
+        <div class="flex justify-center mt-4">
           @if (codeSended()) {
           <p-button type="submit" label="Iniciar sesión" [loading]="isLoading"
             [disabled]="loginForm.invalid || isLoading" />
@@ -97,6 +103,15 @@
             [disabled]="loginForm.value.whatsapp.length < 9 || isLoading" (onClick)="requestLoginCode()" />
           }
         </div>
+        <!-- <div class="flex justify-center mt-6">
+          @if (codeSended()) {
+          <p-button type="submit" label="Iniciar sesión" [loading]="isLoading"
+            [disabled]="!isOtpComplete() || loginForm.invalid || isLoading" />
+          } @else {
+          <p-button label="Enviar código" [loading]="isLoading" icon="pi pi-key"
+            [disabled]="loginForm.value.whatsapp.length < 9 || isLoading" (onClick)="requestLoginCode()" />
+          }
+        </div> -->
 
         @if (codeSended()) {
         <p class="my-4 text-center text-sm">
