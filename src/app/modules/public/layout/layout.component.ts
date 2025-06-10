@@ -5,10 +5,11 @@ import { RouterOutlet } from '@angular/router';
 import { SubscriptionService } from '../../user/services/subscription.service';
 import AuthService from '../../auth/services/auth.service';
 import { FeedbackComponent } from "../../shared/feedback/feedback.component";
+import { FloatingAddProductButtonComponent } from '../../shared/floating-add-product-button/floating-add-product-button.component';
 
 @Component({
   selector: 'app-layout',
-  imports: [HeaderComponent, FooterComponent, RouterOutlet, FeedbackComponent],
+  imports: [HeaderComponent, FooterComponent, RouterOutlet, FeedbackComponent, FloatingAddProductButtonComponent],
   templateUrl: './layout.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
