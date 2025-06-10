@@ -1,0 +1,162 @@
+<div class="floating-button-container">
+  <!-- Añade el toast para los mensajes -->
+  <p-toast></p-toast>
+  
+  <button pButton pRipple 
+          icon="pi pi-plus" 
+          class="p-button-rounded p-button-primary floating-button"
+          (click)="showDialog()">
+  </button>
+
+  <p-dialog maskStyleClass="backdrop-blur-sm" [(visible)]="visible" [modal]="true" [style]="{ width: '25rem' }">
+    <ng-template #header>
+      <div class="inline-flex items-center justify-center gap-2">
+        <h2 class="font-bold whitespace-nowrap text-xl">Registrar mi producto</h2>
+      </div>
+    </ng-template>
+
+    <span class="text-surface-500 dark:text-surface-400 block mb-4">
+      Registra un producto para realizar el seguimiento.
+    </span>
+
+    <span class="text-center text-surface-500 dark:text-surface-400 text-sm marfa-italic-md">
+      Actualmente aceptamos URLs de estas tiendas
+    </span>
+
+    <div class="card flex justify-around my-4">
+      <!-- falabella -->
+      <a href="https://www.falabella.com.pe/falabella-pe" target="_blank">
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Todo falabella" tooltipPosition="bottom">
+          <img class="h-5" src="assets/svg/falabella.svg" alt="Logo falabella">
+        </p-button>
+      </a>
+
+      <!-- Mercado libre -->
+      <a href="https://www.mercadolibre.com.pe/" target="_blank">
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Mercado libre" tooltipPosition="bottom">
+          <img class="h-5" src="assets/svg/mercadolibre.svg" alt="Logo mercado libre">
+        </p-button>
+      </a>
+
+      <!-- Oechsle -->
+      <a href="https://www.oechsle.pe/" target="_blank">
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Oechsle" tooltipPosition="bottom">
+          <img class="h-5" src="assets/svg/oechsle.svg" alt="Logo oechsle">
+        </p-button>
+      </a>
+
+      <!-- Plaza vea -->
+      <a href="https://www.plazavea.com.pe/" target="_blank">
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Plaza vea" tooltipPosition="bottom">
+          <img class="h-5" src="assets/svg/plazavea.svg" alt="Logo plaza vea">
+        </p-button>
+      </a>
+
+      <!-- Platanitos -->
+      <a href="https://platanitos.com/pe" target="_blank">
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Platanitos" tooltipPosition="bottom">
+          <img class="h-5" src="assets/svg/platanitos.svg" alt="Logo platanitos">
+        </p-button>
+      </a>
+
+      <!-- promart -->
+      <a href="https://www.promart.pe/" target="_blank">
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Promart" tooltipPosition="bottom">
+          <img class="h-5" src="assets/svg/promart.svg" alt="Logo promart">
+        </p-button>
+      </a>
+    </div>
+    <div class="card flex justify-around my-[-12px]">
+      <!-- sodimac -->
+      <a href="http://sodimac.falabella.com.pe/sodimac-pe" target="_blank">
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Sodimac" tooltipPosition="bottom">
+          <img class="h-5" src="assets/svg/sodimac.svg" alt="Sodimac" />
+        </p-button>
+      </a>
+
+      <!-- tottus -->
+      <a href="https://tottus.falabella.com.pe/tottus-pe" target="_blank">
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Tottus" tooltipPosition="bottom">
+          <img class="h-5" src="assets/svg/tottus.svg" alt="Tottus" />
+        </p-button>
+      </a>
+
+      <!-- Linio -->
+      <a href="https://linio.falabella.com.pe/linio-pe" target="_blank">
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Linio" tooltipPosition="bottom">
+          <img class="h-5" src="assets/svg/linio.svg" alt="Logo linio" />
+        </p-button>
+      </a>
+
+      <!-- Inkafarma -->
+      <a href="https://inkafarma.pe/" target="_blank">
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Inkafarma" tooltipPosition="bottom">
+          <img class="h-5" src="assets/svg/inkafarma.svg" alt="Logo Inkafarma" />
+        </p-button>
+      </a>
+
+      <!-- MiFarma -->
+      <a href="https://www.mifarma.com.pe/" target="_blank">
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="MiFarma" tooltipPosition="bottom">
+          <img class="h-5" src="assets/svg/mifarma.svg" alt="Logo Mifarma" />
+        </p-button>
+      </a>
+
+      <!-- Vivanda -->
+      <a href="https://www.vivanda.com.pe/" target="_blank">
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Vivanda" tooltipPosition="bottom">
+          <img class="h-5" src="assets/svg/vivanda.svg" alt="Logo vivanda" />
+        </p-button>
+      </a>
+    </div>
+
+    <div class="card flex justify-around my-4">
+      <!-- Shopstar -->
+      <a href="https://www.shopstar.pe/" target="_blank">
+        <p-button [outlined]="true" [severity]="'secondary'" pTooltip="Shopstart" tooltipPosition="bottom">
+          <img class="h-5" src="assets/svg/shopstar.svg" alt="Logo Shopstar">
+        </p-button>
+      </a>
+    </div>
+    
+    <div class="mt-8">
+      <p-floatlabel variant="on">
+        <textarea pTextarea id="over_label" 
+                  [(ngModel)]="url" 
+                  (input)="evaluateUrl()" 
+                  (paste)="onPaste($event)"
+                  (keyup)="evaluateUrl()"
+                  rows="4" 
+                  [fluid]="true"
+                  style="resize: none" 
+                  class="h-full">
+        </textarea>
+        <label for="on_label"> <i class="pi pi-link"></i> Pega el URL del producto</label>
+      </p-floatlabel>
+      
+      <!-- Mensaje de error para tienda no soportada -->
+      <div *ngIf="showUnsupportedMessage()" 
+          class="mt-2 p-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md flex items-center gap-2">
+        <i class="pi pi-exclamation-triangle"></i>
+        <span>Esta tienda aún no es soportada. Por favor, usa una de las tiendas mostradas arriba.</span>
+      </div>
+      
+      <!-- Mensaje de éxito para tienda soportada -->
+      <div *ngIf="showSupportedMessage()" 
+          class="mt-2 p-2 text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md flex items-center gap-2">
+        <i class="pi pi-check-circle"></i>
+        <span>¡Perfecto! Esta tienda es compatible.</span>
+      </div>
+    </div>
+
+    <div class="my-4 flex justify-center">
+      <!-- <p-button label="Registrar URL" icon="pi pi-plus" [disabled]="url.length < 5 || disabled"
+        [loading]="loading" (onClick)="registrarUrl()" /> -->
+        <p-button label="Registrar URL" 
+          icon="pi pi-plus" 
+          [disabled]="url.length < 5 || disabled()"
+          [loading]="loading()" 
+          (onClick)="registrarUrl()" />
+    </div>
+  </p-dialog>
+</div>
