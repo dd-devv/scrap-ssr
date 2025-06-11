@@ -18,6 +18,8 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { PaginationComponent } from '../../shared/pagination/pagination.component';
 import { PaginatePipe } from '../../../pipes/paginate.pipe';
 import { Product, ProductPublic } from '../interfaces';
+import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-offers',
@@ -37,7 +39,9 @@ import { Product, ProductPublic } from '../interfaces';
     Tooltip,
     Toast,
     PaginationComponent,
-    PaginatePipe
+    PaginatePipe,
+    InputTextModule,
+    FloatLabelModule
   ],
   providers: [ExtractDomainPipe, MessageService],
   templateUrl: './offers.component.html',
@@ -52,6 +56,7 @@ export default class OffersComponent {
   private platformId = inject(PLATFORM_ID);
   selectedStore: string | null = null;
   availableStores: string[] = [];
+  searchTerm: string = '';
 
   componentLoading = this.productService.isLoading;
   products = this.productService.productsPublic;
@@ -94,16 +99,50 @@ export default class OffersComponent {
     });
   }
 
+  // applyFilter() {
+  //   this.currentPage = 1;
+  //   if (!this.selectedStore) {
+  //     this.filteredProducts.set(this.products());
+  //     return;
+  //   }
+  //   this.filteredProducts.set(this.products().filter(product =>
+  //     this.extractDomainPipe.transform(product.url) === this.selectedStore
+  //   ));
+  // }
   applyFilter() {
     this.currentPage = 1;
-    if (!this.selectedStore) {
-      this.filteredProducts.set(this.products());
-      return;
+    
+    let filtered = this.products();
+    
+    // Aplicar filtro por tienda si está seleccionada
+    if (this.selectedStore) {
+      filtered = filtered.filter(product =>
+        this.extractDomainPipe.transform(product.url) === this.selectedStore
+      );
     }
-    this.filteredProducts.set(this.products().filter(product =>
-      this.extractDomainPipe.transform(product.url) === this.selectedStore
-    ));
+    
+    // Aplicar filtro por búsqueda si hay término
+    if (this.searchTerm.trim()) {
+      const searchTermLower = this.searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(product =>
+        product.productTitle.toLowerCase().includes(searchTermLower)
+      );
+    }
+    
+    this.filteredProducts.set(filtered);
   }
+
+  clearFilters(): void {
+  this.searchTerm = '';
+  this.selectedStore = null;
+  this.applyFilter();
+  this.currentPage = 1; // Resetear a la primera página
+  
+  // Opcional: hacer scroll al inicio
+  if (isPlatformBrowser(this.platformId)) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
 
   get totalPages(): number {
     return Math.ceil(this.filteredProducts().length / this.pageSize);

@@ -1,15 +1,31 @@
 <div class="min-h-80 py-2">
-  <!-- Filtro por tienda -->
-  <div class="mb-4">
-    <p-dropdown [options]="availableStores" [(ngModel)]="selectedStore" (onChange)="applyFilter()" [showClear]="true"
-      placeholder="Filtrar por tienda" appendTo="body" styleClass="w-full md:w-64">
-      <ng-template pTemplate="item" let-store>
-        <div class="flex items-center gap-2">
-          <img class="h-6" src="../../../../assets/svg/{{ store }}.svg" alt="Logo {{ store }}" />
-          <span>{{ store | titlecase }}</span>
-        </div>
-      </ng-template>
-    </p-dropdown>
+  <!-- Barra de búsqueda y filtro -->
+  <div class="mb-4 mt-2 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <!-- Buscador -->
+    <div class="w-full md:w-96">
+      <span class="p-input-icon-left w-full">
+        <!-- <i class="pi pi-search"></i> -->
+        <!-- <input type="text" pInputText [(ngModel)]="searchTerm" (input)="applyFilter()" 
+               placeholder="Buscar en Acllabay.com" class="w-full" /> -->
+        <p-floatlabel >
+            <input pInputText [(ngModel)]="searchTerm"  (input)="applyFilter()" autocomplete="off" class="w-full"/>
+            <label for="over_label"> <i class="pi pi-search"></i> Buscar en Acllabay.com</label>
+        </p-floatlabel>
+      </span>
+    </div>
+    
+    <!-- Filtro por tienda -->
+    <div class="w-full md:w-64">
+      <p-dropdown [options]="availableStores" [(ngModel)]="selectedStore" (onChange)="applyFilter()" [showClear]="true"
+        placeholder="Filtrar por tienda" appendTo="body" styleClass="w-full">
+        <ng-template pTemplate="item" let-store>
+          <div class="flex items-center gap-2">
+            <img class="h-6" src="../../../../assets/svg/{{ store }}.svg" alt="Logo {{ store }}" />
+            <span>{{ store | titlecase }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
   </div>
 
   @if (isLoading()) {
@@ -55,6 +71,28 @@
   }
 
   @else if (!isLoading()) {
+    @if (filteredProducts().length === 0) {
+    <div class="flex flex-col items-center justify-center py-12 text-center">
+      <i class="pi pi-search text-6xl text-gray-400 mb-4"></i>
+      <h3 class="text-xl font-medium text-gray-600 mb-2">No se encontraron productos</h3>
+      <p class="text-gray-500 mb-6">
+        @if (searchTerm || selectedStore) {
+          No encontramos resultados para "{{searchTerm}}" 
+          @if (selectedStore) { en {{selectedStore | titlecase}} }
+        } @else {
+          No hay productos disponibles en este momento
+        }
+      </p>
+      @if (searchTerm || selectedStore) {
+        <button pButton pRipple 
+                label="Limpiar filtros" 
+                icon="pi pi-filter-slash" 
+                class="p-button-outlined" 
+                (click)="clearFilters()"></button>
+      }
+    </div>
+  }
+  @else {
   <div class="my-4 grid grid-cols-2 gap-1 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
     @for (product of filteredProducts() | paginate:currentPage:pageSize; track $index) {
     <div>
@@ -136,7 +174,7 @@
       </p-card>
     </div>
     }
-  </div>
+  </div>}
 
   @if (totalPages > 1) {
   <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)" />

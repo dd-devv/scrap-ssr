@@ -24,6 +24,7 @@ import { PaginationComponent } from '../../shared/pagination/pagination.componen
 import { PaginatePipe } from '../../../pipes/paginate.pipe';
 import { Product } from '../interfaces';
 import { CarouselModule } from 'primeng/carousel'; // Agrega esto
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-products',
@@ -50,7 +51,8 @@ import { CarouselModule } from 'primeng/carousel'; // Agrega esto
     DropdownModule,
     PaginationComponent,
     PaginatePipe,
-    CarouselModule
+    CarouselModule,
+    FloatLabelModule
   ],
   providers: [MessageService, ConfirmationService, ExtractDomainPipe],
   templateUrl: './products.component.html',
@@ -80,6 +82,7 @@ export default class ProductsComponent implements OnInit {
 
   url: string = '';
   urlId: string = '';
+  searchTerm: string = '';
 
     // Nuevas propiedades para la validación de URL
   private hasUrl = signal(false);
@@ -232,16 +235,49 @@ export default class ProductsComponent implements OnInit {
     this.availableStores = Array.from(stores).sort();
   }
 
+  // applyFilter() {
+  //   this.currentPage = 1;
+  //   if (!this.selectedStore) {
+  //     this.filteredProducts.set(this.products());
+  //     return;
+  //   }
+  //   this.filteredProducts.set(this.products().filter(product =>
+  //     this.extractDomainPipe.transform(product.url) === this.selectedStore
+  //   ));
+  // }
   applyFilter() {
     this.currentPage = 1;
-    if (!this.selectedStore) {
-      this.filteredProducts.set(this.products());
-      return;
+    
+    let filtered = this.products();
+    
+    // Aplicar filtro por tienda si está seleccionada
+    if (this.selectedStore) {
+      filtered = filtered.filter(product =>
+        this.extractDomainPipe.transform(product.url) === this.selectedStore
+      );
     }
-    this.filteredProducts.set(this.products().filter(product =>
-      this.extractDomainPipe.transform(product.url) === this.selectedStore
-    ));
+    
+    // Aplicar filtro por búsqueda si hay término
+    if (this.searchTerm.trim()) {
+      const searchTermLower = this.searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(product =>
+        product.productTitle.toLowerCase().includes(searchTermLower)
+      );
+    }
+    
+    this.filteredProducts.set(filtered);
   }
+  clearFilters(): void {
+  this.searchTerm = '';
+  this.selectedStore = null;
+  this.applyFilter();
+  this.currentPage = 1; // Resetear a la primera página
+  
+  // Opcional: hacer scroll al inicio
+  if (isPlatformBrowser(this.platformId)) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
 
   get totalPages(): number {
     return Math.ceil(this.filteredProducts().length / this.pageSize);
