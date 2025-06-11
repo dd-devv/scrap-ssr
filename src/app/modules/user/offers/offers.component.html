@@ -13,7 +13,7 @@
   </div>
 
   @if (isLoading()) {
-  <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+  <div class="mt-4 grid grid-cols-2 gap-1 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4 ">
     @for (item of [1,2,3,4,5,6,7,8]; track $index) {
     <div class="p-4">
       <p-card [style]="{
@@ -55,19 +55,19 @@
   }
 
   @else if (!isLoading()) {
-  <div class="my-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+  <div class="my-4 grid grid-cols-2 gap-1 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
     @for (product of filteredProducts() | paginate:currentPage:pageSize; track $index) {
     <div>
       <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%' }">
         <ng-template #header>
           <div class="bg-white">
             <img [alt]="product.productTitle"
-              class="h-72 md:h-[362px] xl:h-[302px] w-full m-auto cursor-pointer object-contain" [src]="product.image"
+              class="h-52 md:h-[362px] xl:h-[302px] w-full m-auto cursor-pointer object-contain" [src]="product.image"
               [routerLink]="['/ofertas', product.urlId]" />
           </div>
         </ng-template>
         <ng-template #title>
-          <div class="h-16">
+          <div class="text-sm  h-[60px] sm:text-xl  sm:h-16">
             {{ truncateText(product.productTitle) | titlecase }}
           </div>
           <div class="mt-2 flex align-middle">
@@ -93,14 +93,14 @@
           </div>
         </ng-template>
         <ng-template #subtitle>
-          <div class="flex items-center cursor-pointer" [routerLink]="['/ofertas', product.urlId]">
-            <img class="h-6" src="../../../../assets/svg/{{ product.url | extractDomain }}.svg"
+          <div class="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-2 cursor-pointer" [routerLink]="['/ofertas', product.urlId]">
+            <img class="h-5" src="../../../../assets/svg/{{ product.url | extractDomain }}.svg"
               alt="Logo {{ product.url | extractDomain }}" />
-            <small class="ms-2">Actualización ({{ product.lastUpdate | timeAgo }})</small>
+            <small >Actualización ({{ product.lastUpdate | timeAgo }})</small>
           </div>
         </ng-template>
         <div class="cursor-pointer" [routerLink]="['/ofertas', product.urlId]">
-          <h2 class="text-2xl">
+          <h2 class="text-lg sm:text-2xl">
             {{ product.currentPrice | currency : "S/ " }}
           </h2>
           <h3 class="text-sm marfa-italic-md mb-3">
@@ -113,13 +113,13 @@
         <ng-template #footer>
           @if (authService.isAuthenticatedUser()) {
           @if (getMyJob(product.urlId)) {
-          <p class="text-center text-base text-red-500 border border-red-500 rounded-md py-2 hover:bg-red-500 hover:text-white cursor-pointer"
+          <p class="text-center text-base text-red-500 border border-red-500 rounded-md py-1 sm:py-2 hover:bg-red-500 hover:text-white cursor-pointer"
             (click)="deleteUrl(product.urlId)">
-            <i class="pi pi-times me-2 text-base"></i>
-            <a class="text-base"> Dejar de seguir </a>
+            <i class="pi pi-times me-1 sm:me-2 text-xs sm:text-base"></i>
+            <a class="w-full text-xs sm:text-base"> Dejar de seguir </a>
           </p>
           } @else {
-          <p-button label="Seguir" icon="pi pi-heart-fill" class="w-full" styleClass="w-full"
+          <p-button label="Seguir" icon="pi pi-heart-fill" class="w-full text-xs sm:text-base" styleClass="w-full"
             (onClick)="addUrlForMe(product.job, product.urlId)" />
           }
           } @else {

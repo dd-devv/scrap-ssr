@@ -167,7 +167,7 @@
   </p-dialog>
 
   @if (componentLoading()) {
-  <div class="my-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+  <div class="my-4 grid grid-cols-2 gap-1 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4 ">
 
     @for (item of [1,2,3,4,5,6,7,8]; track $index) {
     <div class="p-4">
@@ -209,42 +209,40 @@
 
   <!-- <div class="masonry-grid my-4"> -->
   @if (!componentLoading()) {
-  <div class=" my-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+  <div class=" my-4 grid grid-cols-2 gap-1 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4 ">
     @for (product of filteredProducts() | paginate:currentPage:pageSize; track $index) {
     <!-- @let arrDate = productService.priceHistory().priceHistory.dates[0];
           @let arrPrices = productService.priceHistory().priceHistory.prices[0]; -->
-
     <div class="masonry-item">
-      <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%' }">
+      <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%'}">
         <ng-template #header>
           <div class="bg-white">
             <img [alt]="product.productTitle"
-              class="h-72 md:h-[362px] xl:h-[302px] w-full m-auto cursor-pointer object-contain" [src]="product.image"
+              class="h-52 md:h-[362px] xl:h-[302px] w-full m-auto cursor-pointer object-contain" [src]="product.image"
               [routerLink]="['/producto', product.urlId ]" />
           </div>
         </ng-template>
         <ng-template #title>
-          <div class="h-16">
-
+          <div class="text-sm h-[60px]  sm:text-xl  sm:h-16">
             {{ truncateText(product.productTitle) | titlecase}}
           </div>
         </ng-template>
         <ng-template #subtitle>
-          <div class="flex items-center">
+          <div class="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-2">
             <img class="h-5" src="../../../../assets/svg/{{product.url|extractDomain}}.svg"
               alt="Logo {{product.url|extractDomain}}">
-            <small class="ms-2">Actualización ({{product.lastUpdate | timeAgo}})</small>
+            <small class="">Actualización ({{product.lastUpdate | timeAgo}})</small>
           </div>
         </ng-template>
-        <h2 class="text-2xl">
+        <h2 class="text-lg sm:text-2xl">
           {{product.currentPrice | currency: 'S/ '}}
         </h2>
-        <h3 class="text-surface-500" [ngClass]="{'text-green-600': product.currentPrice === product.lowestPrice}">
+        <h3 class="text-surface-500 text-sm  sm:text-base " [ngClass]="{'text-green-600': product.currentPrice === product.lowestPrice}">
           Precio mínimo: <samp class="">{{product.lowestPrice | currency: 'S/'}}</samp>
         </h3>
         <ng-template #footer>
           <div class="flex gap-4 mt-1">
-            <p-button label="Detalles" icon="pi pi-chart-scatter" class="w-full" styleClass="w-full"
+            <p-button label="Detalles" icon="pi pi-chart-scatter" class="w-full text-xs sm:text-base" styleClass="w-full"
               [routerLink]="['/producto', product.urlId ]" />
           </div>
         </ng-template>

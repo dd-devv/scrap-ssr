@@ -61,7 +61,7 @@ export default class OffersComponent {
   estadosOfertas = signal<{ [key: string]: boolean }>({});
 
   currentPage = 1;
-  pageSize = 8;
+  pageSize = 16;
 
   loadStores() {
     const stores = new Set<string>();
