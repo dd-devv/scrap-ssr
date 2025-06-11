@@ -1,7 +1,7 @@
 <div class="min-h-80 py-8">
 
   <div class="flex justify-center">
-  <div class="my-4 flex flex-col justify-center gap-4 w-full lg:w-2/3">
+  <div class="my-4 mb-0 flex flex-col justify-center gap-4 w-full lg:w-2/3">
     
     <!-- Carrusel de tiendas soportadas -->
     <div class="mb-4">
@@ -62,10 +62,10 @@
     </div>
 
     <!-- Mensaje de error para tienda no soportada -->
-     <div class="h-20">
+     <div class="h-16">
 
         @if (showUnsupportedMessage()) {
-          <div class="mt-2 p-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2">
+          <div class="mt-0 p-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2">
           <i class="pi pi-exclamation-triangle text-lg"></i>
           <div>
             <p class="font-medium">Esta tienda aún no es soportada</p>
@@ -76,7 +76,7 @@
       
       <!-- Mensaje de éxito para tienda soportada -->
       @if (showSupportedMessage()) {
-        <div class="mt-2 p-3 text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center gap-2">
+        <div class="mt-0 p-3 text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center gap-2">
           <i class="pi pi-check-circle text-lg"></i>
           <div>
             <p class="font-medium">¡Perfecto! Esta tienda es compatible</p>
@@ -214,7 +214,8 @@
     <!-- @let arrDate = productService.priceHistory().priceHistory.dates[0];
           @let arrPrices = productService.priceHistory().priceHistory.prices[0]; -->
     <div class="masonry-item">
-      <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%'}">
+      <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%'}"
+      styleClass="[&_.p-card-body]:!p-2 sm:[&_.p-card-body]:!p-4">
         <ng-template #header>
           <div class="bg-white">
             <img [alt]="product.productTitle"
