@@ -84,4 +84,10 @@ export const Shops: Shop[] = [
     logo: 'assets/svg/inkafarma.svg',
     url: 'https://inkafarma.pe/',
   },
+  {
+    id: 14,
+    name: 'Metro',
+    logo: 'assets/svg/metro.svg',
+    url: 'https://www.metro.pe/',
+  },
 ];
