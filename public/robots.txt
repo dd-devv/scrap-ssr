@@ -1,0 +1,30 @@
+User-agent: *
+
+# Permitir indexación de rutas públicas
+Allow: /
+Allow: /about
+Allow: /plans
+Allow: /contact
+Allow: /faqs
+Allow: /tutorials
+Allow: /producto/
+Allow: /ofertas/
+
+# Bloquear rutas de autenticación y privadas
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password/
+Disallow: /verify-whatsapp
+Disallow: /productos
+Disallow: /datos
+Disallow: /notificaciones
+
+# Permitir sitemap
+Allow: /sitemap.xml
+
+# Ubicación del sitemap
+Sitemap: https://acllabay.com/sitemap.xml
+
+# Crawl-delay opcional (en segundos)
+Crawl-delay: 1
