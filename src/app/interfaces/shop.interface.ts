@@ -90,4 +90,10 @@ export const Shops: Shop[] = [
     logo: 'assets/svg/metro.svg',
     url: 'https://www.metro.pe/',
   },
+  {
+    id: 15,
+    name: 'Carsa',
+    logo: 'assets/svg/carsa.svg',
+    url: 'https://www.carsa.pe/',
+  },
 ];

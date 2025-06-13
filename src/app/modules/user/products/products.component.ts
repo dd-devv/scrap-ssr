@@ -179,6 +179,12 @@ export default class ProductsComponent implements OnInit {
       logo: 'assets/svg/metro.svg',
       url: 'https://www.metro.pe/',
       domain: 'metro'
+    },
+    {
+      name: 'Carsa',
+      logo: 'assets/svg/carsa.svg',
+      url: 'https://www.carsa.pe/',
+      domain: 'metro'
     }
   ];
 
@@ -311,7 +317,8 @@ export default class ProductsComponent implements OnInit {
       'promart',
       'mifarma',
       'inkafarma',
-      'metro'
+      'metro',
+      'carsa'
     ];
 
     const urlTrimmed = this.url.trim();
