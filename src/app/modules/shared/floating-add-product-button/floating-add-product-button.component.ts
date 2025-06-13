@@ -69,6 +69,7 @@ export class FloatingAddProductButtonComponent {
       'mifarma',
       'inkafarma',
       'metro',
+      'carsa'
     ];
 
     const urlTrimmed = this.url.trim();
