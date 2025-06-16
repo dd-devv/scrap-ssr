@@ -11,6 +11,10 @@ import  ProductService  from '../../user/services/product.service';
 import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
+import AuthService from '../../auth/services/auth.service';
+import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-floating-add-product-button',
@@ -25,7 +29,8 @@ import { ToastModule } from 'primeng/toast';
     FormsModule,
     TextareaModule,
     FloatLabelModule,
-    ToastModule
+    ToastModule,
+    RouterLink,
   ],
   templateUrl: './floating-add-product-button.component.html',
   styleUrls: ['./floating-add-product-button.component.css'],
@@ -34,7 +39,8 @@ import { ToastModule } from 'primeng/toast';
 export class FloatingAddProductButtonComponent {
   productService = inject(ProductService);
   messageService = inject(MessageService);
-  
+  authService = inject(AuthService);
+
   visible = signal(false);
   loading = signal(false);
   disabled = signal(false);
@@ -51,6 +57,8 @@ export class FloatingAddProductButtonComponent {
       this.evaluateUrl();
     }, 10);
   }
+
+  constructor(private router: Router) {}
 
   evaluateUrl() {
     const supportedDomains = [
@@ -107,6 +115,10 @@ export class FloatingAddProductButtonComponent {
       return false;
     }
   }
+  goToLoginAndCloseModal() {
+    this.closeDialog();
+    this.router.navigate(['/login']);
+}
 
   // Métodos para mostrar los mensajes
   showUnsupportedMessage(): boolean {

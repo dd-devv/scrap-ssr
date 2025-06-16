@@ -22,7 +22,7 @@
     <span class="text-center text-surface-500 dark:text-surface-400 text-sm marfa-italic-md">
       Actualmente aceptamos URLs de estas tiendas
     </span>
-
+    <!-- list of stores -->
     <div class="card flex justify-around my-4">
       <!-- falabella -->
       <a href="https://www.falabella.com.pe/falabella-pe" target="_blank">
@@ -66,6 +66,7 @@
         </p-button>
       </a>
     </div>
+
     <div class="card flex justify-around my-[-12px]">
       <!-- sodimac -->
       <a href="http://sodimac.falabella.com.pe/sodimac-pe" target="_blank">
@@ -178,11 +179,22 @@
     <div class="my-4 flex justify-center">
       <!-- <p-button label="Registrar URL" icon="pi pi-plus" [disabled]="url.length < 5 || disabled"
         [loading]="loading" (onClick)="registrarUrl()" /> -->
+        @if (authService.isAuthenticatedUser()) {
         <p-button label="Registrar URL" 
           icon="pi pi-plus" 
           [disabled]="url.length < 5 || disabled()"
           [loading]="loading()" 
           (onClick)="registrarUrl()" />
+        }
+        @else {
+          <p-button 
+          label="Inicia sesión para continuar"
+          icon="pi pi-sign-in"
+          [disabled]="url.length < 5 || disabled()"
+          [loading]="loading()"
+          (onClick)="goToLoginAndCloseModal()"
+        />
+        }
     </div>
   </p-dialog>
 </div>
