@@ -12,8 +12,9 @@ import { Meta, Title } from '@angular/platform-browser'; // Importamos Meta y Ti
 import { TimeAgoPipe } from './../../../pipes/timeAgo.pipe';
 import { Button } from 'primeng/button';
 import { ConfirmDialog } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import AuthService from '../../auth/services/auth.service';
+import { Toast } from 'primeng/toast';
 
 
 @Component({
@@ -27,9 +28,10 @@ import AuthService from '../../auth/services/auth.service';
     Skeleton,
     ExtractDomainPipe,
     TimeAgoPipe,
-    ConfirmDialog
+    ConfirmDialog,
+    Toast
   ],
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, MessageService],
   styleUrl: './offer.component.css',
   templateUrl: './offer.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,11 +39,13 @@ import AuthService from '../../auth/services/auth.service';
 export default class OfferComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private confirmationService = inject(ConfirmationService);
+  private messageService = inject(MessageService);
   productService = inject(ProductService);
   authService = inject(AuthService);
   router = inject(Router);
   private meta = inject(Meta); // Inyectamos el servicio Meta
   private title = inject(Title); // Inyectamos el servicio Title
+  isLoading = this.productService.isLoading;
 
   // Signal para almacenar el id
   productId = signal<string | null>(null);
@@ -306,6 +310,24 @@ export default class OfferComponent implements OnInit {
       reject: () => {
       },
     });
+  }
+
+  addUrlForMe(sourceJobId: string, urlId: string) {
+    this.isLoading.set(true);
+    this.productService.addUrlForMe(sourceJobId, urlId).subscribe({
+      next: (response) => {
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Agregado a tu seguimiento', life: 3000 });
+        this.cargarEstadoJobs(this.productId()!);
+      },
+      error: (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error, life: 3000 });
+        this.isLoading.set(false);
+      },
+      complete: () => {
+        this.isLoading.set(false);
+      }
+    });
+
   }
 
   deleteUrl(): void {

@@ -85,23 +85,14 @@ productService.priceHistory().priceHistory.prices);
           <!-- <p-button severity="contrast" label="Comprar en tienda" icon="pi pi-cart-plus" class="w-full"
             styleClass="w-full" /> -->
           @if (estadoDelPrecio === 'verde') {
-            <!-- Botón animado para precio mínimo -->
-            <p-button
-              severity="success"
-              label="¡COMPRAR AHORA! - PRECIO MÍNIMO"
-              icon="pi pi-bolt"
-              class="w-full animate-pulse hover:animate-none"
-              styleClass="w-full font-bold shadow-lg shadow-green-500/50 hover:bg-green-500 "
-            />
+          <!-- Botón animado para precio mínimo -->
+          <p-button severity="success" label="¡COMPRAR AHORA! - PRECIO MÍNIMO" icon="pi pi-bolt"
+            class="w-full animate-pulse hover:animate-none"
+            styleClass="w-full font-bold shadow-lg shadow-green-500/50 hover:bg-green-500 " />
           } @else {
-            <!-- Botón normal para otros casos -->
-            <p-button
-              severity="contrast"
-              label="Comprar en tienda"
-              icon="pi pi-cart-plus"
-              class="w-full"
-              styleClass="w-full"
-            />
+          <!-- Botón normal para otros casos -->
+          <p-button severity="contrast" label="Comprar en tienda" icon="pi pi-cart-plus" class="w-full"
+            styleClass="w-full" />
           }
         </div>
       </a>
@@ -117,6 +108,10 @@ productService.priceHistory().priceHistory.prices);
         <i class="pi pi-trash me-2 text-sm"></i>
         <a> Dejar de seguir </a>
       </p>
+      }
+      @if (authService.isAuthenticatedUser() && !getMyJob(productService.priceHistory().productInfo.urlId)) {
+      <p-button label="Seguir" icon="pi pi-heart-fill" class="w-full text-xs sm:text-base" styleClass="w-full"
+        (onClick)="addUrlForMe(productService.priceHistory().productInfo.job, productService.priceHistory().productInfo.urlId)" />
       }
     </div>
   </div>
@@ -220,3 +215,5 @@ productService.priceHistory().priceHistory.prices);
 </p-confirmdialog>
 <!-- </div> -->
 }
+
+<p-toast [breakpoints]="{ '780px': { width: '80%', right: '8' } }" />

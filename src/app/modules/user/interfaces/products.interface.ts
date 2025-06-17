@@ -61,6 +61,7 @@ export interface ProductInfo {
   image:        string;
   url:          string;
   urlId:        string;
+  job:        string;
 }
 
 export interface DeleteURLResp {
