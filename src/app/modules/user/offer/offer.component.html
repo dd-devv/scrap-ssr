@@ -110,7 +110,7 @@ productService.priceHistory().priceHistory.prices);
       </p>
       }
       @if (authService.isAuthenticatedUser() && !getMyJob(productService.priceHistory().productInfo.urlId)) {
-      <p-button label="Seguir" icon="pi pi-heart-fill" class="w-full text-xs sm:text-base" styleClass="w-full"
+      <p-button label="Seguir" icon="pi pi-heart-fill" class="w-full text-xs sm:text-base mt-4" styleClass="w-full" outlined="true"
         (onClick)="addUrlForMe(productService.priceHistory().productInfo.job, productService.priceHistory().productInfo.urlId)" />
       }
     </div>
