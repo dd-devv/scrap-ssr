@@ -29,8 +29,7 @@ import { Router } from '@angular/router';
     FormsModule,
     TextareaModule,
     FloatLabelModule,
-    ToastModule,
-    RouterLink,
+    ToastModule
   ],
   templateUrl: './floating-add-product-button.component.html',
   styleUrls: ['./floating-add-product-button.component.css'],
@@ -45,7 +44,7 @@ export class FloatingAddProductButtonComponent {
   loading = signal(false);
   disabled = signal(false);
   url: string = '';
-  
+
   // Nuevas propiedades para controlar los mensajes
   private hasUrl = signal(false);
   private isSupported = signal(false);
@@ -91,7 +90,7 @@ export class FloatingAddProductButtonComponent {
 
     // Verificar si es una URL válida
     const isValidUrl = this.isValidHttpUrl(urlTrimmed);
-    
+
     if (!isValidUrl) {
       this.disabled.set(true);
       this.isSupported.set(false);
@@ -139,20 +138,20 @@ export class FloatingAddProductButtonComponent {
         this.isSupported.set(false);
         this.closeDialog();
         this.productAdded.emit();
-        this.messageService.add({ 
-          severity: 'success', 
-          summary: 'Éxito', 
-          detail: 'Registrado correctamente', 
-          life: 3000 
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Registrado correctamente',
+          life: 3000
         });
       },
       error: (err) => {
         this.loading.set(false);
-        this.messageService.add({ 
-          severity: 'error', 
-          summary: 'Error!', 
-          detail: 'Error al registrar', 
-          life: 3000 
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error!',
+          detail: 'Error al registrar',
+          life: 3000
         });
       }
     });
