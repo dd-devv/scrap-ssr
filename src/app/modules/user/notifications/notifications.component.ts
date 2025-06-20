@@ -33,17 +33,24 @@ export default class NotificationsComponent {
 
   ngOnInit(): void {
     this.cargarNotificaciones();
+    console.log('Notificaciones cargadas:');
+    console.log(this.notifications());
   }
 
   cargarNotificaciones() {
     this.notificationService.getNotifications().subscribe({
       next: (res) => {
         this.filteredNotifications.set(this.notifications());
+        console.log(this.filteredNotifications());
       },
       error: (err) => {
         console.error('Error al cargar ofertas:', err);
       }
     });
+  }
+  // retorna true si contiene el texto ¡MÍNIMO HISTÓRICO! al inicio del mensaje
+  isMinimumHistoric(message: string): boolean {
+    return message.startsWith('¡MÍNIMO HISTÓRICO!');
   }
 
   get totalPages(): number {
