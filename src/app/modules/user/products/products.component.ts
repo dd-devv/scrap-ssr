@@ -25,6 +25,7 @@ import { PaginatePipe } from '../../../pipes/paginate.pipe';
 import { Product } from '../interfaces';
 import { CarouselModule } from 'primeng/carousel'; // Agrega esto
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { SkeletonProdComponent } from "../../../ui/skeleton-prod/skeleton-prod.component";
 
 @Component({
   selector: 'app-products',
@@ -46,14 +47,14 @@ import { FloatLabelModule } from 'primeng/floatlabel';
     RouterLink,
     ConfirmDialog,
     TimeAgoPipe,
-    Skeleton,
     ExtractDomainPipe,
     DropdownModule,
     PaginationComponent,
     PaginatePipe,
     CarouselModule,
-    FloatLabelModule
-  ],
+    FloatLabelModule,
+    SkeletonProdComponent
+],
   providers: [MessageService, ConfirmationService, ExtractDomainPipe],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
@@ -235,7 +236,7 @@ export default class ProductsComponent implements OnInit {
       }
     });
   }
-  
+
 
   // Métodos para el filtro por tienda
   loadStores() {
@@ -259,16 +260,16 @@ export default class ProductsComponent implements OnInit {
   // }
   applyFilter() {
     this.currentPage = 1;
-    
+
     let filtered = this.products();
-    
+
     // Aplicar filtro por tienda si está seleccionada
     if (this.selectedStore) {
       filtered = filtered.filter(product =>
         this.extractDomainPipe.transform(product.url) === this.selectedStore
       );
     }
-    
+
     // Aplicar filtro por búsqueda si hay término
     if (this.searchTerm.trim()) {
       const searchTermLower = this.searchTerm.toLowerCase().trim();
@@ -276,7 +277,7 @@ export default class ProductsComponent implements OnInit {
         product.productTitle.toLowerCase().includes(searchTermLower)
       );
     }
-    
+
     this.filteredProducts.set(filtered);
   }
   clearFilters(): void {
@@ -284,7 +285,7 @@ export default class ProductsComponent implements OnInit {
   this.selectedStore = null;
   this.applyFilter();
   this.currentPage = 1; // Resetear a la primera página
-  
+
   // Opcional: hacer scroll al inicio
   if (isPlatformBrowser(this.platformId)) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -332,7 +333,7 @@ export default class ProductsComponent implements OnInit {
 
     // Verificar si es una URL válida
     const isValidUrl = this.isValidHttpUrl(urlTrimmed);
-    
+
     if (!isValidUrl) {
       this.disabled.set(true);
       this.isSupported.set(false);
@@ -382,20 +383,20 @@ export default class ProductsComponent implements OnInit {
         this.isSupported.set(false);
         this.disabled.set(false);
         this.loadProducts();
-        this.messageService.add({ 
-          severity: 'success', 
-          summary: 'Éxito', 
-          detail: 'Registrado correctamente', 
-          life: 3000 
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Registrado correctamente',
+          life: 3000
         });
       },
       error: (err) => {
         this.loading.set(false);
-        this.messageService.add({ 
-          severity: 'error', 
-          summary: 'Error!', 
-          detail: 'Error al registrar', 
-          life: 3000 
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error!',
+          detail: 'Error al registrar',
+          life: 3000
         });
       }
     });

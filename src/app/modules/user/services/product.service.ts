@@ -17,6 +17,7 @@ export default class ProductService {
   readonly isLoading = signal<boolean>(false);
   readonly productsUser = signal<Product[]>([]);
   readonly productsPublic = signal<ProductPublic[]>([]);
+  readonly productsAll = signal<ProductPublic[]>([]);
   readonly priceHistory = signal<PriceHistory>({} as PriceHistory);
 
   // Get token dynamically instead of storing in constructor
@@ -154,6 +155,29 @@ export default class ProductService {
       .pipe(
         tap(response => {
           this.productsPublic.set(response);
+        }),
+        catchError(error => {
+          return throwError(() => ({
+            error: error.error
+          }));
+        }),
+        finalize(() => this.isLoading.set(false))
+      );
+  }
+
+  getProductsPublic(): Observable<ProductPublic[]> {
+    this.isLoading.set(true);
+
+    // Check if we're in browser environment
+    if (typeof window === 'undefined') {
+      this.isLoading.set(false);
+      return of([]);
+    }
+
+    return this.http.get<ProductPublic[]>(`${this.apiUrl}scraping/products-public`)
+      .pipe(
+        tap(response => {
+          this.productsAll.set(response);
         }),
         catchError(error => {
           return throwError(() => ({

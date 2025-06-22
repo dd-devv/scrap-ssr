@@ -13,6 +13,7 @@
 
   /* Media query para pantallas pequeñas */
   @media screen and (max-width: 768px) {
+
     /* Ajusta este valor según necesites */
     .fixed-header {
       top: auto;
@@ -24,43 +25,24 @@
 </style>
 
 <div class="fixed z-50 fixed-header" appHideHeader>
-  <p-card
-    styleClass="m-0 [&_.p-card-body]:!p-2 border border-gray-400/30 backdrop-blur-md"
-  >
+  <p-card styleClass="m-0 [&_.p-card-body]:!p-2 border border-gray-400/30 backdrop-blur-md">
     <div class="flex items-center justify-between w-full">
       <!-- Logo -->
       <div class="flex-none mr-3">
-        <img
-          src="../../../../../assets/svg/logo.svg"
-          [routerLink]="['/']"
-          width="40"
-          alt="logo"
-          class="hidden md:block cursor-pointer"
-        />
+        <img src="../../../../../assets/svg/logo.svg" [routerLink]="['/']" width="40" alt="logo"
+          class="hidden md:block cursor-pointer" />
       </div>
 
       <!-- Navigation Items -->
       <nav class="flex flex-grow lg:justify-start">
-        <ul
-          class="flex w-full justify-evenly md:justify-start space-x-2 items-center"
-        >
+        <ul class="flex w-full justify-evenly md:justify-start space-x-2 items-center">
           <!-- inicio -->
           <li>
-            <a
-              [routerLink]="['/']"
-              routerLinkActive="text-primary"
-              [routerLinkActiveOptions]="{ exact: true }"
-              pRipple
-              [pTooltip]="'Inicio'"
-              tooltipEvent="focus"
-              tooltipPosition="top"
-              life="500"
-              class="flex flex-col md:flex-row items-center justify-center px-1 rounded-md"
-            >
+            <a [routerLink]="['/']" routerLinkActive="text-primary" [routerLinkActiveOptions]="{ exact: true }" pRipple
+              [pTooltip]="'Inicio'" tooltipEvent="focus" tooltipPosition="top" life="500"
+              class="flex flex-col md:flex-row items-center justify-center px-1 rounded-md">
               <!-- Ícono: Visible solo en pantallas pequeñas y medianas -->
-              <i
-                class="pi pi-home text-xl md:text-base mb-1 md:mb-0 md:mr-2 sm:block"
-              ></i>
+              <i class="pi pi-home text-xl md:text-base mb-1 md:mb-0 md:mr-2 sm:block"></i>
 
               <!-- Texto: Visible solo en pantallas medianas y grandes -->
               <!-- <span class="text-sm md:text-base hidden md:block lg:block">Inicio</span> -->
@@ -70,20 +52,11 @@
 
           <!-- ofertas -->
           <li class="ml-1">
-            <a
-              [routerLink]="['/ofertas']"
-              routerLinkActive="text-primary"
-              pRipple
-              [pTooltip]="'Ofertas'"
-              tooltipEvent="focus"
-              tooltipPosition="top"
-              life="500"
-              class="flex flex-col md:flex-row items-center justify-center px-1 rounded-md"
-            >
+            <a [routerLink]="['/ofertas']" routerLinkActive="text-primary" pRipple [pTooltip]="'Ofertas'"
+              tooltipEvent="focus" tooltipPosition="top" life="500"
+              class="flex flex-col md:flex-row items-center justify-center px-1 rounded-md">
               <!-- Ícono: Visible solo en pantallas pequeñas y medianas -->
-              <i
-                class="pi pi-tag text-xl md:text-base mb-1 md:mb-0 md:mr-2 sm:block"
-              ></i>
+              <i class="pi pi-tag text-xl md:text-base mb-1 md:mb-0 md:mr-2 sm:block"></i>
 
               <!-- Texto: Visible solo en pantallas medianas y grandes -->
               <!-- <span class="text-sm md:text-base hidden md:block lg:block">Ofertas</span> -->
@@ -91,49 +64,46 @@
             </a>
           </li>
 
+          <!-- Productos -->
+          <li class="ml-1">
+            <a [routerLink]="['/productos']" routerLinkActive="text-primary" pRipple [pTooltip]="'Ofertas'"
+              tooltipEvent="focus" tooltipPosition="top" life="500"
+              class="flex flex-col md:flex-row items-center justify-center px-1 rounded-md">
+              <!-- Ícono: Visible solo en pantallas pequeñas y medianas -->
+              <i class="pi pi-shopping-cart text-xl md:text-base mb-1 md:mb-0 md:mr-2 sm:block"></i>
+
+              <!-- Texto: Visible solo en pantallas medianas y grandes -->
+              <!-- <span class="text-sm md:text-base hidden md:block lg:block">Ofertas</span> -->
+              <span class="text-xs sm:text-sm md:text-base">Productos</span>
+            </a>
+          </li>
+
           @if (authService.isAuthenticatedUser()) {
+          <!-- productos -->
+          <li>
+            <a [routerLink]="['/seguimientos']" routerLinkActive="text-primary" pRipple [pTooltip]="'Mis seguimientos'"
+              tooltipEvent="focus" tooltipPosition="top" life="500"
+              class="flex flex-col md:flex-row items-center justify-center px-1 rounded-md">
+              <!-- Ícono: Visible solo en pantallas pequeñas y medianas -->
+              <i class="pi pi-chart-line text-xl md:text-base mb-1 md:mb-0 md:mr-2"></i>
+
+              <!-- Texto: Visible solo en pantallas medianas y grandes -->
+              <!-- <span class="text-sm md:text-base hidden md:block lg:block">Mis productos</span> -->
+              <span class="text-xs sm:text-sm md:text-base">Seguimientos</span>
+            </a>
+          </li>
+
           <!-- alertas -->
           <li>
-            <a
-              [routerLink]="['/notificaciones']"
-              routerLinkActive="text-primary"
-              pRipple
-              [pTooltip]="'Alertas'"
-              tooltipEvent="focus"
-              tooltipPosition="top"
-              life="500"
-              class="flex flex-col md:flex-row items-center justify-center px-1 rounded-md"
-            >
+            <a [routerLink]="['/notificaciones']" routerLinkActive="text-primary" pRipple [pTooltip]="'Alertas'"
+              tooltipEvent="focus" tooltipPosition="top" life="500"
+              class="flex flex-col md:flex-row items-center justify-center px-1 rounded-md">
               <!-- Ícono: Visible solo en pantallas pequeñas y medianas -->
-              <i
-                class="pi pi-bell text-xl md:text-base mb-1 md:mb-0 md:mr-2 sm:block"
-              ></i>
+              <i class="pi pi-bell text-xl md:text-base mb-1 md:mb-0 md:mr-2 sm:block"></i>
 
               <!-- Texto: Visible solo en pantallas medianas y grandes -->
               <!-- <span class="text-sm md:text-base hidden md:block lg:block">Alertas</span> -->
               <span class="text-xs sm:text-sm md:text-base">Alertas</span>
-            </a>
-          </li>
-          <!-- productos -->
-          <li>
-            <a
-              [routerLink]="['/productos']"
-              routerLinkActive="text-primary"
-              pRipple
-              [pTooltip]="'Mis productos'"
-              tooltipEvent="focus"
-              tooltipPosition="top"
-              life="500"
-              class="flex flex-col md:flex-row items-center justify-center px-1 rounded-md"
-            >
-              <!-- Ícono: Visible solo en pantallas pequeñas y medianas -->
-              <i
-                class="pi pi-shopping-bag text-xl md:text-base mb-1 md:mb-0 md:mr-2"
-              ></i>
-
-              <!-- Texto: Visible solo en pantallas medianas y grandes -->
-              <!-- <span class="text-sm md:text-base hidden md:block lg:block">Mis productos</span> -->
-              <span class="text-xs sm:text-sm md:text-base">Productos</span>
             </a>
           </li>
           }
@@ -141,28 +111,14 @@
         @if (!authService.isAuthenticatedUser()) {
         <div class="flex items-center ml-1">
           <div class="block sm:hidden">
-            <p-button
-              type="button"
-              severity="primary"
-              icon="pi pi-user"
-              size="large"
-              [routerLink]="['/login']"
-              pTooltip="Ingresar"
-              tooltipPosition="bottom"
-            ></p-button>
+            <p-button type="button" severity="primary" icon="pi pi-user" size="large" [routerLink]="['/login']"
+              pTooltip="Ingresar" tooltipPosition="bottom"></p-button>
           </div>
 
           <!-- Botón con label para pantallas medianas en adelante -->
           <div class="hidden sm:block">
-            <p-button
-              type="button"
-              severity="primary"
-              icon="pi pi-user"
-              [routerLink]="['/login']"
-              [label]="'Ingresar'"
-              pTooltip="Ingresar"
-              tooltipPosition="bottom"
-            ></p-button>
+            <p-button type="button" severity="primary" icon="pi pi-user" [routerLink]="['/login']" [label]="'Ingresar'"
+              pTooltip="Ingresar" tooltipPosition="bottom"></p-button>
           </div>
         </div>
 
@@ -172,47 +128,30 @@
       <div class="flex items-center ml-1">
         <!-- Botón solo con ícono para pantallas pequeñas -->
         <div class="block sm:hidden ">
-          <p-button
-            type="button"
-            severity="secondary"
-            icon="pi pi-user"
-            size="large"
-            (onClick)="toggle($event)"
-            pTooltip="{{ authService.currentUser()!.fullname }}"
-            tooltipPosition="bottom"
-          ></p-button>
+          <p-button type="button" severity="secondary" icon="pi pi-user" size="large" (onClick)="toggle($event)"
+            pTooltip="{{ authService.currentUser()!.fullname }}" tooltipPosition="bottom"></p-button>
         </div>
 
         <!-- Botón con label para pantallas medianas en adelante -->
         <div class="hidden sm:block">
-          <p-button
-            type="button"
-            severity="secondary"
-            [label]="authService.currentUser()!.fullname"
-            icon="pi pi-user"
-            (onClick)="toggle($event)"
-          ></p-button>
+          <p-button type="button" severity="secondary" [label]="authService.currentUser()!.fullname" icon="pi pi-user"
+            (onClick)="toggle($event)"></p-button>
         </div>
 
         <!-- Popover -->
         <p-popover #op>
           <p class="mb-3" (click)="toggle($event)">
-            <a [routerLink]="['/productos']">
-              <i class="pi pi-shopping-bag me-2"></i> Mis productos</a
-            >
+            <a [routerLink]="['/seguimientos']">
+              <i class="pi pi-shopping-bag me-2"></i> Seguimientos</a>
           </p>
           <p class="mb-3" (click)="toggle($event)">
             <a [routerLink]="['/datos']">
-              <i class="pi pi-user me-2"></i> Datos</a
-            >
+              <i class="pi pi-user me-2"></i> Datos</a>
           </p>
           <!-- <p class="mb-3">
                 <a href=""> <i class="pi pi-crown me-2"></i> Suscripciones</a>
               </p> -->
-          <p
-            class="text-red-500 cursor-pointer"
-            (click)="logout(); toggle($event)"
-          >
+          <p class="text-red-500 cursor-pointer" (click)="logout(); toggle($event)">
             <a> <i class="pi pi-external-link me-2"></i> Salir</a>
           </p>
         </p-popover>
@@ -226,15 +165,8 @@
       </div>
       } -->
       <div class="flex justify-center ml-1">
-        <p-button
-          (onClick)="toggleTheme()"
-          [icon]="(isDarkTheme$ | async) ? 'pi pi-sun' : 'pi pi-moon'"
-          [text]="true"
-          size="large"
-          severity="contrast"
-          pTooltip="Tema"
-          tooltipPosition="bottom"
-        >
+        <p-button (onClick)="toggleTheme()" [icon]="(isDarkTheme$ | async) ? 'pi pi-sun' : 'pi pi-moon'" [text]="true"
+          size="large" severity="contrast" pTooltip="Tema" tooltipPosition="bottom">
         </p-button>
       </div>
     </div>

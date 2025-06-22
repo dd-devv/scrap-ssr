@@ -60,7 +60,7 @@ export const routes: Routes = [
 
       //Rutas para usuario autenticado
       {
-        path: 'productos',
+        path: 'seguimientos',
         loadComponent: () => import('./modules/user/products/products.component'),
         canActivate: [authenticatedUserGuard]
       },
@@ -70,7 +70,7 @@ export const routes: Routes = [
         canActivate: [authenticatedUserGuard]
       },
       {
-        path: 'producto/:id',
+        path: 'seguimientos/:id',
         loadComponent: () => import('./modules/user/product/product.component'),
       },
       {
@@ -81,6 +81,11 @@ export const routes: Routes = [
       {
         path: 'ofertas/:urlId',
         loadComponent: () => import('./modules/user/offer/offer.component')
+      },
+      {
+        path: 'productos',
+        loadComponent: () => import('./modules/user/products-all/products-all.component'),
+        data: { ssr: false }
       },
       {
         path: 'notificaciones',

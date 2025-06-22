@@ -36,7 +36,7 @@ export default class VerifyWhatsappComponent {
   handleInput(event: any, index: number): void {
     const input = event.target;
     let value = input.value;
-    
+
     if (!/^\d*$/.test(value)) {
       this.isInvalid = true;
       input.value = '';
@@ -44,19 +44,19 @@ export default class VerifyWhatsappComponent {
       setTimeout(() => this.isInvalid = false, 1000);
       return;
     }
-    
+
     if (value.length > 1) {
       value = value.slice(0, 1);
       input.value = value;
     }
-    
+
     this.otpValues[index] = value;
-    
+
     if (value && index < this.otpLength - 1) {
       const nextInput = document.querySelectorAll('.otp-box')[index + 1] as HTMLInputElement;
       nextInput.focus();
     }
-    
+
     if (!value && index > 0) {
       const prevInput = document.querySelectorAll('.otp-box')[index - 1] as HTMLInputElement;
       prevInput.focus();
@@ -65,7 +65,7 @@ export default class VerifyWhatsappComponent {
 
   handleKeyDown(event: KeyboardEvent, index: number): void {
     const input = event.target as HTMLInputElement;
-    
+
     if (event.key === 'Backspace') {
       if (!input.value && index > 0) {
         event.preventDefault();
@@ -74,15 +74,15 @@ export default class VerifyWhatsappComponent {
         this.otpValues[index - 1] = '';
         prevInput.focus();
       }
-      
+
       if (input.value) {
         input.value = '';
         this.otpValues[index] = '';
       }
       return;
     }
-    
-    if (!/^\d$/.test(event.key) && 
+
+    if (!/^\d$/.test(event.key) &&
         !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(event.key)) {
       event.preventDefault();
       this.isInvalid = true;
@@ -93,14 +93,14 @@ export default class VerifyWhatsappComponent {
   handlePaste(event: ClipboardEvent): void {
     event.preventDefault();
     const pasteData = event.clipboardData?.getData('text/plain').replace(/\D/g, '');
-    
+
     if (pasteData && pasteData.length === this.otpLength) {
       for (let i = 0; i < this.otpLength; i++) {
         this.otpValues[i] = pasteData[i];
         const input = document.querySelectorAll('.otp-box')[i] as HTMLInputElement;
         input.value = pasteData[i];
       }
-      
+
       const lastInput = document.querySelectorAll('.otp-box')[this.otpLength - 1] as HTMLInputElement;
       lastInput.focus();
     }
@@ -135,7 +135,7 @@ export default class VerifyWhatsappComponent {
         });
 
         this.verifyng = false;
-        this.router.navigate(['/productos']);
+        this.router.navigate(['/seguimientos']);
         this.authService.checkAuthStatus();
 
         if (isPlatformBrowser(this.PLATFORM_ID)) {

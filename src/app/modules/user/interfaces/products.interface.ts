@@ -25,6 +25,7 @@ export interface Product {
   currentPrice: number;
   lastUpdate:   Date;
   image:        string;
+  categories:   [string];
   lowestPrice:  number;
   url:          string;
   urlId:        string;
@@ -35,6 +36,7 @@ export interface ProductPublic {
   currentPrice:       number;
   lastUpdate:         Date;
   image:              string;
+  categories:         [string];
   url:                string;
   urlId:              string;
   job:              string;

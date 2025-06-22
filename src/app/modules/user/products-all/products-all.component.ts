@@ -1,29 +1,27 @@
+import { CurrencyPipe, isPlatformBrowser, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, PLATFORM_ID, signal } from '@angular/core';
-import ProductService from '../services/product.service';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { CurrencyPipe, isPlatformBrowser, TitleCasePipe } from '@angular/common';
-import { BadgeModule } from 'primeng/badge';
 import { TimeAgoPipe } from '../../../pipes/timeAgo.pipe';
-import { Skeleton } from 'primeng/skeleton';
+import { BadgeModule } from 'primeng/badge';
 import { ExtractDomainPipe } from '../../../pipes/extract-domain.pipe';
 import { RouterLink } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { Tooltip } from 'primeng/tooltip';
-import AuthService from '../../auth/services/auth.service';
 import { Toast } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 import { PaginationComponent } from '../../shared/pagination/pagination.component';
 import { PaginatePipe } from '../../../pipes/paginate.pipe';
-import { ProductPublic } from '../interfaces';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { SkeletonProdComponent } from "../../../ui/skeleton-prod/skeleton-prod.component";
+import { MessageService } from 'primeng/api';
+import ProductService from '../services/product.service';
+import AuthService from '../../auth/services/auth.service';
+import { ProductPublic } from '../interfaces';
+import { SkeletonProdComponent } from '../../../ui/skeleton-prod/skeleton-prod.component';
 
 @Component({
-  selector: 'app-offers',
-  standalone: true,
+  selector: 'app-products-all',
   imports: [
     ButtonModule,
     CardModule,
@@ -42,13 +40,13 @@ import { SkeletonProdComponent } from "../../../ui/skeleton-prod/skeleton-prod.c
     InputTextModule,
     FloatLabelModule,
     SkeletonProdComponent
-],
+  ],
   providers: [ExtractDomainPipe, MessageService],
-  templateUrl: './offers.component.html',
-  styleUrl: './offers.component.css',
+  templateUrl: './products-all.component.html',
+  styleUrl: './products-all.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class OffersComponent {
+export default class ProductsAllComponent {
   productService = inject(ProductService);
   extractDomainPipe = inject(ExtractDomainPipe);
   private messageService = inject(MessageService);
@@ -59,7 +57,7 @@ export default class OffersComponent {
   searchTerm: string = '';
 
   componentLoading = this.productService.isLoading;
-  products = this.productService.productsPublic;
+  products = this.productService.productsAll;
   filteredProducts = signal<ProductPublic[]>([]);
   isLoading = this.productService.isLoading;
 
@@ -79,11 +77,11 @@ export default class OffersComponent {
 
   ngOnInit(): void {
 
-    this.obteneOfertas();
+    this.obteneProductsAll();
   }
 
-  obteneOfertas() {
-    this.productService.getLatestResultsPublic().subscribe({
+  obteneProductsAll() {
+    this.productService.getProductsPublic().subscribe({
       next: (res) => {
         this.loadStores();
         this.products().forEach(prod => {
@@ -133,16 +131,16 @@ export default class OffersComponent {
   }
 
   clearFilters(): void {
-  this.searchTerm = '';
-  this.selectedStore = null;
-  this.applyFilter();
-  this.currentPage = 1; // Resetear a la primera página
+    this.searchTerm = '';
+    this.selectedStore = null;
+    this.applyFilter();
+    this.currentPage = 1; // Resetear a la primera página
 
-  // Opcional: hacer scroll al inicio
-  if (isPlatformBrowser(this.platformId)) {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Opcional: hacer scroll al inicio
+    if (isPlatformBrowser(this.platformId)) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
-}
 
   get totalPages(): number {
     return Math.ceil(this.filteredProducts().length / this.pageSize);
@@ -176,7 +174,7 @@ export default class OffersComponent {
     this.productService.addUrlForMe(sourceJobId, urlId).subscribe({
       next: (response) => {
         this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Agregado a tu seguimiento', life: 3000 });
-        this.obteneOfertas();
+        this.obteneProductsAll();
       },
       error: (error) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error, life: 3000 });
@@ -218,7 +216,7 @@ export default class OffersComponent {
     this.productService.deleteUrl(urlId).subscribe({
       next: (res) => {
         this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Dejaste de seguir', life: 3000 });
-        this.obteneOfertas();
+        this.obteneProductsAll();
       }
     });
   }

@@ -14,7 +14,7 @@
         @if (!authService.isAuthenticated()) {
           <p-button label="Empezar ahora" icon="pi pi-arrow-right" iconPos="right" [routerLink]="['/register']" />
         } @else {
-          <p-button label="Registrar productos" [routerLink]="['/productos']" />
+          <p-button label="Registrar productos" [routerLink]="['/seguimientos']" />
         }
     </div>
 

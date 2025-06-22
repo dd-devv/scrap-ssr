@@ -8,10 +8,12 @@ import { Card } from 'primeng/card';
 import { Button } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
 import { ConfirmDialog } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Skeleton } from 'primeng/skeleton';
 import { ExtractDomainPipe } from '../../../pipes/extract-domain.pipe';
 import { Meta, Title } from '@angular/platform-browser'; // Importar Meta y Title
+import AuthService from '../../auth/services/auth.service';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-product',
@@ -24,9 +26,10 @@ import { Meta, Title } from '@angular/platform-browser'; // Importar Meta y Titl
     ConfirmDialog,
     Skeleton,
     ExtractDomainPipe,
-    TimeAgoPipe
+    TimeAgoPipe,
+    ToastModule
   ],
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, MessageService],
   styleUrl: './product.component.css',
   templateUrl: './product.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +38,8 @@ export default class ProductComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private confirmationService = inject(ConfirmationService);
   productService = inject(ProductService);
+  private messageService = inject(MessageService);
+  authService = inject(AuthService);
   router = inject(Router);
   private meta = inject(Meta); // Inyectar servicio Meta
   private title = inject(Title); // Inyectar servicio Title
@@ -45,6 +50,10 @@ export default class ProductComponent implements OnInit {
   options: any;
   platformId = inject(PLATFORM_ID);
   urlId: string = '';
+
+  isLoading = this.productService.isLoading;
+
+  estadosOfertas = signal<{ [key: string]: boolean }>({});
 
   constructor(private cd: ChangeDetectorRef) { }
 
@@ -71,24 +80,25 @@ export default class ProductComponent implements OnInit {
     //   })
     // ).subscribe();
     this.route.paramMap.pipe(
-    tap(params => {
-      const id = params.get('id');
-      this.productId.set(id);
-    }),
-    switchMap(() => {
-      const id = this.productId() ?? '';
-      return this.productService.getPriceHistory(id);
-    }),
-    tap(response => {
-      if (response && response.priceHistory) {
-        this.updateChart(response.priceHistory);
+      tap(params => {
+        const id = params.get('id');
+        this.productId.set(id);
+        this.cargarEstadoJobs(id!);
+      }),
+      switchMap(() => {
+        const id = this.productId() ?? '';
+        return this.productService.getPriceHistory(id);
+      }),
+      tap(response => {
+        if (response && response.priceHistory) {
+          this.updateChart(response.priceHistory);
 
-        if (response.productInfo) {
-          this.updateMetaTags(response.productInfo);
+          if (response.productInfo) {
+            this.updateMetaTags(response.productInfo);
+          }
         }
-      }
-    })
-  ).subscribe();
+      })
+    ).subscribe();
 
     // Inicializar el gráfico con datos vacíos
     this.initChart();
@@ -103,8 +113,8 @@ export default class ProductComponent implements OnInit {
 
     // Obtener una descripción limpia
     const description = productInfo.description ?
-        `${productInfo.description.slice(0, 150)}...` :
-        'Monitoreo de precios y alertas de WhatsApp para este producto en AcllaBay';
+      `${productInfo.description.slice(0, 150)}...` :
+      'Monitoreo de precios y alertas de WhatsApp para este producto en AcllaBay';
 
     // Actualizar todas las meta tags
     this.meta.updateTag({ name: 'description', content: description });
@@ -322,7 +332,7 @@ export default class ProductComponent implements OnInit {
   deleteUrl(): void {
     this.productService.deleteUrl(this.urlId).subscribe({
       next: (res) => {
-        this.router.navigate(['/productos']);
+        this.router.navigate(['/seguimientos']);
       }
     });
   }
@@ -330,8 +340,51 @@ export default class ProductComponent implements OnInit {
   delete(urlId: string): void {
     this.productService.deleteUrl(urlId).subscribe({
       next: (res) => {
-        this.router.navigate(['/productos']);
+        this.router.navigate(['/seguimientos']);
       }
     });
+  }
+
+
+  cargarEstadoJobs(urlId: string): void {
+    this.productService.getMyJob(urlId).subscribe({
+      next: (res) => {
+        // Actualizar la señal con el nuevo estado
+        this.estadosOfertas.update(estados => ({
+          ...estados,
+          [urlId]: res.myjob
+        }));
+      },
+      error: (err) => {
+        // En caso de error, marcar como false
+        this.estadosOfertas.update(estados => ({
+          ...estados,
+          [urlId]: false
+        }));
+      }
+    });
+  }
+
+  // Método para obtener el estado (usa la señal)
+  getMyJob(urlId: string): boolean {
+    return this.estadosOfertas()[urlId] || false;
+  }
+
+  addUrlForMe(sourceJobId: string, urlId: string) {
+    this.isLoading.set(true);
+    this.productService.addUrlForMe(sourceJobId, urlId).subscribe({
+      next: (response) => {
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Agregado a tu seguimiento', life: 3000 });
+        this.cargarEstadoJobs(this.productId()!);
+      },
+      error: (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error, life: 3000 });
+        this.isLoading.set(false);
+      },
+      complete: () => {
+        this.isLoading.set(false);
+      }
+    });
+
   }
 }

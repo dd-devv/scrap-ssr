@@ -67,7 +67,7 @@ export default class NotificationsComponent {
   readNotification(id: string, urlId: string) {
     this.notificationService.readNotification(id).subscribe({
       next: (res) => {
-        this.rouer.navigate(['/producto', urlId]);
+        this.rouer.navigate(['/seguimientos', urlId]);
       }
     });
   }

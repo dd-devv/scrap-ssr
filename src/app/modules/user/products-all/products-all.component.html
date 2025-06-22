@@ -46,7 +46,7 @@
           <div class="bg-white">
             <img [alt]="product.productTitle"
               class="h-52 md:h-[362px] xl:h-[302px] w-full m-auto cursor-pointer object-contain" [src]="product.image"
-              [routerLink]="['/ofertas', product.urlId]" />
+              [routerLink]="['/seguimientos', product.urlId]" />
           </div>
         </ng-template>
         <ng-template #title>
@@ -54,46 +54,48 @@
             {{ truncateText(product.productTitle) | titlecase }}
           </div>
           <div class="mt-2 flex align-middle">
-            <p-badge [value]="product.discountPercentage + '% de ahorro'" severity="contrast" />
-
             @if (authService.isAuthenticatedUser()) {
             <!-- @if (getMyJob(product.urlId)) {
-            <a class="ml-3 text-red-500 cursor-pointer" pTooltip="Siguiendo" tooltipPosition="bottom">
+            <a class="text-red-500 cursor-pointer" pTooltip="Siguiendo" tooltipPosition="bottom">
               <i class="pi pi-heart-fill text-lg"></i>
             </a>
             } @else {
-            <a class="ml-3 text-gray-500 cursor-pointer" pTooltip="Empezar a seguir" tooltipPosition="bottom"
+            <a class="text-gray-500 cursor-pointer" pTooltip="Empezar a seguir" tooltipPosition="bottom"
               (click)="addUrlForMe(product.job, product.urlId)">
               <i class="pi pi-heart text-lg"></i>
             </a>
             } -->
             @if (getMyJob(product.urlId)) {
-            <a class="ml-3 text-red-500 cursor-pointer" pTooltip="Siguiendo" tooltipPosition="bottom">
+            <a class="text-red-500 cursor-pointer" pTooltip="Siguiendo" tooltipPosition="bottom">
               <i class="pi pi-heart-fill text-lg"></i>
             </a>
             } @else {
-            <a class="ml-3 text-gray-500 hover:text-red-500 cursor-pointer transition-colors duration-200"
+            <a class="text-gray-500 hover:text-red-500 cursor-pointer transition-colors duration-200"
               pTooltip="Empezar a seguir" tooltipPosition="bottom" (click)="addUrlForMe(product.job, product.urlId)">
               <i class="pi pi-heart text-lg hover:pi-heart-fill"></i>
             </a>
             }
             } @else {
-            <a class="ml-3 text-gray-500 cursor-pointer" pTooltip="Empezar a seguir" tooltipPosition="bottom"
+            <a class="text-gray-500 cursor-pointer" pTooltip="Empezar a seguir" tooltipPosition="bottom"
               [routerLink]="['/login']">
               <i class="pi pi-heart text-lg"></i>
             </a>
+            }
+
+            @if (product.discountPercentage > 0) {
+            <p-badge [value]="product.discountPercentage + '% de ahorro'" severity="contrast" class="ml-3" />
             }
           </div>
         </ng-template>
         <ng-template #subtitle>
           <div class="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-2 cursor-pointer"
-            [routerLink]="['/ofertas', product.urlId]">
+            [routerLink]="['/seguimientos', product.urlId]">
             <img class="h-5" src="../../../../assets/svg/{{ product.url | extractDomain }}.svg"
               alt="Logo {{ product.url | extractDomain }}" />
             <small>Actualización ({{ product.lastUpdate | timeAgo }})</small>
           </div>
         </ng-template>
-        <div class="cursor-pointer" [routerLink]="['/ofertas', product.urlId]">
+        <div class="cursor-pointer" [routerLink]="['/seguimientos', product.urlId]">
           <h2 class="text-lg sm:text-2xl">
             {{ product.currentPrice | currency : "S/ " }}
           </h2>
