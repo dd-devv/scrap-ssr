@@ -99,7 +99,7 @@
           <h2 class="text-lg sm:text-2xl">
             {{ product.currentPrice | currency : "S/ " }}
           </h2>
-          <h3 class="text-sm marfa-italic-md mb-3">
+          <h3 class="text-sm marfa-italic-md mb-3" [style.visibility]="product.currentPrice >=  product.previousPrice ? 'hidden' : 'visible'">
             Antes:
             <samp class="line-through">{{
               product.previousPrice | currency : "S/"
