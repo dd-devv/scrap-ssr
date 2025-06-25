@@ -184,7 +184,13 @@ export default class ProductsComponent implements OnInit {
       name: 'Carsa',
       logo: 'assets/svg/carsa.svg',
       url: 'https://www.carsa.pe/',
-      domain: 'metro'
+      domain: 'carsa'
+    },
+    {
+      name: 'Aruma',
+      logo: 'assets/svg/aruma.svg',
+      url: 'https://www.aruma.pe/',
+      domain: 'aruma'
     }
   ];
 

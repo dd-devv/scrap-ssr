@@ -96,4 +96,10 @@ export const Shops: Shop[] = [
     logo: 'assets/svg/carsa.svg',
     url: 'https://www.carsa.pe/',
   },
+  {
+    id: 16,
+    name: 'Aruma',
+    logo: 'assets/svg/aruma.svg',
+    url: 'https://www.aruma.pe/',
+  },
 ];
