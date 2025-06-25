@@ -1,159 +1,212 @@
 <div class="min-h-80 py-2">
   <!-- Barra de búsqueda y filtro -->
   <div class="mb-4 mt-2 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-    <!-- Buscador -->
-    <div class="w-full md:w-96">
+    <!-- Contenedor de buscador y botón de filtros -->
+    <div class="flex w-full items-center gap-2 md:w-96">
+      <!-- Botón para mostrar filtros en móvil -->
+      <p-button 
+                class="lg:hidden" 
+                (onClick)="sidebarVisible = true"><i class="pi pi-filter"></i>Filtro</p-button>
+      
+      <!-- Buscador -->
       <span class="p-input-icon-left w-full">
-        <!-- <i class="pi pi-search"></i> -->
-        <!-- <input type="text" pInputText [(ngModel)]="searchTerm" (input)="applyFilter()"
-               placeholder="Buscar en Acllabay.com" class="w-full" /> -->
         <p-floatlabel>
           <input pInputText [(ngModel)]="searchTerm" (input)="applyFilter()" autocomplete="off" class="w-full" />
           <label for="over_label"> <i class="pi pi-search"></i> Buscar en Acllabay.com</label>
         </p-floatlabel>
       </span>
     </div>
+  </div>
 
-    <!-- Filtro por tienda -->
-    <div class="w-full md:w-64">
-      <p-dropdown [options]="availableStores" [(ngModel)]="selectedStore" (onChange)="applyFilter()" [showClear]="true"
-        placeholder="Filtrar por tienda" appendTo="body" styleClass="w-full">
-        <ng-template pTemplate="item" let-store>
-          <div class="flex items-center gap-2">
-            <img class="h-6" src="../../../../assets/svg/{{ store }}.svg" alt="Logo {{ store }}" />
-            <span>{{ store | titlecase }}</span>
-          </div>
-        </ng-template>
-      </p-dropdown>
+  <!-- Sidebar móvil -->
+  <p-drawer [(visible)]="sidebarVisible" position="left" [style]="{width: '20rem'}">
+    <div class="p-4">
+      <h2 class="text-lg font-bold mb-3">Filtros de busqueda</h2>
+      <!-- Filtro por tienda -->
+      <div class="w-full mb-3">
+        <p-dropdown [options]="availableStores" [(ngModel)]="selectedStore" (onChange)="applyFilter()" [showClear]="true"
+          placeholder="Filtrar por tienda" appendTo="body" styleClass="w-full">
+          <ng-template pTemplate="item" let-store>
+            <div class="flex items-center gap-2">
+              <img class="h-6" src="../../../../assets/svg/{{ store }}.svg" alt="Logo {{ store }}" />
+              <span>{{ store | titlecase }}</span>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+      <!-- Filtro por descuento -->
+      <div class="w-full">
+        <p-dropdown [options]="discountRanges" optionLabel="label" [(ngModel)]="selectedDiscountRange" 
+                    (onChange)="applyFilter()" [showClear]="true" placeholder="Filtrar por descuento" 
+                    appendTo="body" styleClass="w-full">
+          <ng-template pTemplate="item" let-range>
+            <div class="flex items-center gap-2">
+              <i class="pi pi-percentage"></i>
+              <span>{{ range.label }}</span>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+      <div class="mt-4">
+        <button pButton label="Aplicar filtros" class="w-full mb-2" (click)="sidebarVisible = false"></button>
+        <button pButton pRipple label="Limpiar filtros" icon="pi pi-filter-slash" class="p-button-outlined w-full"
+          (click)="clearFilters()"></button>
+      </div>
     </div>
-  </div>
+  </p-drawer>
 
-  @if (isLoading()) {
-  <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
-    @for (item of [1,2,3,4,5,6,7,8]; track $index) {
-    <skeleton-prod />
-    }
-  </div>
-  }
-
-  @if (!isLoading()) {
-  <div class="my-4 grid grid-cols-2 gap-1 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-    @for (product of filteredProducts() | paginate:currentPage:pageSize; track $index) {
-    <div>
-      <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%' }"
-        styleClass="[&_.p-card-body]:!p-2 sm:[&_.p-card-body]:!p-4">
-        <ng-template #header>
-          <div class="bg-white">
-            <img [alt]="product.productTitle"
-              class="h-52 md:h-[362px] xl:h-[302px] w-full m-auto cursor-pointer object-contain" [src]="product.image"
-              [routerLink]="['/ofertas', product.urlId]" />
-          </div>
-        </ng-template>
-        <ng-template #title>
-          <div class="text-sm  h-[60px] sm:text-xl  sm:h-16">
-            {{ truncateText(product.productTitle) | titlecase }}
-          </div>
-          <div class="mt-2 flex align-middle">
-            <p-badge [value]="product.discountPercentage + '% de ahorro'" severity="contrast" />
-
-            @if (authService.isAuthenticatedUser()) {
-            <!-- @if (getMyJob(product.urlId)) {
-            <a class="ml-3 text-red-500 cursor-pointer" pTooltip="Siguiendo" tooltipPosition="bottom">
-              <i class="pi pi-heart-fill text-lg"></i>
-            </a>
-            } @else {
-            <a class="ml-3 text-gray-500 cursor-pointer" pTooltip="Empezar a seguir" tooltipPosition="bottom"
-              (click)="addUrlForMe(product.job, product.urlId)">
-              <i class="pi pi-heart text-lg"></i>
-            </a>
-            } -->
-            @if (getMyJob(product.urlId)) {
-            <a class="ml-3 text-red-500 cursor-pointer" pTooltip="Siguiendo" tooltipPosition="bottom">
-              <i class="pi pi-heart-fill text-lg"></i>
-            </a>
-            } @else {
-            <a class="ml-3 text-gray-500 hover:text-red-500 cursor-pointer transition-colors duration-200"
-              pTooltip="Empezar a seguir" tooltipPosition="bottom" (click)="addUrlForMe(product.job, product.urlId)">
-              <i class="pi pi-heart text-lg hover:pi-heart-fill"></i>
-            </a>
-            }
-            } @else {
-            <a class="ml-3 text-gray-500 cursor-pointer" pTooltip="Empezar a seguir" tooltipPosition="bottom"
-              [routerLink]="['/login']">
-              <i class="pi pi-heart text-lg"></i>
-            </a>
-            }
-          </div>
-        </ng-template>
-        <ng-template #subtitle>
-          <div class="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-2 cursor-pointer"
-            [routerLink]="['/ofertas', product.urlId]">
-            <img class="h-5" src="../../../../assets/svg/{{ product.url | extractDomain }}.svg"
-              alt="Logo {{ product.url | extractDomain }}" />
-            <small>Actualización ({{ product.lastUpdate | timeAgo }})</small>
-          </div>
-        </ng-template>
-        <div class="cursor-pointer" [routerLink]="['/ofertas', product.urlId]">
-          <h2 class="text-lg sm:text-2xl">
-            {{ product.currentPrice | currency : "S/ " }}
-          </h2>
-          <h3 class="text-sm marfa-italic-md mb-3">
-            Antes:
-            <samp class="line-through">{{
-              product.previousPrice | currency : "S/"
-              }}</samp>
-          </h3>
+  <div class="flex flex-row gap-3">
+    <!-- Sidebar de filtros para desktop -->
+    <div class="hidden w-72 lg:block">
+      <p-card class="w-full">
+        <h2 class="text-lg font-bold mb-3">Filtros de busqueda</h2>
+        <!-- Filtro por tienda -->
+        <div class="w-full mb-3">
+          <p-dropdown [options]="availableStores" [(ngModel)]="selectedStore" (onChange)="applyFilter()" [showClear]="true"
+            placeholder="Filtrar por tienda" appendTo="body" styleClass="w-full">
+            <ng-template pTemplate="item" let-store>
+              <div class="flex items-center gap-2">
+                <img class="h-6" src="../../../../assets/svg/{{ store }}.svg" alt="Logo {{ store }}" />
+                <span>{{ store | titlecase }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
         </div>
-        <ng-template #footer>
-          @if (authService.isAuthenticatedUser()) {
-          @if (getMyJob(product.urlId)) {
-          <p class="text-center text-base text-red-500 border border-red-500 rounded-md py-1 sm:py-2 hover:bg-red-500 hover:text-white cursor-pointer"
-            (click)="deleteUrl(product.urlId)">
-            <i class="pi pi-times me-1 sm:me-2 text-xs sm:text-base"></i>
-            <a class="w-full text-xs sm:text-base"> Dejar de seguir </a>
-          </p>
-          } @else {
-          <p-button label="Seguir" icon="pi pi-heart-fill" class="w-full text-xs sm:text-base" styleClass="w-full"
-            (onClick)="addUrlForMe(product.job, product.urlId)" />
-          }
-          } @else {
-          <p class="text-center text-base text-green-500 border border-green-500 rounded-md py-2 hover:bg-green-500 hover:text-white cursor-pointer"
-            [routerLink]="['/login']">
-            <i class="pi pi-heart me-2 text-base"></i>
-            <a class="text-base"> Seguir </a>
-          </p>
-          }
-
-
-        </ng-template>
+        <!-- Filtro por descuento -->
+        <div class="w-full">
+          <p-dropdown [options]="discountRanges" optionLabel="label" [(ngModel)]="selectedDiscountRange" 
+                      (onChange)="applyFilter()" [showClear]="true" placeholder="Filtrar por descuento" 
+                      appendTo="body" styleClass="w-full">
+            <ng-template pTemplate="item" let-range>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-percentage"></i>
+                <span>{{ range.label }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
       </p-card>
     </div>
-    }
-  </div>
-
-  @if (totalPages > 1) {
-  <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)" />
-  }
-  }
-
-  @if (!isLoading() && filteredProducts().length === 0) {
-  <div class="flex flex-col items-center justify-center py-12 text-center">
-    <i class="pi pi-search text-6xl text-gray-400 mb-4"></i>
-    <h3 class="text-xl font-medium text-gray-600 mb-2">No se encontraron productos</h3>
-    <p class="text-gray-500 mb-6">
-      @if (searchTerm || selectedStore) {
-      No encontramos resultados para "{{searchTerm}}"
-      @if (selectedStore) { en {{selectedStore | titlecase}} }
-      } @else {
-      No hay productos disponibles en este momento
+    
+    <!-- Contenido principal -->
+    <div class="flex-1">
+      @if (isLoading()) {
+      <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
+        @for (item of [1,2,3,4,5,6,7,8]; track $index) {
+        <skeleton-prod />
+        }
+      </div>
       }
-    </p>
-    @if (searchTerm || selectedStore) {
-    <button pButton pRipple label="Limpiar filtros" icon="pi pi-filter-slash" class="p-button-outlined"
-      (click)="clearFilters()"></button>
-    }
+
+      @if (!isLoading()) {
+      <div class=" grid grid-cols-2 gap-1 sm:gap-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
+        @for (product of filteredProducts() | paginate:currentPage:pageSize; track $index) {
+        <div>
+          <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%' }"
+            styleClass="[&_.p-card-body]:!p-2 sm:[&_.p-card-body]:!p-4">
+            <ng-template #header>
+              <div class="bg-white">
+                <img [alt]="product.productTitle"
+                  class="h-52 md:h-[250px]  w-full m-auto cursor-pointer object-contain" [src]="product.image"
+                  [routerLink]="['/ofertas', product.urlId]" />
+              </div>
+            </ng-template>
+            <ng-template #title>
+              <div class="text-sm  sm:text-base  sm:h-12">
+                {{ truncateText(product.productTitle) | titlecase }}
+              </div>
+              <div class="mt-2 flex align-middle">
+                <p-badge [value]="product.discountPercentage + '% de ahorro'" severity="contrast" />
+
+                @if (authService.isAuthenticatedUser()) {
+                @if (getMyJob(product.urlId)) {
+                <a class="ml-3 text-red-500 cursor-pointer" pTooltip="Siguiendo" tooltipPosition="bottom">
+                  <i class="pi pi-heart-fill text-lg"></i>
+                </a>
+                } @else {
+                <a class="ml-3 text-gray-500 hover:text-red-500 cursor-pointer transition-colors duration-200"
+                  pTooltip="Empezar a seguir" tooltipPosition="bottom" (click)="addUrlForMe(product.job, product.urlId)">
+                  <i class="pi pi-heart text-lg hover:pi-heart-fill"></i>
+                </a>
+                }
+                } @else {
+                <a class="ml-3 text-gray-500 cursor-pointer" pTooltip="Empezar a seguir" tooltipPosition="bottom"
+                  [routerLink]="['/login']">
+                  <i class="pi pi-heart text-lg"></i>
+                </a>
+                }
+              </div>
+            </ng-template>
+            <ng-template #subtitle>
+              <div class="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-2 cursor-pointer"
+                [routerLink]="['/ofertas', product.urlId]">
+                <img class="h-5" src="../../../../assets/svg/{{ product.url | extractDomain }}.svg"
+                  alt="Logo {{ product.url | extractDomain }}" />
+                <small>Actualización ({{ product.lastUpdate | timeAgo }})</small>
+              </div>
+            </ng-template>
+            <div class="cursor-pointer" [routerLink]="['/ofertas', product.urlId]">
+              <h2 class="text-lg sm:text-2xl">
+                {{ product.currentPrice | currency : "S/ " }}
+              </h2>
+              <h3 class="text-sm marfa-italic-md mb-3">
+                Antes:
+                <samp class="line-through">{{
+                  product.previousPrice | currency : "S/"
+                  }}</samp>
+              </h3>
+            </div>
+            <ng-template #footer>
+              @if (authService.isAuthenticatedUser()) {
+              @if (getMyJob(product.urlId)) {
+              <p class="text-center text-base text-red-500 border border-red-500 rounded-md py-1 sm:py-2 hover:bg-red-500 hover:text-white cursor-pointer"
+                (click)="deleteUrl(product.urlId)">
+                <i class="pi pi-times me-1 sm:me-2 text-xs sm:text-base"></i>
+                <a class="w-full text-xs sm:text-base"> Dejar de seguir </a>
+              </p>
+              } @else {
+              <p-button label="Seguir" icon="pi pi-heart-fill" class="w-full text-xs sm:text-base" styleClass="w-full"
+                (onClick)="addUrlForMe(product.job, product.urlId)" />
+              }
+              } @else {
+              <p class="text-center text-base text-green-500 border border-green-500 rounded-md py-2 hover:bg-green-500 hover:text-white cursor-pointer"
+                [routerLink]="['/login']">
+                <i class="pi pi-heart me-2 text-base"></i>
+                <a class="text-base"> Seguir </a>
+              </p>
+              }
+            </ng-template>
+          </p-card>
+        </div>
+        }
+      </div>
+
+      @if (totalPages > 1) {
+      <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)" />
+      }
+      }
+
+      @if (!isLoading() && filteredProducts().length === 0) {
+      <div class="flex flex-col items-center justify-center py-12 text-center">
+        <i class="pi pi-search text-6xl text-gray-400 mb-4"></i>
+        <h3 class="text-xl font-medium text-gray-600 mb-2">No se encontraron productos</h3>
+        <p class="text-gray-500 mb-6">
+          @if (searchTerm || selectedStore || selectedDiscountRange) {
+          No encontramos resultados para "{{searchTerm}}"
+          @if (selectedStore) { en {{selectedStore | titlecase}} }
+          @if (selectedDiscountRange) { con {{selectedDiscountRange.label}} }
+          } @else {
+          No hay productos disponibles en este momento
+          }
+        </p>
+        @if (searchTerm || selectedStore || selectedDiscountRange) {
+        <button pButton pRipple label="Limpiar filtros" icon="pi pi-filter-slash" class="p-button-outlined"
+          (click)="clearFilters()"></button>
+        }
+      </div>
+      }
+    </div>
   </div>
-  }
 </div>
 
 <p-toast [breakpoints]="{ '780px': { width: '80%', right: '8' } }" />

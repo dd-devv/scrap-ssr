@@ -20,6 +20,8 @@ import { ProductPublic } from '../interfaces';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { SkeletonProdComponent } from "../../../ui/skeleton-prod/skeleton-prod.component";
+import { DrawerModule } from 'primeng/drawer';
+
 
 @Component({
   selector: 'app-offers',
@@ -41,7 +43,8 @@ import { SkeletonProdComponent } from "../../../ui/skeleton-prod/skeleton-prod.c
     PaginatePipe,
     InputTextModule,
     FloatLabelModule,
-    SkeletonProdComponent
+    SkeletonProdComponent,
+    DrawerModule
 ],
   providers: [ExtractDomainPipe, MessageService],
   templateUrl: './offers.component.html',
@@ -68,6 +71,22 @@ export default class OffersComponent {
   currentPage = 1;
   pageSize = 16;
 
+  selectedDiscountRange: any = null;
+  discountRanges = [
+    { label: '10% o más', value: { min: 10, max: 100 } },
+    { label: '20% o más', value: { min: 20, max: 100 } },
+    { label: '30% o más', value: { min: 30, max: 100 } },
+    { label: '40% o más', value: { min: 40, max: 100 } },
+    { label: '50% o más', value: { min: 50, max: 100 } },
+    { label: '60% o más', value: { min: 60, max: 100 } },
+    { label: '70% o más', value: { min: 70, max: 100 } },
+    { label: '80% o más', value: { min: 80, max: 100 } },
+    { label: '90% o más', value: { min: 90, max: 100 } }
+  ];
+  showSidebar = false;
+  sidebarVisible = false;
+  drawerVisible = false;
+
   loadStores() {
     const stores = new Set<string>();
     this.products().forEach(product => {
@@ -91,7 +110,7 @@ export default class OffersComponent {
         });
 
         this.filteredProducts.set(this.products());
-
+        this.applyFilter();
       },
       error: (err) => {
         console.error('Error al cargar ofertas:', err);
@@ -99,46 +118,115 @@ export default class OffersComponent {
     });
   }
 
+
+
+  // Modifica el método applyFilter para incluir el filtro por descuento
   // applyFilter() {
   //   this.currentPage = 1;
-  //   if (!this.selectedStore) {
-  //     this.filteredProducts.set(this.products());
-  //     return;
+
+  //   let filtered = this.products();
+
+  //   // Aplicar filtro por tienda si está seleccionada
+  //   if (this.selectedStore) {
+  //     filtered = filtered.filter(product =>
+  //       this.extractDomainPipe.transform(product.url) === this.selectedStore
+  //     );
   //   }
-  //   this.filteredProducts.set(this.products().filter(product =>
-  //     this.extractDomainPipe.transform(product.url) === this.selectedStore
-  //   ));
+
+  //   // Aplicar filtro por búsqueda si hay término
+  //   if (this.searchTerm.trim()) {
+  //     const searchTermLower = this.searchTerm.toLowerCase().trim();
+  //     filtered = filtered.filter(product =>
+  //       product.productTitle.toLowerCase().includes(searchTermLower)
+  //     );
+  //   }
+
+  //   // Aplicar filtro por rango de descuento
+  //   if (this.selectedDiscountRange) {
+  //     filtered = filtered.filter(product => {
+  //       const discount = product.discountPercentage;
+  //       return discount >= this.selectedDiscountRange.value.min && 
+  //             discount <= this.selectedDiscountRange.value.max;
+  //     });
+  //   }
+
+  //   this.filteredProducts.set(filtered);
   // }
-  applyFilter() {
-    this.currentPage = 1;
+applyFilter() {
+  console.log('Aplicando filtros:', {
+    searchTerm: this.searchTerm,
+    selectedStore: this.selectedStore,
+    selectedDiscountRange: this.selectedDiscountRange
+  });
 
-    let filtered = this.products();
+  this.currentPage = 1;
+  let filtered = this.products();
 
-    // Aplicar filtro por tienda si está seleccionada
-    if (this.selectedStore) {
-      filtered = filtered.filter(product =>
-        this.extractDomainPipe.transform(product.url) === this.selectedStore
-      );
-    }
+  console.log('Productos iniciales:', filtered.length);
 
-    // Aplicar filtro por búsqueda si hay término
-    if (this.searchTerm.trim()) {
-      const searchTermLower = this.searchTerm.toLowerCase().trim();
-      filtered = filtered.filter(product =>
-        product.productTitle.toLowerCase().includes(searchTermLower)
-      );
-    }
-
-    this.filteredProducts.set(filtered);
+  // Aplicar filtro por tienda si está seleccionada
+  if (this.selectedStore) {
+    filtered = filtered.filter(product =>
+      this.extractDomainPipe.transform(product.url) === this.selectedStore
+    );
+    console.log('Después del filtro por tienda:', filtered.length);
   }
 
-  clearFilters(): void {
+  // Aplicar filtro por búsqueda si hay término
+  if (this.searchTerm.trim()) {
+    const searchTermLower = this.searchTerm.toLowerCase().trim();
+    filtered = filtered.filter(product =>
+      product.productTitle.toLowerCase().includes(searchTermLower)
+    );
+    console.log('Después del filtro por búsqueda:', filtered.length);
+  }
+
+  // Aplicar filtro por rango de descuento - VERSIÓN MÁS DEFENSIVA
+  if (this.selectedDiscountRange && 
+      this.selectedDiscountRange.value && 
+      typeof this.selectedDiscountRange.value.min === 'number' && 
+      typeof this.selectedDiscountRange.value.max === 'number') {
+    console.log('Aplicando filtro de descuento:', this.selectedDiscountRange);
+    filtered = filtered.filter(product => {
+      // const discount = product.discountPercentage;
+      const discount = Number(product.discountPercentage);
+      // Verificar que el descuento sea un número válido
+      if (typeof discount !== 'number' || isNaN(discount)) {
+        console.log(`Producto con descuento inválido: ${product.productTitle}, descuento: ${discount}`);
+        return false;
+      }
+      
+      const inRange = discount >= this.selectedDiscountRange.value.min && 
+                     discount <= this.selectedDiscountRange.value.max;
+      console.log(`Producto: ${product.productTitle}, Descuento: ${discount}%, En rango: ${inRange}`);
+      return inRange;
+    });
+    console.log('Después del filtro por descuento:', filtered.length);
+  }
+
+  this.filteredProducts.set(filtered);
+  console.log('Productos filtrados finales:', this.filteredProducts().length);
+}
+
+
+  // clearFilters(): void {
+  //   this.searchTerm = '';
+  //   this.selectedStore = null;
+  //   this.selectedDiscountRange = null;
+  //   this.applyFilter();
+  //   this.currentPage = 1;
+
+  //   if (isPlatformBrowser(this.platformId)) {
+  //     window.scrollTo({ top: 0, behavior: 'smooth' });
+  //   }
+  // }
+ clearFilters(): void {
   this.searchTerm = '';
   this.selectedStore = null;
+  this.selectedDiscountRange = null; // Asegurar que sea null, no undefined
   this.applyFilter();
-  this.currentPage = 1; // Resetear a la primera página
+  this.currentPage = 1;
 
-  // Opcional: hacer scroll al inicio
   if (isPlatformBrowser(this.platformId)) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
