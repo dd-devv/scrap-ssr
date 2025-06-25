@@ -191,6 +191,12 @@ export default class ProductsComponent implements OnInit {
       logo: 'assets/svg/aruma.svg',
       url: 'https://www.aruma.pe/',
       domain: 'aruma'
+    },
+    {
+      name: 'Romestore',
+      logo: 'assets/svg/romestore.svg',
+      url: 'https://www.romestore.pe/',
+      domain: 'romestore'
     }
   ];
 
@@ -324,7 +330,9 @@ export default class ProductsComponent implements OnInit {
       'mifarma',
       'inkafarma',
       'metro',
-      'carsa'
+      'carsa',
+      'aruma',
+      'romestore'
     ];
 
     const urlTrimmed = this.url.trim();

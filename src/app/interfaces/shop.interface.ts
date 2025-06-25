@@ -102,4 +102,10 @@ export const Shops: Shop[] = [
     logo: 'assets/svg/aruma.svg',
     url: 'https://www.aruma.pe/',
   },
+  {
+    id: 17,
+    name: 'Romestore',
+    logo: 'assets/svg/romestore.svg',
+    url: 'https://www.romestore.pe/',
+  },
 ];
