@@ -17,7 +17,6 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { TimeAgoPipe } from '../../../pipes/timeAgo.pipe';
 import AuthService from '../../auth/services/auth.service';
 import { SubscriptionService } from '../services/subscription.service';
-import { Skeleton } from 'primeng/skeleton';
 import { ExtractDomainPipe } from '../../../pipes/extract-domain.pipe';
 import { DropdownModule } from 'primeng/dropdown';
 import { PaginationComponent } from '../../shared/pagination/pagination.component';

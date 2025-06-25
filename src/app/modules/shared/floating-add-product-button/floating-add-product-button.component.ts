@@ -33,7 +33,7 @@ import { Router } from '@angular/router';
   ],
   templateUrl: './floating-add-product-button.component.html',
   styleUrls: ['./floating-add-product-button.component.css'],
-  providers: [MessageService] // Añade MessageService como proveedor
+  providers: [MessageService]
 })
 export class FloatingAddProductButtonComponent {
   productService = inject(ProductService);

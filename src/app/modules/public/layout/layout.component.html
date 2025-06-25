@@ -1,12 +1,53 @@
-<div class="flex flex-col min-h-screen">  <!-- Cambiado h-screen a min-h-screen -->
+<div class="flex flex-col min-h-screen"> <!-- Cambiado h-screen a min-h-screen -->
   <app-header />
-  
-  <div class="flex-grow w-full px-4 mx-auto sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl mt-2 md:mt-20">
+
+  <div
+    class="flex-grow w-full px-4 mx-auto sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl mt-2 md:mt-20">
     <router-outlet />
   </div>
 
-  <app-feedback />
+  <!-- <app-feedback /> -->
   <app-floating-add-product-button />
 
   <app-footer />
+
+  @if (isBrowser) {
+  <p-dialog maskStyleClass="backdrop-blur-sm" [visible]="dialogVisible()" [modal]="true" [closable]="false"
+    [closeOnEscape]="true" [dismissableMask]="true" [style]="{ width: '50rem' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+
+    <ng-template #header>
+      <div class="inline-flex items-center justify-center gap-2">
+        <h2 class="font-bold whitespace-nowrap text-xl">Categorías de interés</h2>
+      </div>
+    </ng-template>
+
+    <p class="text-sm mb-4">
+      Selecciona las categorías que te interesan para personalizar tu experiencia.
+    </p>
+
+    <div class="card flex items-center gap-2 flex-wrap">
+      @for (cat of categorys() | slice:0:32; track $index) {
+      <p-chip [label]="cat" (click)="toggleCategory(cat)" [styleClass]="isCategorySelected(cat) ? 'bg-primary/30' : ''" class="cursor-pointer" />
+      }
+    </div>
+
+
+    <ng-template #footer>
+      <div class="w-full">
+        <div class="flex justify-center mt-6">
+          <p-button [label]="'Aceptar ' + categorysSelected.length + ' categorías' " icon="pi pi-check" (onClick)="registerCategorysUser()" />
+        </div>
+
+        <div class="flex justify-center mt-2">
+          <p-button [text]="true" size="small" severity="secondary" label="Recuérdame más tarde"
+            (onClick)="closeDialog()" />
+        </div>
+      </div>
+    </ng-template>
+  </p-dialog>
+  }
+
 </div>
+
+<p-toast [breakpoints]="{ '780px': { width: '80%', right: '8' } }" />

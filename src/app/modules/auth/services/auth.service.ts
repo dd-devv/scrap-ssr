@@ -8,6 +8,7 @@ import { TokenStorageService } from './tokenStorage.service';
 import { jwtDecode } from 'jwt-decode';
 import { UpdatePasswordRequest, UpdateResponse } from '../interfaces/register.interface';
 import { Router } from '@angular/router';
+import { CategoryService } from '../../user/services/category.service';
 
 interface TokenPayload {
   userId: string;
@@ -22,6 +23,7 @@ interface TokenPayload {
 export default class AuthService {
   private http = inject(HttpClient);
   private tokenStorage = inject(TokenStorageService);
+  private categoryService = inject(CategoryService);
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
   private apiUrl = environment.apiUrl;
@@ -56,6 +58,8 @@ export default class AuthService {
           this.needsVerification.set(false);
           // Al iniciar sesión, eliminamos cualquier token de verificación que pudiera existir
           this.tokenStorage.removeVerificationToken();
+
+          this.categoryService.hasUserCategorys(response.token).subscribe();
         }),
         catchError(error => {
           this.tokenStorage.setVerificationToken(error.error.tempToken);

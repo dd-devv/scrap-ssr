@@ -1,9 +1,9 @@
 <div class="floating-button-container">
   <!-- Añade el toast para los mensajes -->
-  <p-toast></p-toast>
-  
-  <button pButton pRipple 
-          icon="pi pi-plus" 
+<p-toast [breakpoints]="{ '780px': { width: '80%', right: '8' } }" />
+
+  <button pButton pRipple
+          icon="pi pi-plus"
           class="p-button-rounded p-button-primary floating-button"
           (click)="showDialog()">
   </button>
@@ -145,31 +145,31 @@
       </a>
     </div>
 
-    
+
     <div class="mt-8">
       <p-floatlabel variant="on">
-        <textarea pTextarea id="over_label" 
-                  [(ngModel)]="url" 
-                  (input)="evaluateUrl()" 
+        <textarea pTextarea id="over_label"
+                  [(ngModel)]="url"
+                  (input)="evaluateUrl()"
                   (paste)="onPaste($event)"
                   (keyup)="evaluateUrl()"
-                  rows="4" 
+                  rows="4"
                   [fluid]="true"
-                  style="resize: none" 
+                  style="resize: none"
                   class="h-full">
         </textarea>
         <label for="on_label"> <i class="pi pi-link"></i> Pega el URL del producto</label>
       </p-floatlabel>
-      
+
       <!-- Mensaje de error para tienda no soportada -->
-      <div *ngIf="showUnsupportedMessage()" 
+      <div *ngIf="showUnsupportedMessage()"
           class="mt-2 p-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md flex items-center gap-2">
         <i class="pi pi-exclamation-triangle"></i>
         <span>Esta tienda aún no es soportada. Por favor, usa una de las tiendas mostradas arriba.</span>
       </div>
-      
+
       <!-- Mensaje de éxito para tienda soportada -->
-      <div *ngIf="showSupportedMessage()" 
+      <div *ngIf="showSupportedMessage()"
           class="mt-2 p-2 text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md flex items-center gap-2">
         <i class="pi pi-check-circle"></i>
         <span>¡Perfecto! Esta tienda es compatible.</span>
@@ -180,14 +180,14 @@
       <!-- <p-button label="Registrar URL" icon="pi pi-plus" [disabled]="url.length < 5 || disabled"
         [loading]="loading" (onClick)="registrarUrl()" /> -->
         @if (authService.isAuthenticatedUser()) {
-        <p-button label="Registrar URL" 
-          icon="pi pi-plus" 
+        <p-button label="Registrar URL"
+          icon="pi pi-plus"
           [disabled]="url.length < 5 || disabled()"
-          [loading]="loading()" 
+          [loading]="loading()"
           (onClick)="registrarUrl()" />
         }
         @else {
-          <p-button 
+          <p-button
           label="Inicia sesión para continuar"
           icon="pi pi-sign-in"
           [disabled]="url.length < 5 || disabled()"
