@@ -125,11 +125,11 @@ export default class ProductService {
     })
       .pipe(
         tap(response => {
-          // const sortedProducts = [...response].sort((a, b) =>
-          //   a.productTitle.localeCompare(b.productTitle)
-          // );
-          // this.productsUser.set(sortedProducts);
-          this.productsUser.set(response);
+          const sortedProducts = [...response].sort((a, b) =>
+            b.firstDate.toString().localeCompare(a.firstDate.toString() )
+          );
+          this.productsUser.set(sortedProducts);
+          // this.productsUser.set(response);
 
         }),
         catchError(error => {
@@ -156,7 +156,11 @@ export default class ProductService {
     })
       .pipe(
         tap(response => {
-          this.productsPublic.set(response);
+          const sortedProducts = [...response].sort((a, b) =>
+            a.firstDate.toString().localeCompare(b.firstDate.toString())
+          );
+          this.productsPublic.set(sortedProducts);
+          // this.productsUser.set(response);
         }),
         catchError(error => {
           return throwError(() => ({

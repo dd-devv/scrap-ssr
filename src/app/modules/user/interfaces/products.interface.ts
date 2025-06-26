@@ -24,6 +24,7 @@ export interface Product {
   productTitle: string;
   currentPrice: number;
   lastUpdate:   Date;
+  firstDate:    Date;
   image:        string;
   brand:        string;
   model:        string;
@@ -44,6 +45,7 @@ export interface ProductPublic {
   url:                string;
   urlId:              string;
   job:                string;
+  firstDate:          Date;
   lowestPrice:        number;
   previousPrice:      number;
   discountPercentage: number;
