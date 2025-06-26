@@ -125,10 +125,12 @@ export default class ProductService {
     })
       .pipe(
         tap(response => {
-          const sortedProducts = [...response].sort((a, b) =>
-            a.productTitle.localeCompare(b.productTitle)
-          );
-          this.productsUser.set(sortedProducts);
+          // const sortedProducts = [...response].sort((a, b) =>
+          //   a.productTitle.localeCompare(b.productTitle)
+          // );
+          // this.productsUser.set(sortedProducts);
+          this.productsUser.set(response);
+
         }),
         catchError(error => {
           console.error('Error fetching products:', error);

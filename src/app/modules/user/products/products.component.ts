@@ -263,6 +263,7 @@ export default class ProductsComponent implements OnInit {
       if (domain) stores.add(domain);
     });
     this.availableStores = Array.from(stores).sort();
+    // this.availableStores = Array.from(stores);
   }
 
   // applyFilter() {
