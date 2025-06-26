@@ -19,6 +19,7 @@ import ProductService from '../services/product.service';
 import AuthService from '../../auth/services/auth.service';
 import { ProductPublic } from '../interfaces';
 import { SkeletonProdComponent } from '../../../ui/skeleton-prod/skeleton-prod.component';
+import { CategoryService } from '../services/category.service';
 
 @Component({
   selector: 'app-products-all',
@@ -61,6 +62,9 @@ export default class ProductsAllComponent {
   filteredProducts = signal<ProductPublic[]>([]);
   isLoading = this.productService.isLoading;
 
+  categoryService = inject(CategoryService);
+  categorysUser = this.categoryService.categorysUser;
+
   estadosOfertas = signal<{ [key: string]: boolean }>({});
 
   currentPage = 1;
@@ -76,8 +80,21 @@ export default class ProductsAllComponent {
   }
 
   ngOnInit(): void {
-
     this.obteneProductsAll();
+
+    this.authService.checkAuthStatus().subscribe();
+
+    if (this.authService.isAuthenticatedUser()) {
+      this.getCategorysUser();
+    }
+  }
+
+  getCategorysUser() {
+    this.categoryService.getUserCategorys().subscribe({
+      next: () => {
+        this.categorysUser.set(this.categoryService.categorysUser());
+      }
+    });
   }
 
   obteneProductsAll() {
@@ -88,8 +105,9 @@ export default class ProductsAllComponent {
           this.cargarEstadoJobs(prod.urlId);
         });
 
-        this.filteredProducts.set(this.products());
 
+        this.filteredProducts.set(this.products());
+        this.applyFilter();
       },
       error: (err) => {
         console.error('Error al cargar ofertas:', err);
@@ -127,7 +145,59 @@ export default class ProductsAllComponent {
       );
     }
 
+    // Ordenar productos por categorías del usuario (si está autenticado)
+    if (this.authService.isAuthenticatedUser() && this.categorysUser().length > 0) {
+      filtered = this.sortProductsByUserCategories(filtered);
+    }
+
     this.filteredProducts.set(filtered);
+  }
+
+  private sortProductsByUserCategories(products: ProductPublic[]): ProductPublic[] {
+    const userCategories = this.categorysUser();
+
+    // Separar productos que coinciden y no coinciden con las categorías del usuario
+    const matchingProducts: ProductPublic[] = [];
+    const nonMatchingProducts: ProductPublic[] = [];
+
+    products.forEach(product => {
+      // Si no tiene categorías, va directamente a no coincidentes
+      if (product.categories.every(cat => !cat || cat.trim() === '')) {
+        nonMatchingProducts.push(product);
+        return;
+      }
+
+      const hasMatchingCategory = product.categories.some(productCategory =>
+        userCategories.some(userCategory =>
+          productCategory.toLowerCase().includes(userCategory.toLowerCase()) ||
+          userCategory.toLowerCase().includes(productCategory.toLowerCase())
+        )
+      );
+
+      if (hasMatchingCategory) {
+        matchingProducts.push(product);
+      } else {
+        nonMatchingProducts.push(product);
+      }
+    });
+
+    // Retornar productos coincidentes primero, seguidos de los no coincidentes
+    return [...matchingProducts, ...nonMatchingProducts];
+  }
+
+  // Método opcional para obtener información de coincidencia de categorías
+  hasMatchingCategory(product: ProductPublic): boolean {
+    if (!this.authService.isAuthenticatedUser() || this.categorysUser().length === 0) {
+      return false;
+    }
+
+    const userCategories = this.categorysUser();
+    return product.categories.some(productCategory =>
+      userCategories.some(userCategory =>
+        productCategory.toLowerCase().includes(userCategory.toLowerCase()) ||
+        userCategory.toLowerCase().includes(productCategory.toLowerCase())
+      )
+    );
   }
 
   clearFilters(): void {

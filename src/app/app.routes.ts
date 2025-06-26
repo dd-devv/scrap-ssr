@@ -91,6 +91,11 @@ export const routes: Routes = [
         path: 'notificaciones',
         loadComponent: () => import('./modules/user/notifications/notifications.component'),
         canActivate: [authenticatedUserGuard]
+      },
+      {
+        path: 'categorias',
+        loadComponent: () => import('./modules/user/categorys/categorys.component'),
+        canActivate: [authenticatedUserGuard]
       }
     ]
   },

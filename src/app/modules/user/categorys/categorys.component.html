@@ -1,0 +1,17 @@
+<div class="flex flex-col pl-3 mb-2 lg:mb-5">
+  <h2 class="font-semibold mt-4 mb-2 text-2xl text-center lg:text-3xl"><i class="pi pi-heart text-2xl me-2"></i> Mis
+    categorías de
+    interés</h2>
+
+  <p-message severity="success" icon="pi pi-send"
+    text="Seleccione sus categorías favoritas para recibir ofertas relacionadas" styleClass="my-4" />
+</div>
+
+<div class="card flex items-center gap-2 flex-wrap">
+  @for (cat of categorys(); track $index) {
+  <p-chip [label]="cat" (click)="toggleCategory(cat)" [styleClass]="isCategorySelected(cat) ? 'bg-primary/30' : ''"
+    class="cursor-pointer" />
+  }
+</div>
+
+<p-toast [breakpoints]="{ '780px': { width: '80%', right: '8' } }" />

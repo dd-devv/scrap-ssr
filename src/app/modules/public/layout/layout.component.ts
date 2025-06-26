@@ -40,6 +40,7 @@ export class LayoutComponent implements OnInit {
   categoryService = inject(CategoryService);
   private cdr = inject(ChangeDetectorRef);
   categorys = this.categoryService.categorysAll;
+  loading = this.categoryService.isLoading;
 
   categorysSelected: string[] = [];
 

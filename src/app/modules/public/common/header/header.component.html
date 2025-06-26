@@ -142,11 +142,15 @@
         <p-popover #op>
           <p class="mb-3" (click)="toggle($event)">
             <a [routerLink]="['/seguimientos']">
-              <i class="pi pi-shopping-bag me-2"></i> Seguimientos</a>
+              <i class="pi pi-chart-line me-2"></i> Seguimientos</a>
           </p>
           <p class="mb-3" (click)="toggle($event)">
             <a [routerLink]="['/datos']">
               <i class="pi pi-user me-2"></i> Datos</a>
+          </p>
+          <p class="mb-3" (click)="toggle($event)">
+            <a [routerLink]="['/categorias']">
+              <i class="pi pi-list me-2"></i> Categorías</a>
           </p>
           <!-- <p class="mb-3">
                 <a href=""> <i class="pi pi-crown me-2"></i> Suscripciones</a>

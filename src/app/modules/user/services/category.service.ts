@@ -63,7 +63,29 @@ export class CategoryService {
 
   registerUserCategorys(categorys: string[]): Observable<UserCategorys> {
 
+    this.isLoading.set(true);
+
     return this.http.post<UserCategorys>(`${this.apiUrl}category`, { categorys }, {
+      headers: {
+        Authorization: `Bearer ${this.authToken}`
+      }
+    })
+      .pipe(
+        tap(response => {
+          this.isLoading.set(false);
+          return response;
+        }),
+        catchError(error => {
+          return throwError(() => ({
+            error: error.error
+          }));
+        })
+      );
+  }
+
+  deleteUserCategory(category: string): Observable<UserCategorys> {
+
+    return this.http.put<UserCategorys>(`${this.apiUrl}category/delete`, { category }, {
       headers: {
         Authorization: `Bearer ${this.authToken}`
       }
@@ -80,23 +102,23 @@ export class CategoryService {
       );
   }
 
-hasUserCategorys(token?: string): Observable<HasCategorys> {
-  const authToken = token || this.authToken;
+  hasUserCategorys(token?: string): Observable<HasCategorys> {
+    const authToken = token || this.authToken;
 
-  return this.http.get<HasCategorys>(`${this.apiUrl}category/user-categorys`, {
-    headers: {
-      Authorization: `Bearer ${authToken}`
-    }
-  })
-  .pipe(
-    tap(response => {
-      this.hasUserCats.set(response.hasCategorys);
-    }),
-    catchError(error => {
-      return throwError(() => ({
-        error: error.error
-      }));
+    return this.http.get<HasCategorys>(`${this.apiUrl}category/user-categorys`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      }
     })
-  );
-}
+      .pipe(
+        tap(response => {
+          this.hasUserCats.set(response.hasCategorys);
+        }),
+        catchError(error => {
+          return throwError(() => ({
+            error: error.error
+          }));
+        })
+      );
+  }
 }

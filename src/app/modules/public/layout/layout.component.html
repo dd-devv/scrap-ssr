@@ -36,7 +36,7 @@
     <ng-template #footer>
       <div class="w-full">
         <div class="flex justify-center mt-6">
-          <p-button [label]="'Aceptar ' + categorysSelected.length + ' categorías' " icon="pi pi-check" (onClick)="registerCategorysUser()" />
+          <p-button [label]="'Aceptar ' + categorysSelected.length + ' categorías' " icon="pi pi-check" (onClick)="registerCategorysUser()" [loading]="loading()" />
         </div>
 
         <div class="flex justify-center mt-2">
