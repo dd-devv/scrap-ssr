@@ -156,11 +156,7 @@ export default class ProductService {
     })
       .pipe(
         tap(response => {
-          const sortedProducts = [...response].sort((a, b) =>
-            a.firstDate.toString().localeCompare(b.firstDate.toString())
-          );
-          this.productsPublic.set(sortedProducts);
-          // this.productsUser.set(response);
+          this.productsPublic.set(response);
         }),
         catchError(error => {
           return throwError(() => ({
@@ -183,7 +179,12 @@ export default class ProductService {
     return this.http.get<ProductPublic[]>(`${this.apiUrl}scraping/products-public`)
       .pipe(
         tap(response => {
-          this.productsAll.set(response);
+          const sortedProducts = [...response].sort((a, b) =>
+            a.firstDate.toString().localeCompare(b.firstDate.toString())
+          );
+
+          this.productsAll.set(sortedProducts);
+          // this.productsAll.set(response);
         }),
         catchError(error => {
           return throwError(() => ({
