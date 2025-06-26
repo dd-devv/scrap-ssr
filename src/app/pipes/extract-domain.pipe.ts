@@ -26,7 +26,8 @@ export class ExtractDomainPipe implements PipeTransform {
     'metro',
     'carsa',
     'aruma',
-    'romestore'
+    'romestore',
+    'coolbox',
   ];
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) { }

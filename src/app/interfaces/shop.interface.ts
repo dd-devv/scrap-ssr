@@ -108,4 +108,10 @@ export const Shops: Shop[] = [
     logo: 'assets/svg/romestore.svg',
     url: 'https://www.romestore.pe/',
   },
+  {
+    id: 18,
+    name: 'Coolbox',
+    logo: 'assets/svg/coolbox.svg',
+    url: 'https://www.coolbox.pe/',
+  },
 ];

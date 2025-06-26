@@ -197,6 +197,12 @@ export default class ProductsComponent implements OnInit {
       logo: 'assets/svg/romestore.svg',
       url: 'https://www.romestore.pe/',
       domain: 'romestore'
+    },
+    {
+      name: 'Coolbox',
+      logo: 'assets/svg/coolbox.svg',
+      url: 'https://www.coolbox.pe/',
+      domain: 'coolbox'
     }
   ];
 
@@ -332,7 +338,8 @@ export default class ProductsComponent implements OnInit {
       'metro',
       'carsa',
       'aruma',
-      'romestore'
+      'romestore',
+      'coolbox',
     ];
 
     const urlTrimmed = this.url.trim();
