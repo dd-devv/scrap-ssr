@@ -92,7 +92,7 @@
             [routerLink]="['/seguimientos', product.urlId]">
             <img class="h-5" src="../../../../assets/svg/{{ product.url | extractDomain }}.svg"
               alt="Logo {{ product.url | extractDomain }}" />
-            <small>Actualización ({{ product.lastUpdate | timeAgo }})</small>
+            <small>Actualizado ({{ product.lastUpdate | timeAgo }})</small>
           </div>
         </ng-template>
         <div class="cursor-pointer" [routerLink]="['/seguimientos', product.urlId]">

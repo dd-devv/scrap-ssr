@@ -12,16 +12,17 @@ export class NumberShortPipe implements PipeTransform {
     }
 
     if (value < 1000000) {
-      const thousands = Math.floor(value / 1000);
-      return `${thousands}K`;
+      const thousands = value / 1000;
+      // Si tiene decimales significativos, mostrarlos
+      return thousands % 1 === 0 ? `${thousands}K` : `${thousands.toFixed(1)}K`;
     }
 
     if (value < 1000000000) {
-      const millions = Math.floor(value / 1000000);
-      return `${millions}M`;
+      const millions = value / 1000000;
+      return millions % 1 === 0 ? `${millions}M` : `${millions.toFixed(1)}M`;
     }
 
-    const billions = Math.floor(value / 1000000000);
-    return `${billions}B`;
+    const billions = value / 1000000000;
+    return billions % 1 === 0 ? `${billions}B` : `${billions.toFixed(1)}B`;
   }
 }

@@ -4,10 +4,10 @@
     <!-- Contenedor de buscador y botón de filtros -->
     <div class="flex w-full items-center gap-2 md:w-96">
       <!-- Botón para mostrar filtros en móvil -->
-      <p-button 
-                class="lg:hidden" 
+      <p-button
+                class="lg:hidden"
                 (onClick)="sidebarVisible = true"><i class="pi pi-filter"></i>Filtro</p-button>
-      
+
       <!-- Buscador -->
       <span class="p-input-icon-left w-full">
         <p-floatlabel>
@@ -36,8 +36,8 @@
       </div>
       <!-- Filtro por descuento -->
       <div class="w-full">
-        <p-dropdown [options]="discountRanges" optionLabel="label" [(ngModel)]="selectedDiscountRange" 
-                    (onChange)="applyFilter()" [showClear]="true" placeholder="Filtrar por descuento" 
+        <p-dropdown [options]="discountRanges" optionLabel="label" [(ngModel)]="selectedDiscountRange"
+                    (onChange)="applyFilter()" [showClear]="true" placeholder="Filtrar por descuento"
                     appendTo="body" styleClass="w-full">
           <ng-template pTemplate="item" let-range>
             <div class="flex items-center gap-2">
@@ -74,8 +74,8 @@
         </div>
         <!-- Filtro por descuento -->
         <div class="w-full">
-          <p-dropdown [options]="discountRanges" optionLabel="label" [(ngModel)]="selectedDiscountRange" 
-                      (onChange)="applyFilter()" [showClear]="true" placeholder="Filtrar por descuento" 
+          <p-dropdown [options]="discountRanges" optionLabel="label" [(ngModel)]="selectedDiscountRange"
+                      (onChange)="applyFilter()" [showClear]="true" placeholder="Filtrar por descuento"
                       appendTo="body" styleClass="w-full">
             <ng-template pTemplate="item" let-range>
               <div class="flex items-center gap-2">
@@ -87,7 +87,7 @@
         </div>
       </p-card>
     </div>
-    
+
     <!-- Contenido principal -->
     <div class="flex-1">
       @if (isLoading()) {
@@ -142,7 +142,7 @@
                 [routerLink]="['/ofertas', product.urlId]">
                 <img class="h-5" src="../../../../assets/svg/{{ product.url | extractDomain }}.svg"
                   alt="Logo {{ product.url | extractDomain }}" />
-                <small>Actualización ({{ product.lastUpdate | timeAgo }})</small>
+                <small>Actualizado ({{ product.lastUpdate | timeAgo }})</small>
               </div>
             </ng-template>
             <div class="cursor-pointer" [routerLink]="['/ofertas', product.urlId]">
