@@ -103,9 +103,16 @@ if (!fs.existsSync(publicDir)) {
         const urlId = product.urlId || product.id || product._id;
         return urlId ? `/seguimientos/${urlId}` : null;
       })
-      .filter(Boolean); // Eliminar valores null/undefined
+      .filter(Boolean);
 
-    const allRoutes = [...staticRoutes, ...dynamicRoutes];
+    const dynamicRoutesOff = productsOffList
+      .map(product => {
+        const urlId = product.urlId || product.id || product._id;
+        return urlId ? `/ofertas/${urlId}` : null;
+      })
+      .filter(Boolean);
+
+    const allRoutes = [...staticRoutes, ...dynamicRoutes, ...dynamicRoutesOff];
     const routesContent = allRoutes.join('\n');
 
     // Generar en la raíz
@@ -201,6 +208,24 @@ ${productsList.map(product => {
   </url>`;
     }).filter(Boolean).join('\n')}
 
+      <!-- Ofertas -->
+${productsOffList.map(product => {
+      const urlId = product.urlId || product.id || product._id;
+      if (!urlId) return '';
+
+      const updatedAt = product.updatedAt || product.updated_at || product.lastModified;
+      const lastmod = updatedAt ?
+        new Date(updatedAt).toISOString().split('T')[0] :
+        currentDate;
+
+      return `  <url>
+    <loc>${domain}/ofertas/${urlId}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+    }).filter(Boolean).join('\n')}
+
 </urlset>`;
 
     fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), sitemapContent);
@@ -219,8 +244,8 @@ Allow: /seguimientos/
 Allow: /ofertas/
 
 # Bloquear rutas de autenticación y privadas
-Disallow: /login
-Disallow: /register
+Allow: /login
+Allow: /register
 Disallow: /forgot-password
 Disallow: /reset-password/
 Disallow: /verify-whatsapp

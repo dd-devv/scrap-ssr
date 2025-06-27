@@ -1,10 +1,9 @@
 import { TimeAgoPipe } from './../../../pipes/timeAgo.pipe';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { CommonModule, CurrencyPipe, isPlatformBrowser, SlicePipe } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule, CurrencyPipe, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { switchMap, tap } from 'rxjs/operators';
 import ProductService from '../services/product.service';
-import { Card } from 'primeng/card';
 import { Button } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
 import { ConfirmDialog } from 'primeng/confirmdialog';
@@ -43,6 +42,7 @@ export default class ProductComponent implements OnInit {
   router = inject(Router);
   private meta = inject(Meta); // Inyectar servicio Meta
   private title = inject(Title); // Inyectar servicio Title
+  private document = inject(DOCUMENT);
 
   // Signal para almacenar el id
   productId = signal<string | null>(null);
@@ -58,31 +58,13 @@ export default class ProductComponent implements OnInit {
   constructor(private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    // this.route.paramMap.pipe(
-    //   tap(params => {
-    //     const id = params.get('id');
-    //     this.productId.set(id);
-    //   }),
-    //   switchMap(() => {
-    //     const id = this.productId() ?? '';
-    //     return this.productService.getPriceHistory(id);
-    //   }),
-    //   // Añadir este operador para procesar la respuesta
-    //   tap(response => {
-    //     if (response && response.priceHistory) {
-    //       this.updateChart(response.priceHistory);
-
-    //       // Actualizar meta tags con la información del producto
-    //       if (response.productInfo) {
-    //         this.updateMetaTags(response.productInfo);
-    //       }
-    //     }
-    //   })
-    // ).subscribe();
     this.route.paramMap.pipe(
       tap(params => {
         const id = params.get('id');
         this.productId.set(id);
+
+        // Añadir canonical URL temprano
+        this.updateCanonicalUrl(id!);
         this.cargarEstadoJobs(id!);
       }),
       switchMap(() => {
@@ -95,46 +77,100 @@ export default class ProductComponent implements OnInit {
 
           if (response.productInfo) {
             this.updateMetaTags(response.productInfo);
+            // Añadir structured data
+            this.addStructuredData(response.productInfo);
           }
         }
       })
     ).subscribe();
 
-    // Inicializar el gráfico con datos vacíos
     this.initChart();
   }
 
-  // Método para actualizar las meta tags con la información del producto
   private updateMetaTags(productInfo: any): void {
     if (!productInfo) return;
 
-    // Establecer el título de la página con el nombre del producto
-    this.title.setTitle(`AcllaBay - ${productInfo.title}`);
-
-    // Obtener una descripción limpia
+    const cleanTitle = `${productInfo.title} - Monitoreo de Precios | AcllaBay`;
     const description = productInfo.description ?
-      `${productInfo.description.slice(0, 150)}...` :
-      'Monitoreo de precios y alertas de WhatsApp para este producto en AcllaBay';
+      `Monitorea el precio de ${productInfo.title}. ${productInfo.description.slice(0, 120)}...` :
+      `Monitoreo de precios y alertas de WhatsApp para ${productInfo.title} en AcllaBay`;
 
-    // Actualizar todas las meta tags
+    // Meta tags básicas
+    this.title.setTitle(cleanTitle);
     this.meta.updateTag({ name: 'description', content: description });
-    this.meta.updateTag({ name: 'keywords', content: `${productInfo.title}, monitoreo de precios, alertas de precios, compras inteligentes` });
+    this.meta.updateTag({ name: 'keywords', content: `${productInfo.title}, monitoreo precios, alertas WhatsApp, seguimiento precios` });
 
-    // Open Graph Meta Tags
-    this.meta.updateTag({ property: 'og:title', content: `AcllaBay - ${productInfo.title}` });
+    // Robots específicos para esta página
+    this.meta.updateTag({ name: 'robots', content: 'index, follow, max-image-preview:large' });
+
+    // Open Graph
+    this.meta.updateTag({ property: 'og:title', content: cleanTitle });
     this.meta.updateTag({ property: 'og:description', content: description });
-    this.meta.updateTag({ property: 'og:image', content: productInfo.image || 'https://acllabay.com/logo.png' });
+    this.meta.updateTag({ property: 'og:image', content: productInfo.image || 'https://acllabay.com/assets/og-default.png' });
     this.meta.updateTag({ property: 'og:url', content: `https://acllabay.com/seguimientos/${this.productId()}` });
     this.meta.updateTag({ property: 'og:type', content: 'product' });
+    this.meta.updateTag({ property: 'og:site_name', content: 'AcllaBay' });
 
-    // Twitter Card Meta Tags
+    // Twitter Cards
     this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
-    this.meta.updateTag({ name: 'twitter:title', content: productInfo.title });
+    this.meta.updateTag({ name: 'twitter:site', content: '@acllabay' }); // si tienes Twitter
+    this.meta.updateTag({ name: 'twitter:title', content: cleanTitle });
     this.meta.updateTag({ name: 'twitter:description', content: description });
-    this.meta.updateTag({ name: 'twitter:image', content: productInfo.image || 'https://acllabay.com/logo.png' });
+    this.meta.updateTag({ name: 'twitter:image', content: productInfo.image || 'https://acllabay.com/assets/twitter-default.png' });
 
-    // Marcar para detección de cambios
     this.cd.markForCheck();
+  }
+
+  // Método adicional para canonical URL
+  private updateCanonicalUrl(productId: string): void {
+    const canonicalUrl = `https://acllabay.com/seguimientos/${productId}`;
+
+    // Remover canonical existente si existe
+    const existingCanonical = this.document.querySelector('link[rel="canonical"]');
+    if (existingCanonical) {
+      existingCanonical.remove();
+    }
+
+    // Añadir nuevo canonical
+    const link = this.document.createElement('link');
+    link.setAttribute('rel', 'canonical');
+    link.setAttribute('href', canonicalUrl);
+    this.document.head.appendChild(link);
+  }
+
+  // Structured Data para mejor SEO
+  private addStructuredData(productInfo: any): void {
+    const structuredData = {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": productInfo.title,
+      "description": productInfo.description,
+      "image": productInfo.image,
+      "url": `https://acllabay.com/seguimientos/${this.productId()}`,
+      "brand": {
+        "@type": "Brand",
+        "name": productInfo.brand || "AcllaBay"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": productInfo.currentPrice,
+        "priceCurrency": "PEN", // o la moneda que uses
+        "availability": "https://schema.org/InStock",
+        "url": `https://acllabay.com/seguimientos/${this.productId()}`
+      }
+    };
+
+    // Remover script anterior si existe
+    const existingScript = this.document.querySelector('script[type="application/ld+json"]');
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    // Añadir nuevo structured data
+    const script = this.document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(structuredData);
+    this.document.head.appendChild(script);
   }
 
   // Método para actualizar el gráfico con los datos del historial de precios
