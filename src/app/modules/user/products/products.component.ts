@@ -203,6 +203,12 @@ export default class ProductsComponent implements OnInit {
       logo: 'assets/svg/coolbox.svg',
       url: 'https://www.coolbox.pe/',
       domain: 'coolbox'
+    },
+    {
+      name: 'Tiendasishop',
+      logo: 'assets/svg/tiendasishop.svg',
+      url: 'https://pe.tiendasishop.com/',
+      domain: 'tiendasishop'
     }
   ];
 

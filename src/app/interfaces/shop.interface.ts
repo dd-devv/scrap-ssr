@@ -114,4 +114,11 @@ export const Shops: Shop[] = [
     logo: 'assets/svg/coolbox.svg',
     url: 'https://www.coolbox.pe/',
   },
+  {
+    id: 19,
+    name: 'Tiendasishop',
+    logo: 'assets/svg/tiendasishop.svg',
+    url: 'https://pe.tiendasishop.com/',
+  },
+  
 ];
