@@ -347,6 +347,7 @@ export default class ProductsComponent implements OnInit {
       'aruma',
       'romestore',
       'coolbox',
+      'tiendasishop'
     ];
 
     const urlTrimmed = this.url.trim();
