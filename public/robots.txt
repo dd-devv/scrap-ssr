@@ -7,7 +7,7 @@ Allow: /plans
 Allow: /contact
 Allow: /faqs
 Allow: /tutorials
-Allow: /producto/
+Allow: /seguimientos/
 Allow: /ofertas/
 
 # Bloquear rutas de autenticación y privadas
@@ -16,7 +16,7 @@ Disallow: /register
 Disallow: /forgot-password
 Disallow: /reset-password/
 Disallow: /verify-whatsapp
-Disallow: /productos
+Allow: /seguimientos
 Disallow: /datos
 Disallow: /notificaciones
 

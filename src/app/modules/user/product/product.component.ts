@@ -124,7 +124,7 @@ export default class ProductComponent implements OnInit {
     this.meta.updateTag({ property: 'og:title', content: `AcllaBay - ${productInfo.title}` });
     this.meta.updateTag({ property: 'og:description', content: description });
     this.meta.updateTag({ property: 'og:image', content: productInfo.image || 'https://acllabay.com/logo.png' });
-    this.meta.updateTag({ property: 'og:url', content: `https://acllabay.com/producto/${this.productId()}` });
+    this.meta.updateTag({ property: 'og:url', content: `https://acllabay.com/seguimientos/${this.productId()}` });
     this.meta.updateTag({ property: 'og:type', content: 'product' });
 
     // Twitter Card Meta Tags

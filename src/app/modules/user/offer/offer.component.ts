@@ -1,13 +1,11 @@
-import { CommonModule, CurrencyPipe, isPlatformBrowser, SlicePipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, isPlatformBrowser } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
-import { Card } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
 import { Skeleton } from 'primeng/skeleton';
 import { ExtractDomainPipe } from '../../../pipes/extract-domain.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
 import ProductService from '../services/product.service';
 import { switchMap, tap } from 'rxjs';
-import { Message } from 'primeng/message';
 import { Meta, Title } from '@angular/platform-browser'; // Importamos Meta y Title
 import { TimeAgoPipe } from './../../../pipes/timeAgo.pipe';
 import { Button } from 'primeng/button';
@@ -99,7 +97,7 @@ export default class OfferComponent implements OnInit {
       `Oferta especial: ${productInfo.title} a S/ ${productInfo.currentPrice} - Aprovecha esta oferta en AcllaBay`;
 
     // Generar la URL actual según la estructura de tu aplicación
-    const currentUrl = `https://acllabay.com/oferta/${this.productId()}`;
+    const currentUrl = `https://acllabay.com/ofertas/${this.productId()}`;
 
     // Actualizar todas las meta tags
     this.meta.updateTag({ name: 'description', content: description });
