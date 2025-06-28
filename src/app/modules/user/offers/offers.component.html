@@ -34,6 +34,19 @@
           </ng-template>
         </p-dropdown>
       </div>
+      <!-- filtro por categoría -->
+      <div class="w-full mb-3">
+        <p-dropdown [options]="availableCategories" [(ngModel)]="selectedCategory" 
+                    (onChange)="applyFilter()" [showClear]="true" 
+                    placeholder="Filtrar por categoría" appendTo="body" styleClass="w-full">
+          <ng-template pTemplate="item" let-category>
+            <div class="flex items-center gap-2">
+              <i class="pi pi-tag"></i>
+              <span>{{ category }}</span>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
       <!-- Filtro por descuento -->
       <div class="w-full">
         <p-dropdown [options]="discountRanges" optionLabel="label" [(ngModel)]="selectedDiscountRange"
@@ -68,6 +81,19 @@
               <div class="flex items-center gap-2">
                 <img class="h-6" src="../../../../assets/svg/{{ store }}.svg" alt="Logo {{ store }}" />
                 <span>{{ store | titlecase }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+
+        <div class="w-full mb-3">
+          <p-dropdown [options]="availableCategories" [(ngModel)]="selectedCategory" 
+                      (onChange)="applyFilter()" [showClear]="true" 
+                      placeholder="Filtrar por categoría" appendTo="body" styleClass="w-full">
+            <ng-template pTemplate="item" let-category>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-tag"></i>
+                <span>{{ category }}</span>
               </div>
             </ng-template>
           </p-dropdown>
@@ -191,15 +217,16 @@
         <i class="pi pi-search text-6xl text-gray-400 mb-4"></i>
         <h3 class="text-xl font-medium text-gray-600 mb-2">No se encontraron productos</h3>
         <p class="text-gray-500 mb-6">
-          @if (searchTerm || selectedStore || selectedDiscountRange) {
+          @if (searchTerm || selectedStore || selectedDiscountRange || selectedCategory) {
           No encontramos resultados para "{{searchTerm}}"
           @if (selectedStore) { en {{selectedStore | titlecase}} }
           @if (selectedDiscountRange) { con {{selectedDiscountRange.label}} }
+          @if (selectedCategory) { en la categoría {{selectedCategory}} }
           } @else {
           No hay productos disponibles en este momento
           }
         </p>
-        @if (searchTerm || selectedStore || selectedDiscountRange) {
+        @if (searchTerm || selectedStore || selectedDiscountRange || selectedCategory) {
         <button pButton pRipple label="Limpiar filtros" icon="pi pi-filter-slash" class="p-button-outlined"
           (click)="clearFilters()"></button>
         }
