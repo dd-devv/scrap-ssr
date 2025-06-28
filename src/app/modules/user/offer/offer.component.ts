@@ -203,6 +203,7 @@ export default class OfferComponent implements OnInit {
       this.cd.markForCheck();
     }
   }
+
   // Método para encontrar el primer elemento de un arreglo
   findFirst(arr: any[]): any {
     return arr.length > 0 ? arr[0] : null;

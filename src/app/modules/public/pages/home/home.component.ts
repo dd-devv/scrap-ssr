@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -6,7 +6,7 @@ import { AnimateOnScrollModule } from 'primeng/animateonscroll';
 import { AvatarModule } from 'primeng/avatar';
 import { CarouselModule } from 'primeng/carousel';
 import { TagModule } from 'primeng/tag';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { PublicService } from '../../services/public.service';
 import { NumberShortPipe } from '../../../../pipes/number-Short.pipe';
@@ -16,6 +16,8 @@ import { ThemeService } from '../../../../services/theme.service';
 import AuthService from '../../../auth/services/auth.service';
 import { Shop, Shops } from '../../../../interfaces/shop.interface';
 import { Meta, Title } from '@angular/platform-browser';
+import { PriceHistory } from '../../../user/interfaces';
+import { ChartModule } from 'primeng/chart';
 
 @Component({
   selector: 'app-home',
@@ -30,6 +32,7 @@ import { Meta, Title } from '@angular/platform-browser';
     RouterLink,
     NumberShortPipe,
     ExtractDomainPipe,
+    ChartModule
   ],
   providers: [MessageService],
   templateUrl: './home.component.html',
@@ -42,8 +45,16 @@ export default class HomeComponent implements OnInit {
   productService = inject(ProductService);
   themeService = inject(ThemeService);
   authService = inject(AuthService);
+  cd = inject(ChangeDetectorRef);
   private meta = inject(Meta);
   private title = inject(Title);
+  platformId = inject(PLATFORM_ID);
+
+  products = this.productService.productsPublic;
+  loading = true;
+  productRandom = signal<PriceHistory>({} as PriceHistory);
+  data: any;
+  options: any;
 
   shops: Shop[] = Shops;
 
@@ -52,8 +63,24 @@ export default class HomeComponent implements OnInit {
     //   this.products = products;
     // });
 
+    this.initChart();
     this.publicService.getUsersLenght().subscribe();
-    this.productService.getLatestResultsPublic().subscribe();
+    if (isPlatformBrowser(this.platformId)) {
+      this.productService.getLatestResultsPublic().subscribe({
+        next: (res) => {
+          const indexRandom = Math.floor(Math.random() * 20);
+          const prodRandom = res[indexRandom];
+
+          this.productService.getPriceHistory(prodRandom.urlId).subscribe({
+            next: (response) => {
+              this.productRandom.set(response);
+              this.updateChart(this.productRandom().priceHistory);
+              this.loading = false;
+            }
+          });
+        }
+      });
+    }
 
     // Configurar meta tags para SEO
     this.setMetaTags();
@@ -116,9 +143,6 @@ export default class HomeComponent implements OnInit {
     });
   }
 
-  goApp() {
-    console.log('Go App');
-  }
   truncateText(text: string, length: number = 40): string {
     if (text.length <= length) {
       return text;
@@ -136,6 +160,102 @@ export default class HomeComponent implements OnInit {
         return 'danger';
       default:
         return undefined;
+    }
+  }
+
+  initChart() {
+    if (isPlatformBrowser(this.platformId)) {
+      const documentStyle = getComputedStyle(document.documentElement);
+      const textColor = documentStyle.getPropertyValue('--p-text-color');
+      const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
+      const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
+
+      // Inicializar con datos vacíos
+      this.data = {
+        labels: [],
+        datasets: [
+          {
+            label: 'Historial de precios',
+            data: [],
+            fill: true,
+            borderColor: documentStyle.getPropertyValue('--p-green-500'),
+            backgroundColor: 'rgba(34, 197, 94, 0.2)',
+            tension: 0.4
+          }
+        ]
+      };
+
+      this.options = {
+        maintainAspectRatio: false,
+        aspectRatio: 0.8,
+        plugins: {
+          legend: {
+            labels: {
+              color: textColor
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context: any) {
+                return `Precio: S/ ${context.raw}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: textColorSecondary
+            },
+            grid: {
+              color: surfaceBorder,
+              drawBorder: false
+            }
+          },
+          y: {
+            ticks: {
+              color: textColorSecondary,
+              callback: function (value: any) {
+                return 'S/ ' + value;
+              }
+            },
+            grid: {
+              color: surfaceBorder,
+              drawBorder: false
+            }
+          }
+        }
+      };
+      this.cd.markForCheck();
+    }
+  }
+
+  // Método para actualizar el gráfico con los datos del historial de precios
+  updateChart(priceHistory: any) {
+    if (isPlatformBrowser(this.platformId)) {
+      const documentStyle = getComputedStyle(document.documentElement);
+
+      // Formatear fechas para que sean más legibles
+      const formattedDates = priceHistory.dates.map((dateString: string) => {
+        const date = new Date(dateString);
+        return `${date.getDate()}/${date.getMonth() + 1} ${date.getHours()}:${date.getMinutes()}`;
+      });
+
+      this.data = {
+        labels: formattedDates,
+        datasets: [
+          {
+            label: 'Historial de precios',
+            data: priceHistory.prices,
+            fill: true,
+            borderColor: documentStyle.getPropertyValue('--p-green-500'),
+            backgroundColor: 'rgba(34, 197, 94, 0.2)',
+            tension: 0.1
+          }
+        ]
+      };
+
+      this.cd.markForCheck();
     }
   }
 }

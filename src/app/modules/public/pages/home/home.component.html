@@ -11,11 +11,12 @@
       <p class="my-5 marfa-light-italic-md max-w-[600px] mx-auto">Monitorea tus productos favoritos. Recibe alertas
         instantáneas
         mediante WhatsApp cuando los precios bajen y compra inteligentemente.</p>
-        @if (!authService.isAuthenticated()) {
-          <p-button label="Empezar ahora" icon="pi pi-arrow-right" iconPos="right" [routerLink]="['/register']" />
-        } @else {
-          <p-button label="Registrar productos" [routerLink]="['/seguimientos']" />
-        }
+      @if (!authService.isAuthenticated()) {
+      <p-button label="Empezar ahora" icon="pi pi-arrow-right" iconPos="right" [routerLink]="['/register']"
+        size="large" />
+      } @else {
+      <p-button label="Registrar productos" [routerLink]="['/seguimientos']" size="large" />
+      }
     </div>
 
     <div class="flex justify-center gap-4 max-h-[500px]">
@@ -84,30 +85,75 @@
       </div>
 
       <div class="flex flex-wrap justify-center gap-8">
-        <div pAnimateOnScroll enterClass="animate-enter fade-in-10 slide-in-from-b-20 animate-duration-1000"
-          class="flex flex-col border border-primary-200 shadow-lg justify-center items-center rounded-2xl p-4 gap-4">
-          <span class="text-2xl font-medium">Monitoreo de historial de precios</span>
-          <span class="text-muted-color text-center">Entérate cuando tu producto favorito está en el precio más
-            bajo.</span>
-          @if (themeService.getStoredThemePreference()) {
-          <img src="../../../../../assets/images/graph-dark.png" alt="" class="rounded-2xl w-full">
-          }
-          @if (!themeService.getStoredThemePreference()) {
-          <img src="../../../../../assets/images/graph-light.png" alt="" class="rounded-2xl w-full">
-          }
+        <div class="w-full my-8">
+          <h2 class="text-3xl font-medium text-center mb-4">Monitoreo de historial de precios</h2>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="">
+              <!-- <h3>Historial de precios</h3> -->
+              <p-chart type="line" [data]="data" [options]="options" class="w-full" />
+            </div>
+
+            @if (!loading) {
+            <div class="p-2">
+              <h3 class="mb-3 flex flex-row items-center">
+                <div class="my-2 mr-2" title="{{productRandom().productInfo.url | extractDomain | titlecase}}">
+                  <img class="h-6" src="../../../../assets/svg/{{
+                  productRandom().productInfo.url | extractDomain
+                }}.svg" alt="Logo {{
+                  productRandom().productInfo.url | extractDomain
+                }}" />
+                </div>
+                {{productRandom().productInfo.title}}
+              </h3>
+
+              <div class="card flex justify-center items-center h-60 bg-white rounded-xl">
+                <img [src]="productRandom().productInfo.image" [alt]="productRandom().productInfo.title"
+                  class="rounded-md object-contain h-full" />
+              </div>
+
+              <a href="{{ productRandom().productInfo.url }}" target="_blank">
+                <div class="mt-5 flex justify-center">
+                  <!-- <p-button severity="contrast" label="Comprar en tienda" icon="pi pi-cart-plus" class="w-full"
+              styleClass="w-full" /> -->
+                  <p-button severity="success" label="¡COMPRAR AHORA! - PRECIO MÍNIMO" icon="pi pi-bolt"
+                    class="w-full animate-pulse hover:animate-none"
+                    styleClass="w-full font-bold shadow-lg shadow-green-500/50 hover:bg-green-500 " />
+                </div>
+              </a>
+            </div>
+            }
+          </div>
         </div>
 
         <div pAnimateOnScroll enterClass="animate-enter fade-in-10 slide-in-from-b-20 animate-duration-1000"
-          class="flex flex-col border border-primary-200 shadow-lg justify-center items-center rounded-2xl p-4 gap-4">
-          <span class="text-2xl font-medium">Notificaciones instantáneas por WhatsApp</span>
+          class="flex flex-col shadow-lg justify-center items-center rounded-2xl p-4 gap-4 my-12">
+          <span class="text-2xl font-medium text-center">Notificaciones instantáneas por WhatsApp</span>
           <span class="text-muted-color text-center">Recibe mensajes de whatsapp en el momento en que los productos
             cambien de precio.</span>
-          @if (themeService.getStoredThemePreference()) {
-          <img src="../../../../../assets/images/message-whatsapp-dark.png" alt="" class="rounded-2xl w-full">
-          }
-          @if (!themeService.getStoredThemePreference()) {
-          <img src="../../../../../assets/images/message-whatsapp-light.png" alt="" class="rounded-2xl w-full">
-          }
+
+          <div class="flex gap-6">
+            <!-- Imagen desktop - oculta en pantallas pequeñas -->
+            <div class="hidden md:block w-3/4 border border-primary-500 rounded-lg">
+              @if (themeService.getStoredThemePreference()) {
+              <img src="../../../../../assets/images/message-whatsapp-dark.png" alt="" class="rounded-lg w-full">
+              }
+              @if (!themeService.getStoredThemePreference()) {
+              <img src="../../../../../assets/images/message-whatsapp-light.png" alt="" class="rounded-lg w-full">
+              }
+            </div>
+
+            <!-- Imagen móvil - visible en todas las pantallas, pero toma todo el ancho en pantallas pequeñas -->
+            <div class="w-full md:w-1/4 border border-primary-500 rounded-lg">
+              @if (themeService.getStoredThemePreference()) {
+              <img src="../../../../../assets/images/whatsapp-darkmovil.jpg" alt="" class="rounded-lg h-full">
+              }
+              @if (!themeService.getStoredThemePreference()) {
+              <img src="../../../../../assets/images/whatsapp-light-movil.jpg" alt="" class="rounded-lg h-full">
+              }
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -168,7 +214,8 @@
                 <div class=" text-2xl mt-0 text-green-700">{{ product.currentPrice | currency:'S/ ' }}</div>
                 <div class="text-sm text-gray-500 line-through">{{ product.previousPrice | currency:'S/ ' }}</div>
               </div>
-              <img class="h-6" src="../../../../../assets/svg/{{product.url|extractDomain}}.svg" alt="Logo {{product.url|extractDomain}}">
+              <img class="h-6" src="../../../../../assets/svg/{{product.url|extractDomain}}.svg"
+                alt="Logo {{product.url|extractDomain}}">
             </div>
 
             <div class="mt-4">
@@ -188,7 +235,7 @@
 
     <p-card class="max-w-[450px]">
       <h4 class="pb-5 text-4xl mx-auto text-center text-primary">Tiendas disponibles</h4>
-      <div  class="grid grid-cols-6 gap-4  my-0 md:my-10">
+      <div class="grid grid-cols-6 gap-4  my-0 md:my-10">
         <div *ngFor="let shop of shops" class="flex justify-center">
           <a [href]="shop.url" target="_blank">
             <img [src]="shop.logo" alt="Logo de ..." class="h-12 md:h-14  object-contain" />
