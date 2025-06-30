@@ -15,9 +15,13 @@ export default class ProductService {
   private apiUrl = environment.apiUrl;
 
   readonly isLoading = signal<boolean>(false);
+  readonly isLoadingEqual = signal<boolean>(false);
+  readonly isLoadingRec = signal<boolean>(false);
   readonly productsUser = signal<Product[]>([]);
   readonly productsPublic = signal<ProductPublic[]>([]);
   readonly productsAll = signal<ProductPublic[]>([]);
+  readonly productsEqual = signal<ProductPublic[]>([]);
+  readonly productsRecommended = signal<ProductPublic[]>([]);
   readonly priceHistory = signal<PriceHistory>({} as PriceHistory);
 
   // Get token dynamically instead of storing in constructor
@@ -126,7 +130,7 @@ export default class ProductService {
       .pipe(
         tap(response => {
           const sortedProducts = [...response].sort((a, b) =>
-            b.firstDate.toString().localeCompare(a.firstDate.toString() )
+            b.firstDate.toString().localeCompare(a.firstDate.toString())
           );
           this.productsUser.set(sortedProducts);
           // this.productsUser.set(response);
@@ -214,6 +218,50 @@ export default class ProductService {
           }))
         }),
         tap(() => this.isLoading.set(false))
+      );
+  }
+
+  getProductsEqual(id: string): Observable<ProductPublic[]> {
+
+    this.isLoadingEqual.set(true);
+
+    return this.http.get<ProductPublic[]>(`${this.apiUrl}scraping/equal-results/${id}`, {
+      headers: {
+        Authorization: `Bearer ${this.authToken}`
+      }
+    })
+      .pipe(
+        tap(response => {
+          this.productsEqual.set(response);
+        }),
+        catchError(error => {
+          return throwError(() => ({
+            error: error.error
+          }))
+        }),
+        tap(() => this.isLoadingEqual.set(false))
+      );
+  }
+
+  getProductsRecommended(id: string): Observable<ProductPublic[]> {
+
+    this.isLoadingRec.set(true);
+
+    return this.http.get<ProductPublic[]>(`${this.apiUrl}scraping/recommended-results/${id}`, {
+      headers: {
+        Authorization: `Bearer ${this.authToken}`
+      }
+    })
+      .pipe(
+        tap(response => {
+          this.productsRecommended.set(response);
+        }),
+        catchError(error => {
+          return throwError(() => ({
+            error: error.error
+          }))
+        }),
+        tap(() => this.isLoadingRec.set(false))
       );
   }
 }

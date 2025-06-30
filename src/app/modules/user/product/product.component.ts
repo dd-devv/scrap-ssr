@@ -52,6 +52,11 @@ export default class ProductComponent implements OnInit {
   urlId: string = '';
 
   isLoading = this.productService.isLoading;
+  isLoadingEqual = this.productService.isLoadingEqual;
+  isLoadingRec = this.productService.isLoadingRec;
+
+  productsEqual = this.productService.productsEqual;
+  productsRec = this.productService.productsRecommended;
 
   estadosOfertas = signal<{ [key: string]: boolean }>({});
 
@@ -69,6 +74,8 @@ export default class ProductComponent implements OnInit {
       }),
       switchMap(() => {
         const id = this.productId() ?? '';
+        this.loadProductsEqual(id);
+        this.loadProductsRecommended(id);
         return this.productService.getPriceHistory(id);
       }),
       tap(response => {
@@ -85,6 +92,28 @@ export default class ProductComponent implements OnInit {
     ).subscribe();
 
     this.initChart();
+  }
+
+  loadProductsEqual(id: string) {
+    this.productService.getProductsEqual(id).subscribe({
+      next: () => {
+        console.log(this.productsEqual());
+      },
+      error: (err) => {
+        console.error('Error loading products:', err);
+      }
+    });
+  }
+
+  loadProductsRecommended(id: string) {
+    this.productService.getProductsRecommended(id).subscribe({
+      next: () => {
+        console.log(this.productsRec());
+      },
+      error: (err) => {
+        console.error('Error loading products:', err);
+      }
+    });
   }
 
   private updateMetaTags(productInfo: any): void {

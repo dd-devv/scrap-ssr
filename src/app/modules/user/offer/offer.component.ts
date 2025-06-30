@@ -43,9 +43,14 @@ export default class OfferComponent implements OnInit {
   router = inject(Router);
   private meta = inject(Meta); // Inyectamos el servicio Meta
   private title = inject(Title); // Inyectamos el servicio Title
-    private document = inject(DOCUMENT);
+  private document = inject(DOCUMENT);
 
   isLoading = this.productService.isLoading;
+  isLoadingEqual = this.productService.isLoadingEqual;
+  isLoadingRec = this.productService.isLoadingRec;
+
+  productsEqual = this.productService.productsEqual;
+  productsRec = this.productService.productsRecommended;
 
   // Signal para almacenar el id
   productId = signal<string | null>(null);
@@ -70,6 +75,8 @@ export default class OfferComponent implements OnInit {
       }),
       switchMap(() => {
         const id = this.productId() ?? '';
+        this.loadProductsEqual(id);
+        this.loadProductsRecommended(id);
         return this.productService.getPriceHistory(id);
       }),
       tap(response => {
@@ -86,6 +93,28 @@ export default class OfferComponent implements OnInit {
     ).subscribe();
 
     this.initChart();
+  }
+
+  loadProductsEqual(id: string) {
+    this.productService.getProductsEqual(id).subscribe({
+      next: () => {
+        console.log(this.productsEqual());
+      },
+      error: (err) => {
+        console.error('Error loading products:', err);
+      }
+    });
+  }
+
+  loadProductsRecommended(id: string) {
+    this.productService.getProductsRecommended(id).subscribe({
+      next: () => {
+        console.log(this.productsRec());
+      },
+      error: (err) => {
+        console.error('Error loading products:', err);
+      }
+    });
   }
 
   private updateMetaTags(productInfo: any): void {
