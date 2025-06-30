@@ -192,8 +192,116 @@ productService.priceHistory().priceHistory.prices);
 
       </div>
     </div>
+
+    <!-- Prod en otras tiendas -->
+    <div class="flex w-full">
+      <div class="">
+        <h1 class="mt-7 mb-6 text-2xl text-start">Comparación en otras tiendas</h1>
+
+        <div class="w-full">
+          <p-table [value]="productsEqual()" selectionMode="single" [tableStyle]="{ 'width': '100%' }">
+            <ng-template #header>
+              <tr>
+                <th>Tienda</th>
+                <th>Precio</th>
+                <th></th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-product>
+              <tr [pSelectableRow]="product">
+                <td>
+                  <a [href]="product.url+'?utm_source=acllabay.com&utm_medium=referral'" target="_blank">
+                    <h3 class="text-xs font-bold flex flex-row items-center gap-2">
+                      <div class="my-2" title="{{product.url | extractDomain | titlecase}}">
+                        <img class="h-48 md:h-12" src="../../../../assets/svg/{{
+                  product.url | extractDomain
+                }}.svg" alt="Logo {{
+                  product.url | extractDomain
+                }}" />
+                      </div>
+                      {{ product.url | extractDomain | titlecase}}
+                    </h3>
+                  </a>
+                </td>
+                <td>
+                  <a [href]="product.url+'?utm_source=acllabay.com&utm_medium=referral'" target="_blank">
+                    {{product.currentPrice | currency:'S/'}}
+                  </a>
+                </td>
+                <td class="text-end">
+                  <a [href]="product.url+'?utm_source=acllabay.com&utm_medium=referral'" target="_blank">
+                    <img [src]="product.image" [alt]="product.title" class="w-full md:w-1/3 rounded">
+                  </a>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+<div class="my-6">
+  <h3 class="text-3xl text-center">
+    Poductos recomendados
+  </h3>
+</div>
+
+@if (isLoadingRec()) {
+<div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
+  @for (item of [1,2,3,4]; track $index) {
+  <skeleton-prod />
+  }
+</div>
+}
+
+@if (!isLoadingRec()) {
+<div class=" my-4 grid grid-cols-2 gap-1 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4 ">
+  @for (product of productsRec(); track $index) {
+  <!-- @let arrDate = productService.priceHistory().priceHistory.dates[0];
+          @let arrPrices = productService.priceHistory().priceHistory.prices[0]; -->
+  <div class="masonry-item">
+    <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%'}"
+      styleClass="[&_.p-card-body]:!p-2 sm:[&_.p-card-body]:!p-4">
+      <ng-template #header>
+        <div class="bg-white">
+          <img [alt]="product.productTitle"
+            class="h-52 md:h-[362px] xl:h-[302px] w-full m-auto cursor-pointer object-contain" [src]="product.image"
+            [routerLink]="['/seguimientos', product.urlId ]" />
+        </div>
+      </ng-template>
+      <ng-template #title>
+        <div class="text-sm h-[60px]  sm:text-xl  sm:h-16">
+          {{ truncateText(product.productTitle) | titlecase}}
+        </div>
+      </ng-template>
+      <ng-template #subtitle>
+        <div class="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-2">
+          <img class="h-5" src="../../../../assets/svg/{{product.url|extractDomain}}.svg"
+            alt="Logo {{product.url|extractDomain}}">
+          <small class="">Actualizado ({{product.lastUpdate | timeAgo}})</small>
+        </div>
+      </ng-template>
+      <h2 class="text-lg sm:text-2xl">
+        {{product.currentPrice | currency: 'S/ '}}
+      </h2>
+      <h3 class="text-surface-500 text-sm  sm:text-base "
+        [ngClass]="{'text-green-600': product.currentPrice === product.lowestPrice}">
+        Precio mínimo: <samp class="">{{product.lowestPrice | currency: 'S/'}}</samp>
+      </h3>
+      <ng-template #footer>
+        <div class="flex gap-4 mt-1">
+          <p-button label="Detalles" icon="pi pi-chart-scatter" class="w-full text-xs sm:text-base" styleClass="w-full"
+            [routerLink]="['/seguimientos', product.urlId ]" />
+        </div>
+      </ng-template>
+    </p-card>
+  </div>
+  }
+</div>
+
+}
 
 
 

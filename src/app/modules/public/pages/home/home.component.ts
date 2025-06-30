@@ -6,7 +6,7 @@ import { AnimateOnScrollModule } from 'primeng/animateonscroll';
 import { AvatarModule } from 'primeng/avatar';
 import { CarouselModule } from 'primeng/carousel';
 import { TagModule } from 'primeng/tag';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { PublicService } from '../../services/public.service';
 import { NumberShortPipe } from '../../../../pipes/number-Short.pipe';
@@ -49,6 +49,7 @@ export default class HomeComponent implements OnInit {
   private meta = inject(Meta);
   private title = inject(Title);
   platformId = inject(PLATFORM_ID);
+  document = inject(DOCUMENT);
 
   products = this.productService.productsPublic;
   loading = true;
@@ -111,16 +112,16 @@ export default class HomeComponent implements OnInit {
 
   private setMetaTags(): void {
     // Establecer título de la página
-    this.title.setTitle('AcllaBay - Tu compañero inteligente de compras');
+    this.title.setTitle('Acllabay - Tu compañero inteligente de compras');
 
     // Meta tags para SEO básicos
     this.meta.addTags([
-      { name: 'description', content: 'AcllaBay - Monitorea tus productos favoritos online y recibe alertas de WhatsApp cuando los precios bajen. Ahorra tiempo y dinero en tus compras online.' },
+      { name: 'description', content: 'Acllabay - Monitorea tus productos favoritos online y recibe alertas de WhatsApp cuando los precios bajen. Ahorra tiempo y dinero en tus compras online.' },
       { name: 'keywords', content: 'monitoreo de precios, alertas de precios, ahorro en compras, seguimiento de productos, WhatsApp alertas, compras inteligentes, comparador de precios' },
-      { name: 'author', content: 'AcllaBay' },
+      { name: 'author', content: 'Acllabay' },
 
       // Open Graph Meta Tags para compartir en redes sociales
-      { property: 'og:title', content: 'AcllaBay - Tu compañero inteligente de compras' },
+      { property: 'og:title', content: 'Acllabay - Tu compañero inteligente de compras' },
       { property: 'og:description', content: 'Recibe alertas instantáneas cuando los precios de tus productos favoritos bajen. Compra al mejor precio sin perder tiempo.' },
       { property: 'og:image', content: 'https://acllabay.com/logo.png' },
       { property: 'og:url', content: 'https://acllabay.com/' },
@@ -128,7 +129,7 @@ export default class HomeComponent implements OnInit {
 
       // Twitter Card Meta Tags
       { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: 'AcllaBay - Ahorra sin perder tiempo' },
+      { name: 'twitter:title', content: 'Acllabay - Ahorra sin perder tiempo' },
       { name: 'twitter:description', content: 'Monitorea precios online y recibe alertas instantáneas de WhatsApp cuando bajen.' },
       { name: 'twitter:image', content: 'https://acllabay.com/logo.png' }
     ]);
@@ -164,7 +165,7 @@ export default class HomeComponent implements OnInit {
   }
 
   initChart() {
-    if (isPlatformBrowser(this.platformId)) {
+    if (isPlatformBrowser(this.platformId) && this.document) {
       const documentStyle = getComputedStyle(document.documentElement);
       const textColor = documentStyle.getPropertyValue('--p-text-color');
       const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');

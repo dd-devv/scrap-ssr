@@ -28,13 +28,13 @@ export class TimeAgoPipe implements PipeTransform {
 
     // Determinar el formato adecuado según la diferencia de tiempo
     if (diffSecs < 60) {
-      return diffSecs <= 1 ? 'Hace un momento' : `Hace ${diffSecs} segundos`;
+      return diffSecs <= 1 ? 'Hace un momento' : `Hace ${diffSecs}s`;
     } else if (diffMins < 60) {
-      return diffMins === 1 ? 'Hace un minuto' : `Hace ${diffMins} minutos`;
+      return diffMins === 1 ? 'Hace 1m' : `Hace ${diffMins}m`;
     } else if (diffHours < 24) {
-      return diffHours === 1 ? 'Hace una hora' : `Hace ${diffHours} horas`;
+      return diffHours === 1 ? 'Hace 1h' : `Hace ${diffHours}h`;
     } else if (diffDays < 7) {
-      return diffDays === 1 ? 'Hace un día' : `Hace ${diffDays} días`;
+      return diffDays === 1 ? 'Hace 1d' : `Hace ${diffDays}d`;
     } else if (diffDays < 30) {
       const weeks = Math.floor(diffDays / 7);
       return weeks === 1 ? 'Hace una semana' : `Hace ${weeks} semanas`;

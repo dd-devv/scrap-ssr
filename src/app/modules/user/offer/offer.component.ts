@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, 
 import { ChartModule } from 'primeng/chart';
 import { Skeleton } from 'primeng/skeleton';
 import { ExtractDomainPipe } from '../../../pipes/extract-domain.pipe';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import ProductService from '../services/product.service';
 import { switchMap, tap } from 'rxjs';
 import { Meta, Title } from '@angular/platform-browser'; // Importamos Meta y Title
@@ -13,6 +13,9 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import AuthService from '../../auth/services/auth.service';
 import { Toast } from 'primeng/toast';
+import { TableModule } from 'primeng/table';
+import { SkeletonProdComponent } from '../../../ui/skeleton-prod/skeleton-prod.component';
+import { CardModule } from 'primeng/card';
 
 
 @Component({
@@ -27,7 +30,11 @@ import { Toast } from 'primeng/toast';
     ExtractDomainPipe,
     TimeAgoPipe,
     ConfirmDialog,
-    Toast
+    Toast,
+    TableModule,
+    SkeletonProdComponent,
+    CardModule,
+    RouterLink
   ],
   providers: [ConfirmationService, MessageService],
   styleUrl: './offer.component.css',
@@ -97,9 +104,6 @@ export default class OfferComponent implements OnInit {
 
   loadProductsEqual(id: string) {
     this.productService.getProductsEqual(id).subscribe({
-      next: () => {
-        console.log(this.productsEqual());
-      },
       error: (err) => {
         console.error('Error loading products:', err);
       }
@@ -108,9 +112,6 @@ export default class OfferComponent implements OnInit {
 
   loadProductsRecommended(id: string) {
     this.productService.getProductsRecommended(id).subscribe({
-      next: () => {
-        console.log(this.productsRec());
-      },
       error: (err) => {
         console.error('Error loading products:', err);
       }
@@ -120,10 +121,10 @@ export default class OfferComponent implements OnInit {
   private updateMetaTags(productInfo: any): void {
     if (!productInfo) return;
 
-    const cleanTitle = `${productInfo.title} - Monitoreo de Precios | AcllaBay`;
+    const cleanTitle = `${productInfo.title} - Monitoreo de Precios | Acllabay`;
     const description = productInfo.description ?
       `Monitorea el precio de ${productInfo.title}. ${productInfo.description.slice(0, 120)}...` :
-      `Monitoreo de precios y alertas de WhatsApp para ${productInfo.title} en AcllaBay`;
+      `Monitoreo de precios y alertas de WhatsApp para ${productInfo.title} en Acllabay`;
 
     // Meta tags básicas
     this.title.setTitle(cleanTitle);
@@ -139,7 +140,7 @@ export default class OfferComponent implements OnInit {
     this.meta.updateTag({ property: 'og:image', content: productInfo.image || 'https://acllabay.com/assets/og-default.png' });
     this.meta.updateTag({ property: 'og:url', content: `https://acllabay.com/ofertas/${this.productId()}` });
     this.meta.updateTag({ property: 'og:type', content: 'product' });
-    this.meta.updateTag({ property: 'og:site_name', content: 'AcllaBay' });
+    this.meta.updateTag({ property: 'og:site_name', content: 'Acllabay' });
 
     // Twitter Cards
     this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
@@ -179,7 +180,7 @@ export default class OfferComponent implements OnInit {
       "url": `https://acllabay.com/ofertas/${this.productId()}`,
       "brand": {
         "@type": "Brand",
-        "name": productInfo.brand || "AcllaBay"
+        "name": productInfo.brand || "Acllabay"
       },
       "offers": {
         "@type": "Offer",
@@ -415,5 +416,12 @@ export default class OfferComponent implements OnInit {
         this.router.navigate(['/ofertas']);
       }
     });
+  }
+
+  truncateText(text: string, length: number = 40): string {
+    if (text.length <= length) {
+      return text;
+    }
+    return text.substring(0, length) + '...';
   }
 }

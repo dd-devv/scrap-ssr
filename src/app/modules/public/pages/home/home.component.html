@@ -1,10 +1,10 @@
 <main class="">
 
   <!-- PREVIEW SERVICE -->
-  <section class="min-h-[calc(100vh-80px)] py-16 flex flex-col items-center justify-between">
+  <section class="min-h-[calc(100vh-80px)] py-8 flex flex-col items-center justify-between">
     <div class="text-center mb-6">
       <h1 class="heading-1 max-w-[900px] mx-auto">
-        <span>AcllaBay: </span>
+        <span>Acllabay: </span>
         <span class="text-primary">Ahorra </span>
         <span>sin perder tiempo</span>
       </h1>
@@ -19,16 +19,32 @@
       }
     </div>
 
-    <div class="flex justify-center gap-4 max-h-[500px]">
-      <p-card class="max-w-[450px]">
-        <img alt="Card" class="w-full max-h-[450px] object-cover"
-          src="https://images.unsplash.com/photo-1590098563176-07884b06d7f7?q=80&w=2667&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
-      </p-card>
-      <p-card class="max-w-[450px]">
-        <img alt="Card" class="w-full max-h-[450px] object-cover"
-          src="https://images.unsplash.com/photo-1590098563176-07884b06d7f7?q=80&w=2667&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
-      </p-card>
-    </div>
+    <p-card class="my-16">
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+
+        <!-- Columna izquierda - Contenido de texto -->
+        <div class="flex items-center justify-center">
+          <div class="text-center mb-6">
+            <h3 class="text-2xl font-bold  mb-6 text-center">
+              Consigue el mejor precio
+            </h3>
+            <p class="text-lg mb-6">
+              En <span class="font-medium">acllabay</span> comparar precios es fácil. Encuentra la mejor
+              opción y <span class="font-semibold">ahorra</span> tiempo y dinero.
+            </p>
+
+            <p-button label="Ir a ofertas" severity="contrast" rounded="true" icon="pi pi-chevron-right" iconPos="right"
+              [routerLink]="['/ofertas']" />
+          </div>
+        </div>
+
+        <!-- Columna derecha - Imagen completa -->
+        <div class="flex items-center justify-center cursor-pointer">
+          <img src="../../../../../assets/images/promos-image.png" alt="Promociones acllabay"
+            class="w-full h-auto max-w-md object-contain" [routerLink]="['/ofertas']">
+        </div>
+      </div>
+    </p-card>
 
     <div class="flex flex-col items-center gap-2 mt-6">
       <span class="text-xl font-medium">Desplácese hacia abajo</span>
@@ -161,7 +177,7 @@
         <div pAnimateOnScroll enterClass="animate-enter fade-in-10 spin-in-45 slide-in-from-t-12 animate-duration-1000"
           class="flex flex-col bg-primary text-primary-contrast border-primary shadow-lg justify-center items-center max-w-96 sm:max-w-96 md:max-w-64 rounded-2xl p-8 gap-4">
           <span class="bg-white/20 text-3xl font-bold rounded-xl px-4 py-2">
-            {{publicService.usersLenght() | numberShort}}
+            1{{publicService.usersLenght() | numberShort}}
           </span>
           <h3 class="heading-3">Usuarios</h3>
           <span class="text-center">Activos que usan y confían en nuestra plataforma.</span>
@@ -193,8 +209,8 @@
     @if (!productService.isLoading()) {
     <div>
       <h1 class="pb-5 text-4xl mx-auto text-center text-primary">Ofertas</h1>
-      <p-carousel [value]="productService.productsPublic()" [numVisible]="3" [numScroll]="3" [circular]="false"
-        [responsiveOptions]="responsiveOptions">
+      <p-carousel [value]="productService.productsPublic() | slice:0:42" [numVisible]="3" [numScroll]="3"
+        [circular]="false" [responsiveOptions]="responsiveOptions">
 
         <ng-template let-product pTemplate="item">
           <div class="border border-surface rounded-border m-2 p-4">

@@ -1,6 +1,6 @@
 import { TimeAgoPipe } from './../../../pipes/timeAgo.pipe';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule, CurrencyPipe, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { switchMap, tap } from 'rxjs/operators';
 import ProductService from '../services/product.service';
@@ -13,6 +13,9 @@ import { ExtractDomainPipe } from '../../../pipes/extract-domain.pipe';
 import { Meta, Title } from '@angular/platform-browser'; // Importar Meta y Title
 import AuthService from '../../auth/services/auth.service';
 import { ToastModule } from 'primeng/toast';
+import { TableModule } from 'primeng/table';
+import { SkeletonProdComponent } from '../../../ui/skeleton-prod/skeleton-prod.component';
+import { CardModule } from 'primeng/card';
 
 @Component({
   selector: 'app-product',
@@ -26,7 +29,11 @@ import { ToastModule } from 'primeng/toast';
     Skeleton,
     ExtractDomainPipe,
     TimeAgoPipe,
-    ToastModule
+    ToastModule,
+    TableModule,
+    SkeletonProdComponent,
+    CardModule,
+    RouterLink
   ],
   providers: [ConfirmationService, MessageService],
   styleUrl: './product.component.css',
@@ -96,9 +103,6 @@ export default class ProductComponent implements OnInit {
 
   loadProductsEqual(id: string) {
     this.productService.getProductsEqual(id).subscribe({
-      next: () => {
-        console.log(this.productsEqual());
-      },
       error: (err) => {
         console.error('Error loading products:', err);
       }
@@ -107,9 +111,6 @@ export default class ProductComponent implements OnInit {
 
   loadProductsRecommended(id: string) {
     this.productService.getProductsRecommended(id).subscribe({
-      next: () => {
-        console.log(this.productsRec());
-      },
       error: (err) => {
         console.error('Error loading products:', err);
       }
@@ -119,10 +120,10 @@ export default class ProductComponent implements OnInit {
   private updateMetaTags(productInfo: any): void {
     if (!productInfo) return;
 
-    const cleanTitle = `${productInfo.title} - Monitoreo de Precios | AcllaBay`;
+    const cleanTitle = `${productInfo.title} - Monitoreo de Precios | Acllabay`;
     const description = productInfo.description ?
       `Monitorea el precio de ${productInfo.title}. ${productInfo.description.slice(0, 120)}...` :
-      `Monitoreo de precios y alertas de WhatsApp para ${productInfo.title} en AcllaBay`;
+      `Monitoreo de precios y alertas de WhatsApp para ${productInfo.title} en Acllabay`;
 
     // Meta tags básicas
     this.title.setTitle(cleanTitle);
@@ -138,7 +139,7 @@ export default class ProductComponent implements OnInit {
     this.meta.updateTag({ property: 'og:image', content: productInfo.image || 'https://acllabay.com/assets/og-default.png' });
     this.meta.updateTag({ property: 'og:url', content: `https://acllabay.com/seguimientos/${this.productId()}` });
     this.meta.updateTag({ property: 'og:type', content: 'product' });
-    this.meta.updateTag({ property: 'og:site_name', content: 'AcllaBay' });
+    this.meta.updateTag({ property: 'og:site_name', content: 'Acllabay' });
 
     // Twitter Cards
     this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
@@ -178,7 +179,7 @@ export default class ProductComponent implements OnInit {
       "url": `https://acllabay.com/seguimientos/${this.productId()}`,
       "brand": {
         "@type": "Brand",
-        "name": productInfo.brand || "AcllaBay"
+        "name": productInfo.brand || "Acllabay"
       },
       "offers": {
         "@type": "Offer",
@@ -450,6 +451,12 @@ export default class ProductComponent implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
 
+  truncateText(text: string, length: number = 40): string {
+    if (text.length <= length) {
+      return text;
+    }
+    return text.substring(0, length) + '...';
   }
 }
