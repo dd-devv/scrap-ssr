@@ -209,6 +209,12 @@ export default class ProductsComponent implements OnInit {
       logo: 'assets/svg/tiendasishop.svg',
       url: 'https://pe.tiendasishop.com/',
       domain: 'tiendasishop'
+    },
+    {
+      name: 'Real Plaza',
+      logo: 'assets/svg/realplaza.svg',
+      url: 'https://www.realplaza.com/',
+      domain: 'realplaza'
     }
   ];
 
@@ -347,7 +353,8 @@ export default class ProductsComponent implements OnInit {
       'aruma',
       'romestore',
       'coolbox',
-      'tiendasishop'
+      'tiendasishop',
+      'realplaza'
     ];
 
     const urlTrimmed = this.url.trim();

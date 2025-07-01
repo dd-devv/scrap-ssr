@@ -120,5 +120,11 @@ export const Shops: Shop[] = [
     logo: 'assets/svg/tiendasishop.svg',
     url: 'https://pe.tiendasishop.com/',
   },
+  {
+    id: 20,
+    name: 'Realplaza',
+    logo: 'assets/svg/realplaza.svg',
+    url: 'https://www.realplaza.com/',
+  },
   
 ];

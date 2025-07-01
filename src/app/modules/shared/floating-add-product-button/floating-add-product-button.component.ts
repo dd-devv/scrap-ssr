@@ -80,7 +80,8 @@ export class FloatingAddProductButtonComponent {
       'aruma',
       'romestore',
       'coolbox',
-      'tiendasishop'
+      'tiendasishop',
+      'realplaza'
     ];
 
     const urlTrimmed = this.url.trim();
