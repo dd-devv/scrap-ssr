@@ -203,7 +203,7 @@ productService.priceHistory().priceHistory.prices);
 
       <!-- Prod en otras tiendas -->
       <div class="flex w-full">
-        <div class="">
+        <div class=" w-full">
           <h1 class="mt-7 mb-6 text-2xl text-start">Comparación en otras tiendas</h1>
 
           <div class="w-full">
@@ -217,28 +217,33 @@ productService.priceHistory().priceHistory.prices);
               </ng-template>
               <ng-template #body let-product>
                 <tr [pSelectableRow]="product">
-                  <td>
+                  <td class="w-1/3">
                     <a [href]="product.url+'?utm_source=acllabay.com&utm_medium=referral'" target="_blank">
-                      <h3 class="text-xs font-bold flex flex-row items-center gap-2">
-                        <div class="my-2" title="{{product.url | extractDomain | titlecase}}">
-                          <img class="h-48 md:h-12" src="../../../../assets/svg/{{
-                  product.url | extractDomain
-                }}.svg" alt="Logo {{
-                  product.url | extractDomain
-                }}" />
-                        </div>
-                        {{ product.url | extractDomain | titlecase}}
-                      </h3>
+                      <div class="flex flex-row items-center gap-2">
+                        <img class="h-6" src="../../../../assets/svg/{{
+                          product.url | extractDomain
+                        }}.svg" alt="Logo {{
+                          product.url | extractDomain
+                        }}" />
+                        @if ((product.url | extractDomain | titlecase) !== 'Coolbox' && 
+                        (product.url | extractDomain | titlecase) !== 'Shopstar') {
+                          <h3 class="text-xs font-bold flex flex-row items-center gap-2">
+                            {{ product.url | extractDomain | titlecase }}
+                          </h3>
+                        }
+                      </div>
                     </a>
                   </td>
-                  <td>
+                  <td class="w-1/3">
                     <a [href]="product.url+'?utm_source=acllabay.com&utm_medium=referral'" target="_blank">
                       {{product.currentPrice | currency:'S/'}}
                     </a>
                   </td>
-                  <td class="text-end">
+                  <td class="w-1/3 ">
                     <a [href]="product.url+'?utm_source=acllabay.com&utm_medium=referral'" target="_blank">
-                      <img [src]="product.image" [alt]="product.title" class="w-full md:w-1/3 rounded">
+                      <div>
+                        <img [src]="product.image" [alt]="product.title" class="h-14  md:h-16 rounded m-auto">
+                      </div>
                     </a>
                   </td>
                 </tr>
