@@ -174,5 +174,12 @@
         </p-button>
       </div>
     </div>
+
+    <p-inputgroup class="mt-2">
+      <input pInputText placeholder="Busca en todas las tiendas" [(ngModel)]="search" />
+      <p-inputgroup-addon>
+        <p-button icon="pi pi-search" variant="text" [disabled]="search.length < 8" (onClick)="searchTerm()" />
+      </p-inputgroup-addon>
+    </p-inputgroup>
   </p-card>
 </div>

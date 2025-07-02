@@ -4,7 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-about',
-  imports: [CardModule, RouterLink, RouterLinkActive],
+  imports: [CardModule, RouterLink],
   templateUrl: './about.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,

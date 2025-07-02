@@ -96,6 +96,10 @@ export const routes: Routes = [
         path: 'categorias',
         loadComponent: () => import('./modules/user/categorys/categorys.component'),
         canActivate: [authenticatedUserGuard]
+      },
+      {
+        path: 'search',
+        loadComponent: () => import('./modules/user/search-results/search-results.component')
       }
     ]
   },

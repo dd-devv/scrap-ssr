@@ -53,7 +53,7 @@ import { SkeletonProdComponent } from "../../../ui/skeleton-prod/skeleton-prod.c
     CarouselModule,
     FloatLabelModule,
     SkeletonProdComponent
-],
+  ],
   providers: [MessageService, ConfirmationService, ExtractDomainPipe],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
@@ -84,7 +84,7 @@ export default class ProductsComponent implements OnInit {
   urlId: string = '';
   searchTerm: string = '';
 
-    // Nuevas propiedades para la validación de URL
+  // Nuevas propiedades para la validación de URL
   private hasUrl = signal(false);
   private isSupported = signal(false);
 
@@ -311,16 +311,16 @@ export default class ProductsComponent implements OnInit {
     this.filteredProducts.set(filtered);
   }
   clearFilters(): void {
-  this.searchTerm = '';
-  this.selectedStore = null;
-  this.applyFilter();
-  this.currentPage = 1; // Resetear a la primera página
+    this.searchTerm = '';
+    this.selectedStore = null;
+    this.applyFilter();
+    this.currentPage = 1; // Resetear a la primera página
 
-  // Opcional: hacer scroll al inicio
-  if (isPlatformBrowser(this.platformId)) {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Opcional: hacer scroll al inicio
+    if (isPlatformBrowser(this.platformId)) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
-}
 
   get totalPages(): number {
     return Math.ceil(this.filteredProducts().length / this.pageSize);

@@ -1,0 +1,94 @@
+<section class="min-h-[calc(100vh-80px)] py-8">
+
+  <!-- Input y botón -->
+  <div class="flex gap-1 md:gap-2 w-full mt-6">
+    <div class="w-full">
+      <p-floatlabel variant="on">
+        <input pInputText id="over_label" [(ngModel)]="term" autocomplete="off" class="w-full" />
+        <label for="on_label">
+          <i class="pi pi-search mr-2"></i>
+          Buscar producto...
+        </label>
+      </p-floatlabel>
+    </div>
+
+    <p-button label="Buscar" icon="pi pi-search" [disabled]="term.length < 7" [loading]="loading()" (onClick)="searchTerm()" />
+  </div>
+
+  @if (isLoading()) {
+  <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
+    @for (item of [1,2,3,4,5,6,7,8]; track $index) {
+    <skeleton-prod />
+    }
+  </div>
+  }
+
+  @if (!isLoading()) {
+  <div class="my-4 grid grid-cols-2 gap-1 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    @for (product of results(); track $index) {
+    <div>
+      <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%' }"
+        styleClass="[&_.p-card-body]:!p-2 sm:[&_.p-card-body]:!p-4">
+        <ng-template #header>
+          <div class="bg-white">
+            <img [alt]="product.name" class="h-52 md:h-[362px] xl:h-[302px] w-full m-auto cursor-pointer object-contain"
+              [src]="product.image" />
+          </div>
+        </ng-template>
+        <ng-template #title>
+          <div class="text-sm  h-[60px] sm:text-xl  sm:h-16">
+            {{ truncateText(product.name) | titlecase }}
+          </div>
+        </ng-template>
+        <ng-template #subtitle>
+          <div class="flex flex-row items-start gap-1 sm:items-center text-sm">
+            <img class="h-5" src="../../../../assets/svg/{{ product.store }}.svg" alt="Logo {{ product.store }}" />
+            {{ product.store | titlecase }}
+          </div>
+        </ng-template>
+        <div class="cursor-pointer">
+          <h2 class="text-lg sm:text-2xl">
+            {{ product.price| currency : "S/ " }}
+          </h2>
+        </div>
+        <ng-template #footer>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 my-2">
+            <a [href]="product.url+'?utm_source=acllabay.com&utm_medium=referral'" target="_blank">
+              <p-button label="Comprar" severity="secondary" icon="pi pi-shopping-cart" class="flex-1"
+                styleClass="w-full" size="small" />
+            </a>
+
+            @if (authService.isAuthenticatedUser()) {
+            <p-button label="Seguir" icon="pi pi-heart" class="flex-1" styleClass="w-full" size="small"
+              (click)="registrarUrl(product.url)" />
+            } @else {
+            <p-button label="Seguir" icon="pi pi-heart" [routerLink]="['/login']" class="flex-1" styleClass="w-full"
+              size="small" />
+            }
+          </div>
+        </ng-template>
+      </p-card>
+    </div>
+    }
+  </div>
+  }
+
+  @if (!isLoading() && results().length === 0) {
+  <div class="flex flex-col items-center justify-center py-12 text-center">
+    <i class="pi pi-search text-6xl text-gray-400 mb-4"></i>
+    <h3 class="text-xl font-medium text-gray-600 mb-2">No se encontraron productos</h3>
+    <p class="text-gray-500 mb-6">
+      @if (term) {
+      No encontramos resultados para "{{term}}"
+      }
+    </p>
+
+    @if (term) {
+    <button pButton pRipple label="Limpiar filtros" icon="pi pi-filter-slash" class="p-button-outlined"
+      (click)="clearFilters()"></button>
+    }
+  </div>
+  }
+</section>
+
+<p-toast [breakpoints]="{ '780px': { width: '80%', right: '8' } }" />
