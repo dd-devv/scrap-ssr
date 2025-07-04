@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Variables configurables
-const apiUrl = 'http://localhost:3000/api/';
+const apiUrl = 'https://api2.acllabay.com/api/';
 const domain = 'https://acllabay.com';
 const currentDate = new Date().toISOString().split('T')[0];
 const publicDir = path.join(__dirname, '..', 'public');
@@ -53,17 +53,17 @@ const fetchData = async (url, label) => {
       '/faqs', '/tutorials', '/seguimientos', '/ofertas'
     ];
 
-    const productRoutes = products.map(p => {
-      const id = p.urlId || p.id || p._id;
-      return id ? `/seguimientos/${id}` : null;
-    }).filter(Boolean);
+    // const productRoutes = products.map(p => {
+    //   const id = p.urlId || p.id || p._id;
+    //   return id ? `/seguimientos/${id}` : null;
+    // }).filter(Boolean);
 
     const offerRoutes = offers.map(p => {
       const id = p.urlId || p.id || p._id;
       return id ? `/ofertas/${id}` : null;
     }).filter(Boolean);
 
-    const allRoutes = [...routes, ...productRoutes, ...offerRoutes];
+    const allRoutes = [...routes, ...offerRoutes];
     const routesContent = allRoutes.join('\n');
 
     fs.writeFileSync('routes.txt', routesContent);
@@ -77,17 +77,17 @@ const fetchData = async (url, label) => {
         priority: route === '/' ? '1.0' : '0.7',
         lastmod: currentDate
       })),
-      ...products.map(p => {
-        const id = p.urlId || p.id || p._id;
-        if (!id) return null;
-        const mod = p.updatedAt || p.updated_at || p.lastModified;
-        return {
-          loc: `${domain}/seguimientos/${id}`,
-          changefreq: 'daily',
-          priority: '0.7',
-          lastmod: mod ? new Date(mod).toISOString().split('T')[0] : currentDate
-        };
-      }).filter(Boolean),
+      // ...products.map(p => {
+      //   const id = p.urlId || p.id || p._id;
+      //   if (!id) return null;
+      //   const mod = p.updatedAt || p.updated_at || p.lastModified;
+      //   return {
+      //     loc: `${domain}/seguimientos/${id}`,
+      //     changefreq: 'daily',
+      //     priority: '0.7',
+      //     lastmod: mod ? new Date(mod).toISOString().split('T')[0] : currentDate
+      //   };
+      // }).filter(Boolean),
       ...offers.map(p => {
         const id = p.urlId || p.id || p._id;
         if (!id) return null;
