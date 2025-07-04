@@ -1,3 +1,5 @@
+<div class="pt-6">
+
 @if (productService.isLoading()) {
 <div class="my-8">
   <div class="card my-4">
@@ -329,5 +331,6 @@ productService.priceHistory().priceHistory.prices);
 </p-confirmdialog>
 <!-- </div> -->
 }
+</div>
 
 <p-toast [breakpoints]="{ '780px': { width: '80%', right: '8' } }" />
