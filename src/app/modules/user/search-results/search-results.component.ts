@@ -42,6 +42,8 @@ export default class SearchResultsComponent implements OnInit {
   private location = inject(Location);
 
   loading = signal(false);
+  // Cambiar a Set para manejar múltiples URLs en loading
+  loadingUrls = signal<Set<string>>(new Set());
   isLoading = this.searchService.isLoading;
   results = this.searchService.results;
 
@@ -68,7 +70,6 @@ export default class SearchResultsComponent implements OnInit {
         }
       }
     });
-
   }
 
   ngOnDestroy(): void {
@@ -77,7 +78,6 @@ export default class SearchResultsComponent implements OnInit {
 
   private normalizeSearchTerm(term: string): string {
     try {
-
       let normalized = decodeURIComponent(term);
       normalized = normalized.trim();
       normalized = normalized.replace(/\s+/g, ' ');
@@ -121,7 +121,32 @@ export default class SearchResultsComponent implements OnInit {
     return text.substring(0, length) + '...';
   }
 
+  // Método para verificar si una URL específica está en loading
+  isUrlLoading(url: string): boolean {
+    return this.loadingUrls().has(url);
+  }
+
+  // Método para agregar una URL al Set de loading
+  private addLoadingUrl(url: string): void {
+    this.loadingUrls.update(urls => {
+      const newSet = new Set(urls);
+      newSet.add(url);
+      return newSet;
+    });
+  }
+
+  // Método para remover una URL del Set de loading
+  private removeLoadingUrl(url: string): void {
+    this.loadingUrls.update(urls => {
+      const newSet = new Set(urls);
+      newSet.delete(url);
+      return newSet;
+    });
+  }
+
   registrarUrl(url: string) {
+    this.addLoadingUrl(url);
+
     this.productService.registerUrl([url], '10min').subscribe({
       next: (res) => {
         this.messageService.add({
@@ -130,6 +155,7 @@ export default class SearchResultsComponent implements OnInit {
           detail: 'Registrado correctamente',
           life: 3000
         });
+        this.removeLoadingUrl(url);
       },
       error: (err) => {
         this.messageService.add({
@@ -138,6 +164,7 @@ export default class SearchResultsComponent implements OnInit {
           detail: 'Error al registrar',
           life: 3000
         });
+        this.removeLoadingUrl(url);
       }
     });
   }

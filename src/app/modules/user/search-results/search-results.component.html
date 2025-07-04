@@ -12,7 +12,8 @@
       </p-floatlabel>
     </div>
 
-    <p-button label="Buscar" icon="pi pi-search" [disabled]="term.length < 7" [loading]="loading()" (onClick)="searchTerm()" />
+    <p-button label="Buscar" icon="pi pi-search" [disabled]="term.length < 7" [loading]="loading()"
+      (onClick)="searchTerm()" />
   </div>
 
   @if (isLoading()) {
@@ -60,7 +61,7 @@
 
             @if (authService.isAuthenticatedUser()) {
             <p-button label="Seguir" icon="pi pi-heart" class="flex-1" styleClass="w-full" size="small"
-              (click)="registrarUrl(product.url)" />
+              (click)="registrarUrl(product.url)" [loading]="isUrlLoading(product.url)" />
             } @else {
             <p-button label="Seguir" icon="pi pi-heart" [routerLink]="['/login']" class="flex-1" styleClass="w-full"
               size="small" />
