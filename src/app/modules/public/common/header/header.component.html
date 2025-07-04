@@ -35,7 +35,7 @@
 
       <!-- Navigation Items -->
       <nav class="flex flex-grow lg:justify-start">
-        <ul class="flex w-full justify-evenly md:justify-start space-x-2 items-center">
+        <ul class="flex  justify-evenly md:justify-start space-x-2 items-center w-full lg:w-auto">
           <!-- inicio -->
           <li>
             <a [routerLink]="['/']" routerLinkActive="text-primary" [routerLinkActiveOptions]="{ exact: true }" pRipple
@@ -108,21 +108,16 @@
           </li>
           }
         </ul>
-        @if (!authService.isAuthenticatedUser()) {
-        <div class="flex items-center ml-1">
-          <div class="block sm:hidden">
-            <p-button type="button" severity="primary" icon="pi pi-user" size="large" [routerLink]="['/login']"
-              pTooltip="Ingresar" tooltipPosition="bottom"></p-button>
-          </div>
 
-          <!-- Botón con label para pantallas medianas en adelante -->
-          <div class="hidden sm:block">
-            <p-button type="button" severity="primary" icon="pi pi-user" [routerLink]="['/login']" [label]="'Ingresar'"
-              pTooltip="Ingresar" tooltipPosition="bottom"></p-button>
-          </div>
+        <div class=" justify-center hidden lg:block w-full xl:w-1/2 xl:m-auto">
+            <p-inputgroup>
+              <input pInputText placeholder="Busca en todas las tiendas" [(ngModel)]="search" />
+              <p-inputgroup-addon>
+                <p-button icon="pi pi-search" variant="text" [disabled]="search.length < 8" (onClick)="searchTerm()" />
+              </p-inputgroup-addon>
+            </p-inputgroup>
         </div>
-
-        }
+        
       </nav>
       @if (authService.isAuthenticatedUser()) {
       <div class="flex items-center ml-1">
@@ -168,6 +163,25 @@
         </p-button>
       </div>
       } -->
+      @if (!authService.isAuthenticatedUser()) {
+        <div class="flex items-center ml-1">
+          <div class="block sm:hidden">
+            <p-button type="button" severity="primary" icon="pi pi-user" size="large" [routerLink]="['/login']"
+              pTooltip="Ingresar" tooltipPosition="bottom"></p-button>
+          </div>
+
+          <!-- Botón con label para pantallas medianas en adelante -->
+          <div class="hidden sm:block">
+            <p-button type="button" severity="primary" icon="pi pi-user" [routerLink]="['/login']" [label]="'Ingresar'"
+              pTooltip="Ingresar" tooltipPosition="bottom"></p-button>
+          </div>
+        </div>
+      }
+
+
+
+
+
       <div class="flex justify-center ml-1">
         <p-button (onClick)="toggleTheme()" [icon]="(isDarkTheme$ | async) ? 'pi pi-sun' : 'pi pi-moon'" [text]="true"
           size="large" severity="contrast" pTooltip="Tema" tooltipPosition="bottom">
@@ -175,11 +189,14 @@
       </div>
     </div>
 
-    <p-inputgroup class="mt-2">
-      <input pInputText placeholder="Busca en todas las tiendas" [(ngModel)]="search" />
+    <div class=" lg:hidden">
+
+      <p-inputgroup class="mt-2">
+        <input pInputText placeholder="Busca en todas las tiendas" [(ngModel)]="search" />
       <p-inputgroup-addon>
         <p-button icon="pi pi-search" variant="text" [disabled]="search.length < 8" (onClick)="searchTerm()" />
       </p-inputgroup-addon>
     </p-inputgroup>
+  </div>
   </p-card>
 </div>
