@@ -15,14 +15,14 @@
   @media screen and (max-width: 768px) {
 
     /* Ajusta este valor según necesites */
-    .fixed-header {
-      
+    /*.fixed-header {
+
       /* top: auto; */
 
       /* Elimina la posición superior */
-      bottom: 5px;
+      /*bottom: 5px;*/
       /* Coloca el header a 5px del fondo */
-    }
+    /*} */
   }
 </style>
 
@@ -31,8 +31,8 @@
     <div class="flex  w-full">
       <!-- Logo -->
       <div class="flex-none ">
-        <img src="../../../../../assets/svg/logo.svg" [routerLink]="['/']" width="40" alt="logo"
-          class="hidden md:block cursor-pointer" />
+        <img src="../../../../../assets/svg/logo.svg" [routerLink]="['/']" width="32" alt="logo"
+          class="hidden md:block cursor-pointer mx-2" />
       </div>
 
       <!-- Navigation Items -->
@@ -111,15 +111,17 @@
           }
         </ul>
 
-        <div class=" justify-center hidden lg:block w-full xl:w-1/2 xl:m-auto">
-            <p-inputgroup>
-              <input pInputText placeholder="Busca en todas las tiendas" [(ngModel)]="search" />
-              <p-inputgroup-addon>
-                <p-button icon="pi pi-search" variant="text" [disabled]="search.length < 8" (onClick)="searchTerm()" />
-              </p-inputgroup-addon>
-            </p-inputgroup>
+        <div class="justify-center hidden lg:block w-full xl:w-1/2 xl:m-auto">
+          <p-inputgroup
+            class="hover:shadow-lg transition-all duration-300 rounded-md overflow-hidden bg-white border hover:border-2 border-gray-300 hover:border-primary">
+            <input pInputText placeholder="¿Qué estás buscando?" [(ngModel)]="search" (keyup.enter)="searchTerm()"
+              class="!border-0 !ring-0 !outline-0 px-3 py-1 text-black bg-transparent text-lg font-medium" />
+            <p-inputgroup-addon class="!border-0 !p-0">
+              <p-button icon="pi pi-search" variant="text" [disabled]="search.length < 8" (onClick)="searchTerm()"
+                class="!bg-transparent !border-0 !text-white hover:!scale-105 transition-transform duration-200 !px-2 !py-1" />
+            </p-inputgroup-addon>
+          </p-inputgroup>
         </div>
-        
       </nav>
       @if (authService.isAuthenticatedUser()) {
       <div class="flex items-center ml-1">
@@ -166,18 +168,18 @@
       </div>
       } -->
       @if (!authService.isAuthenticatedUser()) {
-        <div class="flex items-center ml-1">
-          <div class="block sm:hidden">
-            <p-button type="button" severity="primary" icon="pi pi-user" size="large" [routerLink]="['/login']"
-              pTooltip="Ingresar" tooltipPosition="bottom"></p-button>
-          </div>
-
-          <!-- Botón con label para pantallas medianas en adelante -->
-          <div class="hidden sm:block">
-            <p-button type="button" severity="primary" icon="pi pi-user" [routerLink]="['/login']" [label]="'Ingresar'"
-              pTooltip="Ingresar" tooltipPosition="bottom"></p-button>
-          </div>
+      <div class="flex items-center ml-1">
+        <div class="block sm:hidden">
+          <p-button type="button" severity="primary" icon="pi pi-user" size="large" [routerLink]="['/login']"
+            pTooltip="Ingresar" tooltipPosition="bottom"></p-button>
         </div>
+
+        <!-- Botón con label para pantallas medianas en adelante -->
+        <div class="hidden sm:block">
+          <p-button type="button" severity="primary" icon="pi pi-user" [routerLink]="['/login']" [label]="'Ingresar'"
+            pTooltip="Ingresar" tooltipPosition="bottom"></p-button>
+        </div>
+      </div>
       }
 
 
@@ -191,14 +193,17 @@
       </div>
     </div>
 
-    <div class=" lg:hidden">
+    <div class="lg:hidden">
 
-      <p-inputgroup class="mt-2">
-        <input pInputText placeholder="Busca en todas las tiendas" [(ngModel)]="search" />
-      <p-inputgroup-addon>
-        <p-button icon="pi pi-search" variant="text" [disabled]="search.length < 8" (onClick)="searchTerm()" />
-      </p-inputgroup-addon>
-    </p-inputgroup>
-  </div>
+      <p-inputgroup
+        class="shadow hover:shadow-lg transition-all duration-300 rounded-md overflow-hidden bg-white border hover:border-2 border-gray-300 hover:border-primary mt-2">
+        <input pInputText placeholder="¿Qué estás buscando?" [(ngModel)]="search" (keyup.enter)="searchTerm()"
+          class="!border-0 !ring-0 !outline-0 px-2 py-1 text-black bg-transparent text-lg font-medium" />
+        <p-inputgroup-addon class="!border-0 !p-0">
+          <p-button icon="pi pi-search" variant="text" [disabled]="search.length < 8" (onClick)="searchTerm()"
+            class="!bg-transparent !border-0 !text-white hover:!scale-105 transition-transform duration-200 !px-2 !py-1" />
+        </p-inputgroup-addon>
+      </p-inputgroup>
+    </div>
   </p-card>
 </div>

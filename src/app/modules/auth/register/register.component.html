@@ -1,5 +1,5 @@
 <!-- register.component.html -->
-<div class="flex flex-col justify-center items-center h-full md:h-96 w-full p-4 mt-5">
+<div class="flex flex-col justify-center items-center h-screen md:h-96 w-full p-4 mt-5">
   <div class="w-full sm:w-4/5 md:w-2/3 lg:w-5/12">
     <p-card class="shadow-md my-8">
       <h3 class="heading-3 font-bold text-center mb-2">
@@ -7,7 +7,7 @@
       </h3>
 
       <p class="text-balance text-center mb-6">
-        El uso de esta plataforma está disponible exclusivamente para usuarios en Perú. 
+        El uso de esta plataforma está disponible exclusivamente para usuarios en Perú.
       </p>
 
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">

@@ -1,10 +1,10 @@
-<section class="min-h-[calc(100vh-80px)] py-8">
+<section class="min-h-[calc(100vh-80px)] py-8 mt-16 lg:mt-0">
 
   <!-- Input y botón -->
   <div class="flex gap-1 md:gap-2 w-full mt-6">
     <div class="w-full">
       <p-floatlabel variant="on">
-        <input pInputText id="over_label" [(ngModel)]="term" autocomplete="off" class="w-full" />
+        <input pInputText id="over_label" [(ngModel)]="term" (keyup.enter)="searchTerm()" class="w-full" />
         <label for="on_label">
           <i class="pi pi-search mr-2"></i>
           Buscar producto...
