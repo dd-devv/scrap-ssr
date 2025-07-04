@@ -126,5 +126,11 @@ export const Shops: Shop[] = [
     logo: 'assets/svg/realplaza.svg',
     url: 'https://www.realplaza.com/',
   },
+  {
+    id: 21,
+    name: 'Wong',
+    logo: 'assets/svg/wong.svg',
+    url: 'https://www.wong.pe/',
+  },
   
 ];
