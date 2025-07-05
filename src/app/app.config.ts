@@ -9,10 +9,17 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideClientHydration, withEventReplay, withNoHttpTransferCache } from '@angular/platform-browser';
 import { provideServiceWorker } from '@angular/service-worker';
 
+import {
+  provideTanStackQuery,
+  QueryClient,
+  withDevtools
+} from '@tanstack/angular-query-experimental'
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes, withInMemoryScrolling({scrollPositionRestoration:'enabled'})),
+    provideTanStackQuery(new QueryClient(), withDevtools()),
+    provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })),
     provideAnimationsAsync(),
     provideHttpClient(withFetch()),
     providePrimeNG({
@@ -29,8 +36,8 @@ export const appConfig: ApplicationConfig = {
       ripple: true
     }),
     provideClientHydration(withEventReplay(), withNoHttpTransferCache()), provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
-          })
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ]
 };
