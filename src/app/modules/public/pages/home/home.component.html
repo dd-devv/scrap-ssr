@@ -40,8 +40,8 @@
 
         <!-- Columna derecha - Imagen completa -->
         <div class="flex items-center justify-center cursor-pointer">
-          <img src="../../../../../assets/images/promos-image.png" alt="Promociones acllabay"
-            class="w-full h-auto max-w-md object-contain" [routerLink]="['/ofertas']">
+          <img src="https://res.cloudinary.com/dszjxyo0b/image/upload/f_avif,q_5/v1751666425/promos-image_jupr6y.png"
+            alt="Promociones acllabay" class="w-full h-auto max-w-md object-contain" [routerLink]="['/ofertas']">
         </div>
       </div>
     </p-card>
@@ -152,20 +152,24 @@
             <!-- Imagen desktop - oculta en pantallas pequeñas -->
             <div class="hidden md:block w-3/4 border border-primary-500 rounded-lg">
               @if (themeService.getStoredThemePreference()) {
-              <img src="../../../../../assets/images/message-whatsapp-dark.png" alt="" class="rounded-lg w-full">
+              <img src="https://res.cloudinary.com/dszjxyo0b/image/upload/f_avif/v1751666425/message-whatsapp-dark_edubtb.png"
+                alt="" class="rounded-lg w-full">
               }
               @if (!themeService.getStoredThemePreference()) {
-              <img src="../../../../../assets/images/message-whatsapp-light.png" alt="" class="rounded-lg w-full">
+              <img src="https://res.cloudinary.com/dszjxyo0b/image/upload/f_avif/v1751666425/message-whatsapp-light_udwkz0.png"
+                alt="" class="rounded-lg w-full">
               }
             </div>
 
             <!-- Imagen móvil - visible en todas las pantallas, pero toma todo el ancho en pantallas pequeñas -->
             <div class="w-full md:w-1/4 border border-primary-500 rounded-lg">
               @if (themeService.getStoredThemePreference()) {
-              <img src="../../../../../assets/images/whatsapp-darkmovil.jpg" alt="" class="rounded-lg h-full">
+              <img src="https://res.cloudinary.com/dszjxyo0b/image/upload/f_avif/v1751666424/whatsapp-darkmovil_nwlmj4.jpg"
+                alt="" class="rounded-lg h-full">
               }
               @if (!themeService.getStoredThemePreference()) {
-              <img src="../../../../../assets/images/whatsapp-light-movil.jpg" alt="" class="rounded-lg h-full">
+              <img src="https://res.cloudinary.com/dszjxyo0b/image/upload/f_avif/v1751666426/whatsapp-light-movil_e75ng0.jpg"
+                alt="" class="rounded-lg h-full">
               }
             </div>
           </div>

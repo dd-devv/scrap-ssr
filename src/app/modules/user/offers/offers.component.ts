@@ -21,6 +21,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { SkeletonProdComponent } from "../../../ui/skeleton-prod/skeleton-prod.component";
 import { DrawerModule } from 'primeng/drawer';
+import { CategoryService } from '../services/category.service';
 
 @Component({
   selector: 'app-offers',
@@ -56,7 +57,10 @@ export default class OffersComponent {
   private messageService = inject(MessageService);
   authService = inject(AuthService);
   private platformId = inject(PLATFORM_ID);
-  
+
+  categoryService = inject(CategoryService);
+  categorysUser = this.categoryService.categorysUser;
+
   selectedStore: string | null = null;
   availableStores: string[] = [];
   selectedCategory: string | null = null;
@@ -89,7 +93,7 @@ export default class OffersComponent {
     { label: '80% o más', value: { min: 80, max: 100 } },
     { label: '90% o más', value: { min: 90, max: 100 } }
   ];
-  
+
   showSidebar = false;
   sidebarVisible = false;
   drawerVisible = false;
@@ -108,10 +112,10 @@ export default class OffersComponent {
     this.products().forEach(product => {
       if (product.categories && Array.isArray(product.categories)) {
         // Tomar solo el número configurado de categorías
-        const categoriesToAdd = this.categoriesToConsider === Infinity 
-          ? product.categories 
+        const categoriesToAdd = this.categoriesToConsider === Infinity
+          ? product.categories
           : product.categories.slice(0, this.categoriesToConsider);
-        
+
         categoriesToAdd.forEach(category => {
           if (category) categories.add(category);
         });
@@ -122,6 +126,20 @@ export default class OffersComponent {
 
   ngOnInit(): void {
     this.obteneOfertas();
+
+    this.authService.checkAuthStatus().subscribe();
+
+    if (this.authService.isAuthenticatedUser()) {
+      this.getCategorysUser();
+    }
+  }
+
+  getCategorysUser() {
+    this.categoryService.getUserCategorys().subscribe({
+      next: () => {
+        this.categorysUser.set(this.categoryService.categorysUser());
+      }
+    });
   }
 
   obteneOfertas() {
@@ -143,14 +161,17 @@ export default class OffersComponent {
 
   applyFilter() {
     this.currentPage = 1;
+
     let filtered = this.products();
 
+    // Aplicar filtro por tienda si está seleccionada
     if (this.selectedStore) {
       filtered = filtered.filter(product =>
         this.extractDomainPipe.transform(product.url) === this.selectedStore
       );
     }
 
+    // Aplicar filtro por búsqueda si hay término
     if (this.searchTerm.trim()) {
       const searchTermLower = this.searchTerm.toLowerCase().trim();
       filtered = filtered.filter(product =>
@@ -158,32 +179,44 @@ export default class OffersComponent {
       );
     }
 
-    if (this.selectedDiscountRange && 
-        this.selectedDiscountRange.value && 
-        typeof this.selectedDiscountRange.value.min === 'number' && 
-        typeof this.selectedDiscountRange.value.max === 'number') {
-      filtered = filtered.filter(product => {
-        const discount = Number(product.discountPercentage);
-        return !isNaN(discount) && 
-               discount >= this.selectedDiscountRange.value.min && 
-               discount <= this.selectedDiscountRange.value.max;
-      });
-    }
-
-    if (this.selectedCategory) {
-      filtered = filtered.filter(product => {
-        if (!product.categories) return false;
-        
-        // Considerar solo el número configurado de categorías para el filtrado
-        const categoriesToCheck = this.categoriesToConsider === Infinity
-          ? product.categories
-          : product.categories.slice(0, this.categoriesToConsider);
-          
-        return categoriesToCheck.includes(this.selectedCategory!);
-      });
+    // Ordenar productos por categorías del usuario (si está autenticado)
+    if (this.authService.isAuthenticatedUser() && this.categorysUser().length > 0) {
+      filtered = this.sortProductsByUserCategories(filtered);
     }
 
     this.filteredProducts.set(filtered);
+  }
+
+  private sortProductsByUserCategories(products: ProductPublic[]): ProductPublic[] {
+    const userCategories = this.categorysUser();
+
+    // Separar productos que coinciden y no coinciden con las categorías del usuario
+    const matchingProducts: ProductPublic[] = [];
+    const nonMatchingProducts: ProductPublic[] = [];
+
+    products.forEach(product => {
+      // Si no tiene categorías, va directamente a no coincidentes
+      if (product.categories.every(cat => !cat || cat.trim() === '')) {
+        nonMatchingProducts.push(product);
+        return;
+      }
+
+      const hasMatchingCategory = product.categories.some(productCategory =>
+        userCategories.some(userCategory =>
+          productCategory.toLowerCase().includes(userCategory.toLowerCase()) ||
+          userCategory.toLowerCase().includes(productCategory.toLowerCase())
+        )
+      );
+
+      if (hasMatchingCategory) {
+        matchingProducts.push(product);
+      } else {
+        nonMatchingProducts.push(product);
+      }
+    });
+
+    // Retornar productos coincidentes primero, seguidos de los no coincidentes
+    return [...matchingProducts, ...nonMatchingProducts];
   }
 
   clearFilters(): void {
