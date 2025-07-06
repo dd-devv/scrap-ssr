@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { TokenStorageService } from '../../auth/services/tokenStorage.service';
 import { environment } from '../../../../environments/environment';
 import { AddUrlForMeReq, DeleteURLResp, MyJobResp, PriceHistory, Product, ProductPublic, RegisterProductReq, RegisterProductRes } from '../interfaces';
@@ -16,6 +16,9 @@ export default class ProductService {
   private queryClient = inject(QueryClient);
   private apiUrl = environment.apiUrl;
 
+  // Crear un computed signal para el token
+  private authToken = computed(() => this.tokenStorage.getToken());
+
   readonly isLoading = signal<boolean>(false);
   readonly isLoadingEqual = signal<boolean>(false);
   readonly isLoadingRec = signal<boolean>(false);
@@ -28,11 +31,11 @@ export default class ProductService {
 
   // TanStack Query definitions
   private latestResultsQuery = injectQuery(() => ({
-    queryKey: ['latest-results', this.authToken],
+    queryKey: ['latest-results', this.authToken()],
     queryFn: () => this.fetchLatestResults(),
     staleTime: 2 * 60 * 1000, // 2 minutos
     gcTime: 5 * 60 * 1000, // 5 minutos
-    enabled: !!this.authToken && typeof window !== 'undefined'
+    enabled: !!this.authToken() && typeof window !== 'undefined'
   }));
 
   private latestResultsPublicQuery = injectQuery(() => ({
@@ -51,11 +54,6 @@ export default class ProductService {
     enabled: typeof window !== 'undefined'
   }));
 
-  // Get token dynamically instead of storing in constructor
-  private get authToken(): string | null {
-    return this.tokenStorage.getToken();
-  }
-
   registerUrl(urls: string[], frequency: string): Observable<RegisterProductRes> {
     const registerData: RegisterProductReq = {
       urls,
@@ -64,7 +62,7 @@ export default class ProductService {
 
     return this.http.post<RegisterProductRes>(`${this.apiUrl}scraping/job`, registerData, {
       headers: {
-        Authorization: `Bearer ${this.authToken}`
+        Authorization: `Bearer ${this.authToken()}`
       }
     })
       .pipe(
@@ -84,7 +82,7 @@ export default class ProductService {
   getMyJob(urlId: string): Observable<MyJobResp> {
     return this.http.get<MyJobResp>(`${this.apiUrl}scraping/my-job/${urlId}`, {
       headers: {
-        Authorization: `Bearer ${this.authToken}`
+        Authorization: `Bearer ${this.authToken()}`
       }
     })
       .pipe(
@@ -107,7 +105,7 @@ export default class ProductService {
 
     return this.http.post<RegisterProductRes>(`${this.apiUrl}scraping/add-job-me`, addData, {
       headers: {
-        Authorization: `Bearer ${this.authToken}`
+        Authorization: `Bearer ${this.authToken()}`
       }
     })
       .pipe(
@@ -127,7 +125,7 @@ export default class ProductService {
   deleteUrl(urlId: string): Observable<DeleteURLResp> {
     return this.http.delete<DeleteURLResp>(`${this.apiUrl}scraping/job/delete-url/${urlId}`, {
       headers: {
-        Authorization: `Bearer ${this.authToken}`
+        Authorization: `Bearer ${this.authToken()}`
       }
     })
       .pipe(
@@ -148,7 +146,7 @@ export default class ProductService {
     this.isLoading.set(true);
 
     // Check if we're in browser environment and if token is available
-    if (typeof window === 'undefined' || !this.authToken) {
+    if (typeof window === 'undefined' || !this.authToken()) {
       this.isLoading.set(false);
       return of([]);
     }
@@ -164,7 +162,7 @@ export default class ProductService {
     // Si no hay datos en cache o están stale, hacer fetch
     return from(
       this.queryClient.fetchQuery({
-        queryKey: ['latest-results', this.authToken],
+        queryKey: ['latest-results', this.authToken()],
         queryFn: () => this.fetchLatestResults(),
         staleTime: 2 * 60 * 1000,
       })
@@ -264,7 +262,7 @@ export default class ProductService {
     this.isLoading.set(true);
 
     // Usar cache para price history también
-    const queryKey = ['price-history', id, this.authToken];
+    const queryKey = ['price-history', id, this.authToken()];
 
     return from(
       this.queryClient.fetchQuery({
@@ -289,7 +287,7 @@ export default class ProductService {
     this.isLoadingEqual.set(true);
 
     // Usar cache para productos iguales
-    const queryKey = ['products-equal', id, this.authToken];
+    const queryKey = ['products-equal', id, this.authToken()];
 
     return from(
       this.queryClient.fetchQuery({
@@ -314,7 +312,7 @@ export default class ProductService {
     this.isLoadingRec.set(true);
 
     // Usar cache para productos recomendados
-    const queryKey = ['products-recommended', id, this.authToken];
+    const queryKey = ['products-recommended', id, this.authToken()];
 
     return from(
       this.queryClient.fetchQuery({
@@ -340,7 +338,7 @@ export default class ProductService {
     return lastValueFrom(
       this.http.get<Product[]>(`${this.apiUrl}scraping/latest-results`, {
         headers: {
-          Authorization: `Bearer ${this.authToken}`
+          Authorization: `Bearer ${this.authToken()}`
         }
       })
     );
@@ -350,7 +348,7 @@ export default class ProductService {
     return lastValueFrom(
       this.http.get<ProductPublic[]>(`${this.apiUrl}scraping/latest-results-public`, {
         headers: {
-          Authorization: `Bearer ${this.authToken}`
+          Authorization: `Bearer ${this.authToken()}`
         }
       })
     );
@@ -366,7 +364,7 @@ export default class ProductService {
     return lastValueFrom(
       this.http.get<PriceHistory>(`${this.apiUrl}scraping/price-history/${id}`, {
         headers: {
-          Authorization: `Bearer ${this.authToken}`
+          Authorization: `Bearer ${this.authToken()}`
         }
       })
     );
@@ -376,7 +374,7 @@ export default class ProductService {
     return lastValueFrom(
       this.http.get<ProductPublic[]>(`${this.apiUrl}scraping/equal-results/${id}`, {
         headers: {
-          Authorization: `Bearer ${this.authToken}`
+          Authorization: `Bearer ${this.authToken()}`
         }
       })
     );
@@ -386,7 +384,7 @@ export default class ProductService {
     return lastValueFrom(
       this.http.get<ProductPublic[]>(`${this.apiUrl}scraping/recommended-results/${id}`, {
         headers: {
-          Authorization: `Bearer ${this.authToken}`
+          Authorization: `Bearer ${this.authToken()}`
         }
       })
     );

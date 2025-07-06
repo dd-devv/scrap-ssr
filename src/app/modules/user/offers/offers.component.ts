@@ -22,6 +22,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { SkeletonProdComponent } from "../../../ui/skeleton-prod/skeleton-prod.component";
 import { DrawerModule } from 'primeng/drawer';
 import { CategoryService } from '../services/category.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-offers',
@@ -124,12 +125,14 @@ export default class OffersComponent {
     this.availableCategories = Array.from(categories).sort();
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    // Primero verificar autenticación
+    const isAuthenticated = await firstValueFrom(this.authService.checkAuthStatus());
+
+    // Luego ejecutar las queries
     this.obteneOfertas();
 
-    this.authService.checkAuthStatus().subscribe();
-
-    if (this.authService.isAuthenticatedUser()) {
+    if (isAuthenticated) {
       this.getCategorysUser();
     }
   }

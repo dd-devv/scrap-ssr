@@ -20,6 +20,7 @@ import AuthService from '../../auth/services/auth.service';
 import { ProductPublic } from '../interfaces';
 import { SkeletonProdComponent } from '../../../ui/skeleton-prod/skeleton-prod.component';
 import { CategoryService } from '../services/category.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-products-all',
@@ -79,12 +80,14 @@ export default class ProductsAllComponent {
     this.availableStores = Array.from(stores).sort();
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    // Primero verificar autenticación
+    const isAuthenticated = await firstValueFrom(this.authService.checkAuthStatus());
+
+    // Luego ejecutar las queries
     this.obteneProductsAll();
 
-    this.authService.checkAuthStatus().subscribe();
-
-    if (this.authService.isAuthenticatedUser()) {
+    if (isAuthenticated) {
       this.getCategorysUser();
     }
   }
