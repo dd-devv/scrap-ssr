@@ -213,7 +213,7 @@
     @if (!productService.isLoading()) {
     <div>
       <h1 class="pb-5 text-4xl mx-auto text-center text-primary">Ofertas</h1>
-      <p-carousel [value]="productService.productsPublic() | slice:0:42" [numVisible]="3" [numScroll]="3"
+      <p-carousel [value]="productService.productsPublic() | slice:0:8" [numVisible]="3" [numScroll]="3"
         [circular]="false" [responsiveOptions]="responsiveOptions">
 
         <ng-template let-product pTemplate="item">
