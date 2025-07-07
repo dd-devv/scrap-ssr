@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { SearchReq, SearchRes } from '../modules/user/interfaces';
 import { catchError, Observable, tap, throwError } from 'rxjs';
+import { TokenStorageService } from '../modules/auth/services/tokenStorage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,9 @@ export class SearchService {
 
   readonly isLoading = signal<boolean>(true);
   readonly results = signal<SearchRes[]>([]);
+  private tokenStorage = inject(TokenStorageService);
+
+  private authToken = computed(() => this.tokenStorage.getToken());
 
   searTerm(term: string): Observable<SearchRes[]> {
 
@@ -22,7 +26,11 @@ export class SearchService {
       term
     };
 
-    return this.http.post<SearchRes[]>(`${this.apiUrl}search`, searchData, {})
+    return this.http.post<SearchRes[]>(`${this.apiUrl}search`, searchData, {
+      headers: {
+        Authorization: `Bearer ${this.authToken()}`
+      }
+    })
       .pipe(
         tap(response => {
           this.results.set(response);
