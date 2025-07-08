@@ -221,6 +221,12 @@ export default class ProductsComponent implements OnInit {
       logo: 'assets/svg/wong.svg',
       url: 'https://www.wong.pe/',
       domain: 'wong'
+    },
+    {
+      name: 'H&M',
+      logo: 'assets/svg/hm.svg',
+      url: 'https://pe.hm.com/',
+      domain: 'hm'
     }
   ];
 
@@ -362,6 +368,7 @@ export default class ProductsComponent implements OnInit {
       'tiendasishop',
       'realplaza',
       'wong',
+      'hm',
     ];
 
     const urlTrimmed = this.url.trim();

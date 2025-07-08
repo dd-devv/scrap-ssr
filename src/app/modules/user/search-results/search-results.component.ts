@@ -114,7 +114,7 @@ export default class SearchResultsComponent implements OnInit {
     this.term = '';
   }
 
-  truncateText(text: string, length: number = 40): string {
+  truncateText(text: string, length: number = 70): string {
     if (text.length <= length) {
       return text;
     }

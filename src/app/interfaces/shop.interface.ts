@@ -132,5 +132,11 @@ export const Shops: Shop[] = [
     logo: 'assets/svg/wong.svg',
     url: 'https://www.wong.pe/',
   },
+  {
+    id: 22,
+    name: 'H&M',
+    logo: 'assets/svg/hm.svg',
+    url: 'https://pe.hm.com/',
+  },
   
 ];
