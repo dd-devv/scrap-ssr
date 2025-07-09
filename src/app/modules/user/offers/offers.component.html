@@ -35,7 +35,7 @@
         </p-dropdown>
       </div>
       <!-- filtro por categoría -->
-      <div class="w-full mb-3">
+      <!-- <div class="w-full mb-3">
         <p-dropdown [options]="availableCategories" [(ngModel)]="selectedCategory" 
                     (onChange)="applyFilter()" [showClear]="true" 
                     placeholder="Filtrar por categoría" appendTo="body" styleClass="w-full">
@@ -46,7 +46,7 @@
             </div>
           </ng-template>
         </p-dropdown>
-      </div>
+      </div> -->
       <!-- Filtro por descuento -->
       <div class="w-full">
         <p-dropdown [options]="discountRanges" optionLabel="label" [(ngModel)]="selectedDiscountRange"
@@ -86,7 +86,7 @@
           </p-dropdown>
         </div>
 
-        <div class="w-full mb-3">
+        <!-- <div class="w-full mb-3">
           <p-dropdown [options]="availableCategories" [(ngModel)]="selectedCategory" 
                       (onChange)="applyFilter()" [showClear]="true" 
                       placeholder="Filtrar por categoría" appendTo="body" styleClass="w-full">
@@ -97,7 +97,7 @@
               </div>
             </ng-template>
           </p-dropdown>
-        </div>
+        </div> -->
         <!-- Filtro por descuento -->
         <div class="w-full">
           <p-dropdown [options]="discountRanges" optionLabel="label" [(ngModel)]="selectedDiscountRange"

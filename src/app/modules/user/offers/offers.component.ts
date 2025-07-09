@@ -162,33 +162,68 @@ export default class OffersComponent {
     });
   }
 
+  // applyFilter() {
+  //   this.currentPage = 1;
+
+  //   let filtered = this.products();
+
+  //   // Aplicar filtro por tienda si está seleccionada
+  //   if (this.selectedStore) {
+  //     filtered = filtered.filter(product =>
+  //       this.extractDomainPipe.transform(product.url) === this.selectedStore
+  //     );
+  //   }
+
+  //   // Aplicar filtro por búsqueda si hay término
+  //   if (this.searchTerm.trim()) {
+  //     const searchTermLower = this.searchTerm.toLowerCase().trim();
+  //     filtered = filtered.filter(product =>
+  //       product.productTitle.toLowerCase().includes(searchTermLower)
+  //     );
+  //   }
+
+  //   // Ordenar productos por categorías del usuario (si está autenticado)
+  //   if (this.authService.isAuthenticatedUser() && this.categorysUser().length > 0) {
+  //     filtered = this.sortProductsByUserCategories(filtered);
+  //   }
+
+  //   this.filteredProducts.set(filtered);
+  // }
   applyFilter() {
-    this.currentPage = 1;
+  this.currentPage = 1;
 
-    let filtered = this.products();
+  let filtered = this.products();
 
-    // Aplicar filtro por tienda si está seleccionada
-    if (this.selectedStore) {
-      filtered = filtered.filter(product =>
-        this.extractDomainPipe.transform(product.url) === this.selectedStore
-      );
-    }
-
-    // Aplicar filtro por búsqueda si hay término
-    if (this.searchTerm.trim()) {
-      const searchTermLower = this.searchTerm.toLowerCase().trim();
-      filtered = filtered.filter(product =>
-        product.productTitle.toLowerCase().includes(searchTermLower)
-      );
-    }
-
-    // Ordenar productos por categorías del usuario (si está autenticado)
-    if (this.authService.isAuthenticatedUser() && this.categorysUser().length > 0) {
-      filtered = this.sortProductsByUserCategories(filtered);
-    }
-
-    this.filteredProducts.set(filtered);
+  // Filtro por tienda
+  if (this.selectedStore) {
+    filtered = filtered.filter(product =>
+      this.extractDomainPipe.transform(product.url) === this.selectedStore
+    );
   }
+
+  // Filtro por búsqueda
+  if (this.searchTerm.trim()) {
+    const searchTermLower = this.searchTerm.toLowerCase().trim();
+    filtered = filtered.filter(product =>
+      product.productTitle.toLowerCase().includes(searchTermLower)
+    );
+  }
+
+  // Filtro por descuento (nuevo)
+  if (this.selectedDiscountRange) {
+    filtered = filtered.filter(product => 
+      product.discountPercentage >= this.selectedDiscountRange.value.min && 
+      product.discountPercentage <= this.selectedDiscountRange.value.max
+    );
+  }
+
+  // Ordenar por categorías del usuario
+  if (this.authService.isAuthenticatedUser() && this.categorysUser().length > 0) {
+    filtered = this.sortProductsByUserCategories(filtered);
+  }
+
+  this.filteredProducts.set(filtered);
+}
 
   private sortProductsByUserCategories(products: ProductPublic[]): ProductPublic[] {
     const userCategories = this.categorysUser();
