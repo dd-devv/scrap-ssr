@@ -8,7 +8,7 @@
         <!-- <input type="text" pInputText [(ngModel)]="searchTerm" (input)="applyFilter()"
                placeholder="Buscar en Acllabay.com" class="w-full" /> -->
         <p-floatlabel>
-          <input pInputText [(ngModel)]="searchTerm" (input)="applyFilter()" autocomplete="off" class="w-full" />
+          <input pInputText [(ngModel)]="searchTerm" (input)="onSearchChange()" autocomplete="off" class="w-full" />
           <label for="over_label"> <i class="pi pi-search"></i> Buscar en Acllabay.com</label>
         </p-floatlabel>
       </span>
@@ -16,8 +16,8 @@
 
     <!-- Filtro por tienda -->
     <div class="w-full md:w-64">
-      <p-dropdown [options]="availableStores" [(ngModel)]="selectedStore" (onChange)="applyFilter()" [showClear]="true"
-        placeholder="Filtrar por tienda" appendTo="body" styleClass="w-full">
+      <p-dropdown [options]="availableStores" [(ngModel)]="selectedStore" (onChange)="onStoreChange()"
+        [showClear]="true" placeholder="Filtrar por tienda" appendTo="body" styleClass="w-full">
         <ng-template pTemplate="item" let-store>
           <div class="flex items-center gap-2">
             <img class="h-6" src="../../../../assets/svg/{{ store }}.svg" alt="Logo {{ store }}" />
@@ -38,7 +38,7 @@
 
   @if (!isLoading()) {
   <div class="my-4 grid grid-cols-2 gap-1 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-    @for (product of filteredProducts() | paginate:currentPage:pageSize; track $index) {
+    @for (product of filteredProducts(); track $index) {
     <div>
       <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%' }"
         styleClass="[&_.p-card-body]:!p-2 sm:[&_.p-card-body]:!p-4">
@@ -54,7 +54,7 @@
             {{ truncateText(product.productTitle) | titlecase }}
           </div>
           <div class="mt-2 flex align-middle">
-            @if (authService.isAuthenticatedUser()) {
+            @if (isAuthenticated) {
             <!-- @if (getMyJob(product.urlId)) {
             <a class="text-red-500 cursor-pointer" pTooltip="Siguiendo" tooltipPosition="bottom">
               <i class="pi pi-heart-fill text-lg"></i>
@@ -99,7 +99,8 @@
           <h2 class="text-lg sm:text-2xl">
             {{ product.currentPrice | currency : "S/ " }}
           </h2>
-          <h3 class="text-sm marfa-italic-md mb-3" [style.visibility]="product.currentPrice >=  product.previousPrice ? 'hidden' : 'visible'">
+          <h3 class="text-sm marfa-italic-md mb-3"
+            [style.visibility]="product.currentPrice >=  product.previousPrice ? 'hidden' : 'visible'">
             Antes:
             <samp class="line-through">{{
               product.previousPrice | currency : "S/"
@@ -107,7 +108,7 @@
           </h3>
         </div>
         <ng-template #footer>
-          @if (authService.isAuthenticatedUser()) {
+          @if (isAuthenticated) {
           @if (getMyJob(product.urlId)) {
           <p class="text-center text-base text-red-500 border border-red-500 rounded-md py-1 sm:py-2 hover:bg-red-500 hover:text-white cursor-pointer"
             (click)="deleteUrl(product.urlId)">
@@ -133,8 +134,8 @@
     }
   </div>
 
-  @if (totalPages > 1) {
-  <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)" />
+  @if (totalPages() > 1) {
+  <app-pagination [currentPage]="currentPage" [totalPages]="totalPages()" (pageChange)="onPageChange($event)" />
   }
   }
 
