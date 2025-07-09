@@ -227,12 +227,10 @@ productService.priceHistory().priceHistory.prices);
                         }}.svg" alt="Logo {{
                           product.url | extractDomain
                         }}" />
-                        @if ((product.url | extractDomain | titlecase) !== 'Coolbox' && 
-                        (product.url | extractDomain | titlecase) !== 'Shopstar') {
+
                           <h3 class="text-xs font-bold flex flex-row items-center gap-2">
                             {{ product.url | extractDomain | titlecase }}
                           </h3>
-                        }
                       </div>
                     </a>
                   </td>
