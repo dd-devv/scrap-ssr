@@ -1,32 +1,35 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { SearchService } from '../../../services/search.service';
 import { SkeletonProdComponent } from '../../../ui/skeleton-prod/skeleton-prod.component';
 import { CardModule } from 'primeng/card';
 import { CurrencyPipe, TitleCasePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import AuthService from '../../auth/services/auth.service';
-import { Button } from 'primeng/button';
+import { ButtonModule } from 'primeng/button';
 import ProductService from '../services/product.service';
-import { Toast } from 'primeng/toast';
+import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { FloatLabel } from 'primeng/floatlabel';
+import { FloatLabelModule } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { Location } from '@angular/common';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-search-results',
+  standalone: true,
   imports: [
     SkeletonProdComponent,
     CardModule,
     TitleCasePipe,
     CurrencyPipe,
     RouterLink,
-    Button,
-    Toast,
-    FloatLabel,
+    ButtonModule,
+    ToastModule,
+    FloatLabelModule,
     FormsModule,
-    InputTextModule
+    InputTextModule,
+    TooltipModule
   ],
   providers: [MessageService],
   templateUrl: './search-results.component.html',
@@ -42,27 +45,31 @@ export default class SearchResultsComponent implements OnInit {
   private location = inject(Location);
 
   loading = signal(false);
-  // Cambiar a Set para manejar múltiples URLs en loading
   loadingUrls = signal<Set<string>>(new Set());
   isLoading = this.searchService.isLoading;
   results = this.searchService.results;
+  sortOrder = signal<'asc' | 'desc'>('asc');
 
   term = '';
+
+  sortedResults = computed(() => {
+    const results = this.results();
+    if (this.sortOrder() === 'asc') {
+      return [...results].sort((a, b) => (Number(a.price) || Infinity) - (Number(b.price) || Infinity));
+    } else {
+      return [...results].sort((a, b) => (Number(b.price) || Infinity) - (Number(a.price) || Infinity));
+    }
+  });
 
   ngOnInit(): void {
     this.authService.checkAuthStatus().subscribe();
 
-    // Obtener el término de búsqueda de los query params
     this.route.queryParams.subscribe(params => {
       const searchQuery = params['q'];
       if (searchQuery) {
-        // Normalizar el texto (decodificar URL y limpiar)
         this.term = this.normalizeSearchTerm(searchQuery);
-
-        // Limpiar los query params de la URL
         this.clearQueryParams();
 
-        // Realizar la búsqueda si el término es válido
         if (this.term.length > 7) {
           this.searchTerm();
         } else {
@@ -81,7 +88,6 @@ export default class SearchResultsComponent implements OnInit {
       let normalized = decodeURIComponent(term);
       normalized = normalized.trim();
       normalized = normalized.replace(/\s+/g, ' ');
-
       return normalized;
     } catch (error) {
       console.warn('Error al normalizar el término de búsqueda:', error);
@@ -114,6 +120,10 @@ export default class SearchResultsComponent implements OnInit {
     this.term = '';
   }
 
+  toggleSortOrder() {
+    this.sortOrder.update(order => order === 'asc' ? 'desc' : 'asc');
+  }
+
   truncateText(text: string, length: number = 70): string {
     if (text.length <= length) {
       return text;
@@ -121,12 +131,10 @@ export default class SearchResultsComponent implements OnInit {
     return text.substring(0, length) + '...';
   }
 
-  // Método para verificar si una URL específica está en loading
   isUrlLoading(url: string): boolean {
     return this.loadingUrls().has(url);
   }
 
-  // Método para agregar una URL al Set de loading
   private addLoadingUrl(url: string): void {
     this.loadingUrls.update(urls => {
       const newSet = new Set(urls);
@@ -135,7 +143,6 @@ export default class SearchResultsComponent implements OnInit {
     });
   }
 
-  // Método para remover una URL del Set de loading
   private removeLoadingUrl(url: string): void {
     this.loadingUrls.update(urls => {
       const newSet = new Set(urls);

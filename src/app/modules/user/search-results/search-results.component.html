@@ -1,5 +1,4 @@
 <section class="min-h-[calc(100vh-80px)] py-8 mt-16 lg:mt-0">
-
   <!-- Input y botón -->
   <div class="flex gap-1 md:gap-2 w-full mt-6">
     <div class="w-full">
@@ -14,6 +13,16 @@
 
     <p-button label="Buscar" icon="pi pi-search" [disabled]="term.length < 7" [loading]="loading()"
       (onClick)="searchTerm()" />
+    
+    <p-button 
+      [icon]="sortOrder() === 'asc' ? 'pi pi-sort-amount-down' : 'pi pi-sort-amount-up'" 
+      [text]="true" 
+      [rounded]="true"
+      severity="secondary"
+      (click)="toggleSortOrder()"
+      pTooltip="{{sortOrder() === 'asc' ? 'Ordenar de mayor a menor precio' : 'Ordenar de menor a mayor precio'}}"
+      tooltipPosition="top">
+    </p-button>
   </div>
 
   @if (isLoading()) {
@@ -26,7 +35,7 @@
 
   @if (!isLoading()) {
   <div class="my-4 grid grid-cols-2 gap-1 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-    @for (product of results(); track $index) {
+    @for (product of sortedResults(); track $index) {
     <div>
       <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%' }"
         styleClass="[&_.p-card-body]:!p-2 sm:[&_.p-card-body]:!p-4">
@@ -37,7 +46,6 @@
           </div>
         </ng-template>
         <ng-template #title>
-          <!-- <div class="text-sm  h-[60px] sm:text-xl  sm:h-16"> -->
           <div class="text-sm  h-[60px] sm:text-xl  sm:h-[84px]">
             {{ truncateText(product.name) | titlecase }}
           </div>
