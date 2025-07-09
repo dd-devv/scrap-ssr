@@ -138,5 +138,24 @@ export const Shops: Shop[] = [
     logo: 'assets/svg/hm.svg',
     url: 'https://pe.hm.com/',
   },
+  {
+    id: 22,
+    name: 'Cuidafarma',
+    logo: 'assets/svg/cuidafarma.svg',
+    url: 'https://cuidafarma.pe/',
+  },
+  {
+    id: 22,
+    name: 'Hushpuppies',
+    logo: 'assets/svg/hushpuppies.svg',
+    url: 'https://www.hushpuppies.pe/',
+  },
+  {
+    id: 22,
+    name: 'Miniso',
+    logo: 'assets/svg/miniso.svg',
+    url: 'https://www.miniso.pe/',
+  },
+  
   
 ];

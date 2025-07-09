@@ -226,7 +226,25 @@ export default class ProductsComponent implements OnInit {
       name: 'H&M',
       logo: 'assets/svg/hm.svg',
       url: 'https://pe.hm.com/',
-      domain: 'hm'
+      domain: 'hm' 
+    },
+    {
+      name: 'Cuidafarma',
+      logo: 'assets/svg/cuidafarma.svg',
+      url: 'https://cuidafarma.pe/',
+      domain: 'cuidafarma' 
+    },
+    {
+      name: 'Hush Puppies',
+      logo: 'assets/svg/hushpuppies.svg',
+      url: 'https://www.hushpuppies.pe/',
+      domain: 'hushpuppies'
+    },
+    {
+      name: 'Miniso',
+      logo: 'assets/svg/miniso.svg',
+      url: 'https://www.miniso.pe/',
+      domain: 'miniso'
     }
   ];
 
@@ -369,6 +387,8 @@ export default class ProductsComponent implements OnInit {
       'realplaza',
       'wong',
       'hm',
+      'cuidafarma',
+      'hushpuppies'
     ];
 
     const urlTrimmed = this.url.trim();
