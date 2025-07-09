@@ -7,15 +7,18 @@ import { Skeleton } from 'primeng/skeleton';
 import { Notification } from '../interfaces';
 import { PaginationComponent } from '../../shared/pagination/pagination.component';
 import { PaginatePipe } from '../../../pipes/paginate.pipe';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-notifications',
+  standalone: true,
   imports: [
     TimeAgoPipe,
     NgClass,
     Skeleton,
     PaginationComponent,
-    PaginatePipe
+    PaginatePipe,
+    FormsModule
   ],
   templateUrl: './notifications.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +30,7 @@ export default class NotificationsComponent {
   notifications = this.notificationService.notificationsUser;
   isLoading = this.notificationService.isLoading;
   filteredNotifications = signal<Notification[]>([]);
+  showOnlyMinHistoric = false;
 
   currentPage = 1;
   pageSize = 8;
@@ -38,14 +42,27 @@ export default class NotificationsComponent {
   cargarNotificaciones() {
     this.notificationService.getNotifications().subscribe({
       next: (res) => {
-        this.filteredNotifications.set(this.notifications());
+        this.filterNotifications();
       },
       error: (err) => {
         console.error('Error al cargar ofertas:', err);
       }
     });
   }
-  // retorna true si contiene el texto ¡MÍNIMO HISTÓRICO! al inicio del mensaje
+
+  filterNotifications() {
+    if (this.showOnlyMinHistoric) {
+      this.filteredNotifications.set(
+        this.notifications().filter(notification => 
+          this.isMinimumHistoric(notification.description)
+        )
+      );
+    } else {
+      this.filteredNotifications.set(this.notifications());
+    }
+    this.currentPage = 1; // Resetear a la primera página al aplicar filtro
+  }
+
   isMinimumHistoric(message: string): boolean {
     return message.startsWith('¡MÍNIMO HISTÓRICO!');
   }
@@ -72,5 +89,4 @@ export default class NotificationsComponent {
   getNotificationPriceUp(message: string): boolean {
     return message.includes('aumentó');
   }
-
 }
