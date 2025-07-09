@@ -102,8 +102,20 @@ export default class OfferComponent implements OnInit {
     this.initChart();
   }
 
+  // loadProductsEqual(id: string) {
+  //   this.productService.getProductsEqual(id).subscribe({
+  //     error: (err) => {
+  //       console.error('Error loading products:', err);
+  //     }
+  //   });
+  // }
   loadProductsEqual(id: string) {
     this.productService.getProductsEqual(id).subscribe({
+      next: (products) => {
+        // Ordenar los productos por precio de menor a mayor
+        const sortedProducts = [...products].sort((a, b) => a.currentPrice - b.currentPrice);
+        this.productService.productsEqual.set(sortedProducts);
+      },
       error: (err) => {
         console.error('Error loading products:', err);
       }
