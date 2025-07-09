@@ -78,6 +78,7 @@ export default class OffersComponent {
   isLoading = this.productService.isLoading;
 
   estadosOfertas = signal<{ [key: string]: boolean }>({});
+  isAuthenticated = false;
 
   currentPage = 1;
   pageSize = 16;
@@ -126,13 +127,14 @@ export default class OffersComponent {
   }
 
   async ngOnInit(): Promise<void> {
+    this.isLoading.set(true);
     // Primero verificar autenticación
-    const isAuthenticated = await firstValueFrom(this.authService.checkAuthStatus());
+    this.isAuthenticated = await firstValueFrom(this.authService.checkAuthStatus());
 
     // Luego ejecutar las queries
     this.obteneOfertas();
 
-    if (isAuthenticated) {
+    if (this.isAuthenticated) {
       this.getCategorysUser();
     }
   }
@@ -150,9 +152,13 @@ export default class OffersComponent {
       next: (res) => {
         this.loadStores();
         this.loadCategories();
-        this.products().forEach(prod => {
-          this.cargarEstadoJobs(prod.urlId);
-        });
+
+        if (this.isAuthenticated) {
+          this.products().forEach(prod => {
+            this.cargarEstadoJobs(prod.urlId);
+          });
+        }
+
         this.filteredProducts.set(this.products());
         this.applyFilter();
       },
@@ -211,8 +217,8 @@ export default class OffersComponent {
 
   // Filtro por descuento (nuevo)
   if (this.selectedDiscountRange) {
-    filtered = filtered.filter(product => 
-      product.discountPercentage >= this.selectedDiscountRange.value.min && 
+    filtered = filtered.filter(product =>
+      product.discountPercentage >= this.selectedDiscountRange.value.min &&
       product.discountPercentage <= this.selectedDiscountRange.value.max
     );
   }

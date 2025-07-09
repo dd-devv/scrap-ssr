@@ -34,6 +34,12 @@ export interface Product {
   urlId:        string;
 }
 
+export interface ProdsResp {
+  products:  ProductPublic[];
+  message:  string;
+  pages: number;
+}
+
 export interface ProductPublic {
   productTitle:       string;
   currentPrice:       number;
