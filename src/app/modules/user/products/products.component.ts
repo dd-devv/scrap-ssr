@@ -388,7 +388,8 @@ export default class ProductsComponent implements OnInit {
       'wong',
       'hm',
       'cuidafarma',
-      'hushpuppies'
+      'hushpuppies',
+      'miniso',
     ];
 
     const urlTrimmed = this.url.trim();
