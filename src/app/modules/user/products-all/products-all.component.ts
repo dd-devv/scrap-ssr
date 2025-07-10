@@ -95,7 +95,7 @@ export default class ProductsAllComponent implements OnInit {
   filteredProducts = signal<ProductPublic[]>([]);
   totalPages = signal(1);
   currentPage = 1;
-  pageSize = 16;
+  pageSize = 30;
   categorysUser = this.categoryService.categorysUser;
   estadosOfertas = signal<{ [key: string]: boolean }>({});
   isAuthenticated = false;

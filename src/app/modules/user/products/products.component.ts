@@ -93,7 +93,7 @@ export default class ProductsComponent implements OnInit {
   loadingSubscription = signal(false);
 
   currentPage = 1;
-  pageSize = 16;
+  pageSize = 30;
 
   supportedStores = [
     {

@@ -81,7 +81,7 @@ export default class OffersComponent {
   isAuthenticated = false;
 
   currentPage = 1;
-  pageSize = 16;
+  pageSize = 30
 
   selectedDiscountRange: any = null;
   discountRanges = [
