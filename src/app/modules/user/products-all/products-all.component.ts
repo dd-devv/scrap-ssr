@@ -82,7 +82,12 @@ export default class ProductsAllComponent implements OnInit {
     'coolbox',
     'tiendasishop',
     'realplaza',
-    'wong'
+    'wong',
+    'hm',
+    'cuidafarma',
+    'hushpuppies',
+    'miniso',
+    'tiendamia'
   ];
   searchTerm: string = '';
   isLoading = this.productService.isLoading;

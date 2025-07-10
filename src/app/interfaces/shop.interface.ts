@@ -156,6 +156,12 @@ export const Shops: Shop[] = [
     logo: 'assets/svg/miniso.svg',
     url: 'https://www.miniso.pe/',
   },
+  {
+    id: 23,
+    name: 'Tiendamia',
+    logo: 'assets/svg/tiendamia.svg',
+    url: 'https://tiendamia.com/pe/',
+  },
   
   
 ];
