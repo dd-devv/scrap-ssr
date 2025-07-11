@@ -35,7 +35,8 @@ export class ExtractDomainPipe implements PipeTransform {
     'cuidafarma',
     'hushpuppies',
     'miniso',
-    'tiendamia'
+    'tiendamia',
+    'estilos'
   ];
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) { }

@@ -87,7 +87,8 @@ export class FloatingAddProductButtonComponent {
       'cuidafarma',
       'hushpuppies',
       'miniso',
-      'tiendamia'
+      'tiendamia',
+      'estilos' 
     ];
 
     const urlTrimmed = this.url.trim();

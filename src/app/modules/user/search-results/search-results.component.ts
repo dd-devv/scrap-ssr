@@ -48,7 +48,7 @@ export default class SearchResultsComponent implements OnInit {
   loadingUrls = signal<Set<string>>(new Set());
   isLoading = this.searchService.isLoading;
   results = this.searchService.results;
-  sortOrder = signal<'asc' | 'desc'>('asc');
+  sortOrder = signal<'asc' | 'desc'>('desc');
 
   term = '';
 

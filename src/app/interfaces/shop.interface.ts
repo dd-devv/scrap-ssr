@@ -162,6 +162,11 @@ export const Shops: Shop[] = [
     logo: 'assets/svg/tiendamia.svg',
     url: 'https://tiendamia.com/pe/',
   },
+  { id: 24,
+    name: 'Estilos',
+    logo: 'assets/svg/estilos.svg',
+    url: 'https://www.estilos.com.pe/',
+  },
   
   
 ];

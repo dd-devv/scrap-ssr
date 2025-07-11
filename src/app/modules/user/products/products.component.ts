@@ -251,6 +251,12 @@ export default class ProductsComponent implements OnInit {
       logo: 'assets/svg/tiendamia.svg',
       url: 'https://tiendamia.com/pe/',
       domain: 'tiendamia'
+    },
+    {
+      name: 'Estilos',
+      logo: 'assets/svg/estilos.svg',
+      url: 'https://www.estilos.com.pe/',
+      domain: 'estilos'
     }
   ];
 
@@ -396,8 +402,8 @@ export default class ProductsComponent implements OnInit {
       'cuidafarma',
       'hushpuppies',
       'miniso',
-      'tiendamia'
-
+      'tiendamia',
+      'estilos' 
     ];
 
     const urlTrimmed = this.url.trim();

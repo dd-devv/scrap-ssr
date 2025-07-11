@@ -87,7 +87,8 @@ export default class ProductsAllComponent implements OnInit {
     'cuidafarma',
     'hushpuppies',
     'miniso',
-    'tiendamia'
+    'tiendamia',
+    'estilos'
   ];
   searchTerm: string = '';
   isLoading = this.productService.isLoading;
