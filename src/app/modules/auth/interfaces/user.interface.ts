@@ -4,5 +4,6 @@ export interface User {
   email: string;
   whatsapp: string;
   verified: boolean;
+  onlyHisLow: boolean;
   urls_scrap: number;
 }

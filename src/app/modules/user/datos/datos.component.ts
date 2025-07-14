@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import AuthService from '../../auth/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -14,12 +14,15 @@ import { Toast } from 'primeng/toast';
 import { Dialog } from 'primeng/dialog';
 import { catchError, map, Observable, of } from 'rxjs';
 import { InputOtp } from 'primeng/inputotp';
+import { ToggleSwitch } from 'primeng/toggleswitch';
+import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-datos',
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     CardModule,
     InputMask,
     InputTextModule,
@@ -28,7 +31,9 @@ import { InputOtp } from 'primeng/inputotp';
     ButtonModule,
     Toast,
     Dialog,
-    InputOtp
+    InputOtp,
+    ToggleSwitch,
+    MessageModule
   ],
   providers: [MessageService],
   templateUrl: './datos.component.html',
@@ -406,4 +411,27 @@ export default class DatosComponent implements OnInit {
 
   // Getter para el código de verificación
   get verificationCode() { return this.verificationForm.get('verificationCode'); }
+
+  updateUserOnlyHisLow(): void {
+    this.authService.updateUserOnlyHisLow(this.userData.onlyHisLow).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Se guardó correctamente',
+          detail: 'Se guardó tus preferencias',
+          life: 3000
+        });
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error al guardar',
+          detail: 'Ocurrió un error al guardar sus preferencias',
+          life: 3000
+        });
+      }
+    });
+
+  }
+
 }

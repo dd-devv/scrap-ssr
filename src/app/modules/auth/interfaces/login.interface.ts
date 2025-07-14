@@ -5,6 +5,7 @@ export interface LoginResponse {
     email: string;
     whatsapp: string;
     verified: boolean;
+    onlyHisLow: boolean;
     createdAt: string;
     updatedAt: string;
     urls_scrap: number;

@@ -91,21 +91,23 @@
         </form>
       </div>
       }
+
+      <p-message severity="success" icon="pi pi-whatsapp" text="¿Qué tipo de alertas desea recibir?" styleClass="h-full mt-6" />
+
+      <div class="card flex justify-center mt-4">
+        <p-toggleswitch [(ngModel)]="userData.onlyHisLow" (onChange)="updateUserOnlyHisLow()" />
+        <span class="ml-2 text-sm">Solo mínimos históricos</span>
+      </div>
       }
+
+
     </p-card>
   </div>
 </div>
 
 <!-- Modal para verificación de WhatsApp -->
-<p-dialog
-  [(visible)]="showWhatsappVerificationModal"
-  [modal]="true"
-  [closable]="false"
-  [draggable]="false"
-  [resizable]="false"
-  header="Verificación de WhatsApp"
-  [style]="{width: '450px'}"
-  [breakpoints]="{'576px': '90vw'}">
+<p-dialog [(visible)]="showWhatsappVerificationModal" [modal]="true" [closable]="false" [draggable]="false"
+  [resizable]="false" header="Verificación de WhatsApp" [style]="{width: '450px'}" [breakpoints]="{'576px': '90vw'}">
 
   <div class="flex flex-col items-center p-4">
     <i class="pi pi-whatsapp text-5xl text-green-500 mb-4"></i>

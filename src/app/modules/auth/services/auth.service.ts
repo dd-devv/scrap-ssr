@@ -134,7 +134,25 @@ export default class AuthService {
     })
       .pipe(
         tap(response => {
-          // Almacenar el token temporal como token de verificación
+          this.currentUser.set(response.user);
+        }),
+        catchError(error => {
+          return throwError(() => ({
+            error: error.error
+          }));
+        })
+      );
+  }
+
+  updateUserOnlyHisLow(status: boolean): Observable<UpdateResponse> {
+
+    return this.http.post<UpdateResponse>(`${this.apiUrl}users/onlyHisLow`, {onlyHisLow: status}, {
+      headers: {
+        Authorization: `Bearer ${this.authToken}`
+      }
+    })
+      .pipe(
+        tap(response => {
           this.currentUser.set(response.user);
         }),
         catchError(error => {
