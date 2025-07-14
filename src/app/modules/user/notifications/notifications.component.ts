@@ -8,6 +8,7 @@ import { Notification } from '../interfaces';
 import { PaginationComponent } from '../../shared/pagination/pagination.component';
 import { PaginatePipe } from '../../../pipes/paginate.pipe';
 import { FormsModule } from '@angular/forms';
+import { ToggleSwitch } from 'primeng/toggleswitch';
 
 @Component({
   selector: 'app-notifications',
@@ -18,7 +19,8 @@ import { FormsModule } from '@angular/forms';
     Skeleton,
     PaginationComponent,
     PaginatePipe,
-    FormsModule
+    FormsModule,
+    ToggleSwitch
   ],
   templateUrl: './notifications.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,7 +55,7 @@ export default class NotificationsComponent {
   filterNotifications() {
     if (this.showOnlyMinHistoric) {
       this.filteredNotifications.set(
-        this.notifications().filter(notification => 
+        this.notifications().filter(notification =>
           this.isMinimumHistoric(notification.description)
         )
       );
