@@ -14,6 +14,12 @@ import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { Location } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
+import { ExtractDomainPipe } from '../../../pipes/extract-domain.pipe';
+import { TimeAgoPipe } from '../../../pipes/timeAgo.pipe';
+import { firstValueFrom } from 'rxjs';
+import { ProductPublic } from '../interfaces';
+import { BadgeModule } from 'primeng/badge';
+import { FieldsetModule } from 'primeng/fieldset';
 
 @Component({
   selector: 'app-search-results',
@@ -29,7 +35,11 @@ import { TooltipModule } from 'primeng/tooltip';
     FloatLabelModule,
     FormsModule,
     InputTextModule,
-    TooltipModule
+    TooltipModule,
+    ExtractDomainPipe,
+    TimeAgoPipe,
+    BadgeModule,
+    FieldsetModule
   ],
   providers: [MessageService],
   templateUrl: './search-results.component.html',
@@ -48,7 +58,10 @@ export default class SearchResultsComponent implements OnInit {
   loadingUrls = signal<Set<string>>(new Set());
   isLoading = this.searchService.isLoading;
   results = this.searchService.results;
+  productsFound = this.searchService.productsFound;
   sortOrder = signal<'asc' | 'desc'>('desc');
+  estadosOfertas = signal<{ [key: string]: boolean }>({});
+  isAuthenticated = true;
 
   term = '';
 
@@ -62,13 +75,12 @@ export default class SearchResultsComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.authService.checkAuthStatus().subscribe();
+    this.checkAuth();
 
     this.route.queryParams.subscribe(params => {
       const searchQuery = params['q'];
       if (searchQuery) {
         this.term = this.normalizeSearchTerm(searchQuery);
-        this.clearQueryParams();
 
         if (this.term.length > 7) {
           this.searchTerm();
@@ -77,6 +89,14 @@ export default class SearchResultsComponent implements OnInit {
         }
       }
     });
+  }
+
+  private async checkAuth(): Promise<void> {
+    try {
+      this.isAuthenticated = await firstValueFrom(this.authService.checkAuthStatus());
+    } catch (error) {
+      console.error('Error checking auth status:', error);
+    }
   }
 
   ngOnDestroy(): void {
@@ -95,16 +115,9 @@ export default class SearchResultsComponent implements OnInit {
     }
   }
 
-  private clearQueryParams(): void {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {},
-      replaceUrl: true
-    });
-  }
-
   searchTerm() {
     this.loading.set(true);
+    const queryParams: any = {};
     this.searchService.searTerm(this.term).subscribe({
       next: () => {
         this.loading.set(false);
@@ -113,6 +126,24 @@ export default class SearchResultsComponent implements OnInit {
         this.loading.set(false);
         console.log('error', err);
       }
+    });
+
+    this.searchService.searTracks(this.term).subscribe({
+      next: (res) => {
+
+        if (this.isAuthenticated) {
+          this.loadProductStates(res);
+        }
+      }
+    });
+
+    queryParams['q'] = this.term;
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'merge',
+      replaceUrl: true
     });
   }
 
@@ -174,5 +205,75 @@ export default class SearchResultsComponent implements OnInit {
         this.removeLoadingUrl(url);
       }
     });
+  }
+
+  private loadProductStates(products: ProductPublic[]): void {
+    products.forEach(prod => {
+      this.productService.getMyJob(prod.urlId).subscribe({
+        next: (res) => {
+          this.estadosOfertas.update(estados => ({
+            ...estados,
+            [prod.urlId]: res.myjob
+          }));
+        },
+        error: (err) => {
+          this.estadosOfertas.update(estados => ({
+            ...estados,
+            [prod.urlId]: false
+          }));
+        }
+      });
+    });
+  }
+
+
+  addUrlForMe(sourceJobId: string, urlId: string): void {
+    this.isLoading.set(true);
+    this.productService.addUrlForMe(sourceJobId, urlId).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Agregado a tu seguimiento',
+          life: 3000
+        });
+        this.searchService.searTracks(this.term).subscribe();
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.error?.error || 'Error al agregar el producto',
+          life: 3000
+        });
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  deleteUrl(urlId: string): void {
+    this.productService.deleteUrl(urlId).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Dejaste de seguir este producto',
+          life: 3000
+        });
+        this.searchService.searTracks(this.term).subscribe();
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.error?.error || 'Error al dejar de seguir el producto',
+          life: 3000
+        });
+      }
+    });
+  }
+
+  getMyJob(urlId: string): boolean {
+    return this.estadosOfertas()[urlId] || false;
   }
 }
