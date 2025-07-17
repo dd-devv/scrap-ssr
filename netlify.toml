@@ -4,7 +4,3 @@
 
 [[plugins]]
   package = "@netlify/angular-runtime"
-
-  [plugins.inputs]
-    prerender = true
-    excludeRoutes = ["/productos"]
