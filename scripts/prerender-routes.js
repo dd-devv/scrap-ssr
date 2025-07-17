@@ -44,7 +44,7 @@ const fetchData = async (url, label) => {
 (async () => {
   try {
     const [products, offers] = await Promise.all([
-      fetchData(`${apiUrl}scraping/products-public`, 'productos'),
+      // fetchData(`${apiUrl}scraping/products-public`, 'productos'),
       fetchData(`${apiUrl}scraping/latest-results-public`, 'ofertas')
     ]);
 
