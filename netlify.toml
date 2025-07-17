@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = "dist/scrap-front-prime/browser"
+
+[[plugins]]
+  package = "@netlify/angular-runtime"
+
+  [plugins.inputs]
+    prerender = true
+    excludeRoutes = ["/productos"]
