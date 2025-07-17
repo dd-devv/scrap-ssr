@@ -75,8 +75,7 @@ export const routes: Routes = [
       },
       {
         path: 'ofertas',
-        loadComponent: () => import('./modules/user/offers/offers.component'),
-        data: { ssr: false }
+        loadComponent: () => import('./modules/user/offers/offers.component')
       },
       {
         path: 'ofertas/:urlId',
@@ -84,8 +83,7 @@ export const routes: Routes = [
       },
       {
         path: 'productos',
-        loadComponent: () => import('./modules/user/products-all/products-all.component'),
-        data: { ssr: false }
+        loadComponent: () => import('./modules/user/products-all/products-all.component')
       },
       {
         path: 'notificaciones',
