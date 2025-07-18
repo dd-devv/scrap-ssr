@@ -83,7 +83,10 @@ export const routes: Routes = [
       },
       {
         path: 'productos',
-        loadComponent: () => import('./modules/user/products-all/products-all.component')
+        loadComponent: () => import('./modules/user/products-all/products-all.component'),
+        data: {
+          prerender: false
+        }
       },
       {
         path: 'notificaciones',
