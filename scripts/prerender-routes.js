@@ -6,8 +6,6 @@ const apiUrl = 'https://api2.acllabay.com/api/';
 const domain = 'https://acllabay.com';
 const currentDate = new Date().toISOString().split('T')[0];
 const publicDir = path.join(__dirname, '..', 'public');
-const routesTxtPath = path.join(__dirname, '..', 'routes.txt');
-const publicRoutesTxtPath = path.join(publicDir, 'routes.txt');
 
 // Asegurar fetch
 if (typeof fetch === 'undefined') {
@@ -22,14 +20,6 @@ if (typeof fetch === 'undefined') {
 // Asegurar carpeta public
 if (!fs.existsSync(publicDir)) {
   fs.mkdirSync(publicDir, { recursive: true });
-}
-
-// Borrar versiones anteriores de routes.txt
-try {
-  if (fs.existsSync(routesTxtPath)) fs.unlinkSync(routesTxtPath);
-  if (fs.existsSync(publicRoutesTxtPath)) fs.unlinkSync(publicRoutesTxtPath);
-} catch (e) {
-  console.warn('⚠️ No se pudo eliminar routes.txt anteriores:', e.message);
 }
 
 // Fetch con control de errores
@@ -58,7 +48,7 @@ const fetchData = async (url, label) => {
       fetchData(`${apiUrl}scraping/latest-results-public`, 'ofertas')
     ]);
 
-    const staticRoutes = [
+    const routes = [
       '/', '/about', '/plans', '/contact',
       '/faqs', '/tutorials', '/seguimientos', '/ofertas'
     ];
@@ -73,26 +63,31 @@ const fetchData = async (url, label) => {
       return id ? `/ofertas/${id}` : null;
     }).filter(Boolean);
 
-    // Fusionar rutas y eliminar cualquier "/productos"
-    const allRoutes = [...staticRoutes, ...offerRoutes].filter(r => r !== '/productos');
+    const allRoutes = [...routes, ...offerRoutes];
     const routesContent = allRoutes.join('\n');
 
-    // Escribir routes.txt
-    fs.writeFileSync(routesTxtPath, routesContent);
-    fs.writeFileSync(publicRoutesTxtPath, routesContent);
-
-    // Mostrar rutas para depuración
-    console.log('\n📄 Rutas que se van a prerenderizar:');
-    console.log(allRoutes.join('\n'));
+    fs.writeFileSync('routes.txt', routesContent);
+    fs.writeFileSync(path.join(publicDir, 'routes.txt'), routesContent);
 
     // Generar sitemap.xml
     const sitemapEntries = [
-      ...staticRoutes.map(route => ({
+      ...routes.map(route => ({
         loc: `${domain}${route}`,
         changefreq: route === '/' ? 'daily' : 'monthly',
         priority: route === '/' ? '1.0' : '0.7',
         lastmod: currentDate
       })),
+      // ...products.map(p => {
+      //   const id = p.urlId || p.id || p._id;
+      //   if (!id) return null;
+      //   const mod = p.updatedAt || p.updated_at || p.lastModified;
+      //   return {
+      //     loc: `${domain}/seguimientos/${id}`,
+      //     changefreq: 'daily',
+      //     priority: '0.7',
+      //     lastmod: mod ? new Date(mod).toISOString().split('T')[0] : currentDate
+      //   };
+      // }).filter(Boolean),
       ...offers.map(p => {
         const id = p.urlId || p.id || p._id;
         if (!id) return null;
@@ -116,7 +111,7 @@ const fetchData = async (url, label) => {
 
     fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), sitemapXml);
 
-    // Crear robots.txt
+    // robots.txt
     const robotsTxt = `User-agent: *
 
 Allow: /

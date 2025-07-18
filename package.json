@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "build1": "npm run prerender:routes && ng build",
+    "build": "npm run prerender:routes && ng build",
+    "build1": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:scrap-front-prime": "node dist/scrap-front-prime/server/server.mjs",
