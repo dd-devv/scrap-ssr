@@ -51,6 +51,7 @@ export default class HomeComponent implements OnInit {
   private title = inject(Title);
   platformId = inject(PLATFORM_ID);
   document = inject(DOCUMENT);
+  isBrowser = isPlatformBrowser(this.platformId);
 
   products = this.productService.productsPublic;
   loading = true;

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LayoutComponent } from './modules/public/layout/layout.component';
 import { requireVerificacionGuard, verificacionGuard } from './modules/auth/guards/verificacion.guard';
 import { authenticatedUserGuard, authUserGuard } from './modules/auth/guards/user.guard';
+import LayoutAdminComponent from './modules/admin/layout-admin/layout-admin.component';
 
 export const routes: Routes = [
   {
@@ -106,6 +107,32 @@ export const routes: Routes = [
   //   loadComponent: () => import('./modules/auth/verify-whatsapp/verify-whatsapp.component'),
   //   canActivate: [requireVerificacionGuard]
   // },
+  {
+    path: 'admin',
+    component: LayoutAdminComponent,
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./modules/admin/pages/home-admin/home-admin.component'),
+      },
+      {
+        path: 'users',
+        loadComponent: () => import('./modules/admin/pages/users/users.component'),
+      },
+      {
+        path: 'searches',
+        loadComponent: () => import('./modules/admin/pages/searches/searches.component'),
+      },
+      {
+        path: 'tracks',
+        loadComponent: () => import('./modules/admin/pages/tracks/tracks.component'),
+      },
+      {
+        path: 'messages',
+        loadComponent: () => import('./modules/admin/pages/messages/messages.component'),
+      },
+    ]
+  },
   {
     path: '**',
     redirectTo: ''
