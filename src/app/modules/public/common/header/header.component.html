@@ -2,8 +2,8 @@
   .fixed-header {
     position: fixed;
     top: 5px;
-    left: 10px;
-    right: 10px;
+    left: 5px;
+    right: 5px;
   }
 
   .fixed-header .p-menubar {
@@ -19,16 +19,16 @@
 
       /* top: auto; */
 
-      /* Elimina la posición superior */
-      /*bottom: 5px;*/
-      /* Coloca el header a 5px del fondo */
+    /* Elimina la posición superior */
+    /*bottom: 5px;*/
+    /* Coloca el header a 5px del fondo */
     /*} */
   }
 </style>
 
 <div class="fixed z-50 fixed-header" appHideHeader>
-  <p-card styleClass="m-0 [&_.p-card-body]:!p-2 border border-gray-400/30 backdrop-blur-md">
-    <div class="flex  w-full">
+  <p-card styleClass="m-0 [&_.p-card-body]:!p-2 py-1 bg-gray-50/10 backdrop-blur-lg">
+    <div class="flex w-full">
       <!-- Logo -->
       <div class="flex-none ">
         <img src="../../../../../assets/svg/logo.svg" [routerLink]="['/']" width="32" alt="logo"
@@ -138,7 +138,7 @@
         </div>
 
         <!-- Popover -->
-        <p-popover #op>
+        <p-popover #op class="pr-3">
           <p class="mb-3" (click)="toggle($event)">
             <a [routerLink]="['/seguimientos']">
               <i class="pi pi-chart-line me-2"></i> Seguimientos</a>
@@ -157,6 +157,12 @@
           <p class="text-red-500 cursor-pointer" (click)="logout(); toggle($event)">
             <a> <i class="pi pi-external-link me-2"></i> Salir</a>
           </p>
+
+          <div class="flex justify-center ml-1">
+            <p-button (onClick)="toggleTheme()" [icon]="(isDarkTheme$ | async) ? 'pi pi-sun' : 'pi pi-moon'"
+              [text]="true" size="large" severity="contrast" pTooltip="Tema" tooltipPosition="bottom">
+            </p-button>
+          </div>
         </p-popover>
       </div>
       }
@@ -180,17 +186,13 @@
             pTooltip="Ingresar" tooltipPosition="bottom"></p-button>
         </div>
       </div>
-      }
-
-
-
-
 
       <div class="flex justify-center ml-1">
         <p-button (onClick)="toggleTheme()" [icon]="(isDarkTheme$ | async) ? 'pi pi-sun' : 'pi pi-moon'" [text]="true"
           size="large" severity="contrast" pTooltip="Tema" tooltipPosition="bottom">
         </p-button>
       </div>
+      }
     </div>
 
     <div class="lg:hidden">

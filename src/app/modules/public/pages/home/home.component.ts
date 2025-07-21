@@ -40,6 +40,7 @@ import { ChartModule } from 'primeng/chart';
 })
 export default class HomeComponent implements OnInit {
   responsiveOptions: any[] | undefined;
+  responsiveOptionsLogos: any[] | undefined;
   messageService = inject(MessageService);
   publicService = inject(PublicService);
   productService = inject(ProductService);
@@ -105,6 +106,29 @@ export default class HomeComponent implements OnInit {
       {
         breakpoint: '575px',
         numVisible: 1,
+        numScroll: 1,
+      },
+    ];
+
+    this.responsiveOptionsLogos = [
+      {
+        breakpoint: '1400px',
+        numVisible: 6,
+        numScroll: 1,
+      },
+      {
+        breakpoint: '1199px',
+        numVisible: 5,
+        numScroll: 1,
+      },
+      {
+        breakpoint: '767px',
+        numVisible: 4,
+        numScroll: 1,
+      },
+      {
+        breakpoint: '575px',
+        numVisible: 3,
         numScroll: 1,
       },
     ];

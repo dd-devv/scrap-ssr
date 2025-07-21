@@ -1,23 +1,83 @@
-<main class=" pt-10">
+<main class="pt-10 md:pt-0">
+
+  <!-- PREVIEW SERVICE -->
+  <section class="min-h-screen flex flex-col justify-between">
+    <!-- Contenido principal centrado -->
+    <div class="flex-1 flex flex-col items-center justify-center text-center px-4">
+      <!-- Hero Content -->
+      <div class="max-w-4xl mx-auto mb-12">
+        <h1 class="heading-1 mb-6 leading-tight">
+          <span class="block text-primary">Ahorra</span>
+          <span class="block">Sin perder tiempo.</span>
+        </h1>
+
+        <p class="mx-auto mb-8 leading-relaxed">
+          Monitorea tus productos favoritos. Recibe alertas instantáneas mediante WhatsApp cuando los precios bajen y
+          compra inteligentemente.
+        </p>
+
+        <!-- Buttons -->
+        <div class="flex flex-col sm:flex-row gap-8 justify-center items-center mt-8">
+          @if (!authService.isAuthenticated()) {
+          <p-button label="Empezar ahora" icon="pi pi-arrow-right" iconPos="right" [routerLink]="['/register']"
+            size="large" rounded="true" />
+          } @else {
+          <p-button label="Registrar seguimiento" icon="pi pi-plus" iconPos="right" [routerLink]="['/seguimientos']"
+            size="large" rounded="true" />
+          }
+
+          <p-button label="Mostrar ofertas" severity="secondary" size="large" icon="pi pi-tag" iconPos="right"
+            rounded="true" [routerLink]="['/ofertas']" />
+        </div>
+      </div>
+
+      <!-- Feature Cards -->
+      <div class="hidden md:inline">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto my-2">
+          <div class="text-center p-4 bg-surface-200/10 rounded-lg border border-surface-700/20">
+            <h3 class="text-xl font-semibold mb-3">Precio más bajo</h3>
+            <p class="text-gray-400">Encuentra siempre las mejores ofertas.</p>
+          </div>
+
+          <div class="text-center p-4 bg-surface-200/10 rounded-lg border border-surface-700/20">
+            <h3 class="text-xl font-semibold mb-3">Más rápido</h3>
+            <p class="text-gray-400">Recibe alertas por WhatsApp en tiempo real.</p>
+          </div>
+
+          <div class="text-center p-4 bg-surface-200/10 rounded-lg border border-surface-700/20">
+            <h3 class="text-xl font-semibold mb-3">Más confiable</h3>
+            <p class="text-gray-400">Sé parte de nuestros usuarios satisfechos.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Carrusel de logos en la parte inferior -->
+      <div class="mt-16 w-full">
+        <div class="bg-surface-200/10 rounded-lg">
+          <div class="mx-auto px-4">
+            <p-carousel [value]="shops" [numVisible]="6" [numScroll]="1" [circular]="true" [autoplayInterval]="3000"
+              [showIndicators]="false" [showNavigators]="false" [responsiveOptions]="responsiveOptionsLogos"
+              class="store-logos-carousel">
+
+              <ng-template let-logo pTemplate="item">
+                <div class="flex items-center justify-center p-4 h-20">
+                  <a [href]="logo.url" target="_blank" class="cursor-pointer">
+                    <img [src]="logo.logo" [alt]="logo.name"
+                      class="h-12 object-contain opacity-100 md:opacity-60 hover:opacity-100 transition-opacity duration-300 filter grayscale-0 md:filter md:grayscale hover:grayscale-0" />
+                  </a>
+                </div>
+              </ng-template>
+            </p-carousel>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
 
   <!-- PREVIEW SERVICE -->
   <section class="min-h-[calc(100vh-80px)] py-8 flex flex-col items-center justify-between">
-    <div class="text-center mb-6 pt-12">
-      <h1 class="heading-1 max-w-[900px] mx-auto">
-        <span>Acllabay: </span>
-        <span class="text-primary">Ahorra </span>
-        <span>sin perder tiempo</span>
-      </h1>
-      <p class="my-5 marfa-light-italic-md max-w-[600px] mx-auto">Monitorea tus productos favoritos. Recibe alertas
-        instantáneas
-        mediante WhatsApp cuando los precios bajen y compra inteligentemente.</p>
-      @if (!authService.isAuthenticated()) {
-      <p-button label="Empezar ahora" icon="pi pi-arrow-right" iconPos="right" [routerLink]="['/register']"
-        size="large" />
-      } @else {
-      <p-button label="Registrar productos" [routerLink]="['/seguimientos']" size="large" />
-      }
-    </div>
 
     <p-card class="my-16">
       <div class="grid grid-cols-1 lg:grid-cols-2">
@@ -95,7 +155,8 @@
             <i class="pi pi-chart-line !text-2xl"></i>
           </div>
           <span class="text-2xl font-bold text-center">Historial de precios</span>
-          <span class="text-muted-color marfa-italic-sm text-center">Visualiza el comportamiento histórico de precios de tus
+          <span class="text-muted-color marfa-italic-sm text-center">Visualiza el comportamiento histórico de precios de
+            tus
             productos.</span>
         </div>
       </div>
@@ -152,11 +213,13 @@
             <!-- Imagen desktop - oculta en pantallas pequeñas -->
             <div class="hidden md:block w-3/4 border border-primary-500 rounded-lg">
               @if (themeService.getStoredThemePreference()) {
-              <img src="https://res.cloudinary.com/dszjxyo0b/image/upload/f_avif/v1751666425/message-whatsapp-dark_edubtb.png"
+              <img
+                src="https://res.cloudinary.com/dszjxyo0b/image/upload/f_avif/v1751666425/message-whatsapp-dark_edubtb.png"
                 alt="" class="rounded-lg w-full">
               }
               @if (!themeService.getStoredThemePreference()) {
-              <img src="https://res.cloudinary.com/dszjxyo0b/image/upload/f_avif/v1751666425/message-whatsapp-light_udwkz0.png"
+              <img
+                src="https://res.cloudinary.com/dszjxyo0b/image/upload/f_avif/v1751666425/message-whatsapp-light_udwkz0.png"
                 alt="" class="rounded-lg w-full">
               }
             </div>
@@ -164,11 +227,13 @@
             <!-- Imagen móvil - visible en todas las pantallas, pero toma todo el ancho en pantallas pequeñas -->
             <div class="w-full md:w-1/4 border border-primary-500 rounded-lg">
               @if (themeService.getStoredThemePreference()) {
-              <img src="https://res.cloudinary.com/dszjxyo0b/image/upload/f_avif/v1751666424/whatsapp-darkmovil_nwlmj4.jpg"
+              <img
+                src="https://res.cloudinary.com/dszjxyo0b/image/upload/f_avif/v1751666424/whatsapp-darkmovil_nwlmj4.jpg"
                 alt="" class="rounded-lg h-full">
               }
               @if (!themeService.getStoredThemePreference()) {
-              <img src="https://res.cloudinary.com/dszjxyo0b/image/upload/f_avif/v1751666426/whatsapp-light-movil_e75ng0.jpg"
+              <img
+                src="https://res.cloudinary.com/dszjxyo0b/image/upload/f_avif/v1751666426/whatsapp-light-movil_e75ng0.jpg"
                 alt="" class="rounded-lg h-full">
               }
             </div>
