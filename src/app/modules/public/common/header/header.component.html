@@ -151,6 +151,12 @@
             <a [routerLink]="['/categorias']">
               <i class="pi pi-list me-2"></i> Categorías</a>
           </p>
+          @if (authService.isAdmin()) {
+            <p class="mb-3" (click)="toggle($event)">
+            <a [routerLink]="['/admin']">
+              <i class="pi pi-external-link me-2"></i> Administrar</a>
+          </p>
+          }
           <!-- <p class="mb-3">
                 <a href=""> <i class="pi pi-crown me-2"></i> Suscripciones</a>
               </p> -->

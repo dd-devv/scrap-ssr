@@ -3,6 +3,7 @@ import { User } from "./user.interface";
 export interface TokenPayload {
   userId: string;
   purpose?: string;
+  role: string;
   iat: number;
   exp: number;
 }

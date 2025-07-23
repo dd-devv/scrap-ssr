@@ -3,6 +3,7 @@ export interface User {
   fullname: string;
   email: string;
   whatsapp: string;
+  role: string;
   verified: boolean;
   onlyHisLow: boolean;
   urls_scrap: number;

@@ -3,6 +3,7 @@ import { LayoutComponent } from './modules/public/layout/layout.component';
 import { requireVerificacionGuard, verificacionGuard } from './modules/auth/guards/verificacion.guard';
 import { authenticatedUserGuard, authUserGuard } from './modules/auth/guards/user.guard';
 import LayoutAdminComponent from './modules/admin/layout-admin/layout-admin.component';
+import { adminGuard } from './modules/auth/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -110,6 +111,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: LayoutAdminComponent,
+    canActivate: [adminGuard],
     children: [
       {
         path: '',
@@ -130,6 +132,10 @@ export const routes: Routes = [
       {
         path: 'messages',
         loadComponent: () => import('./modules/admin/pages/messages/messages.component'),
+      },
+      {
+        path: 'views',
+        loadComponent: () => import('./modules/admin/pages/views/views.component'),
       },
     ]
   },

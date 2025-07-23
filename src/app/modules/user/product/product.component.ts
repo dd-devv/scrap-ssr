@@ -16,6 +16,8 @@ import { ToastModule } from 'primeng/toast';
 import { TableModule } from 'primeng/table';
 import { SkeletonProdComponent } from '../../../ui/skeleton-prod/skeleton-prod.component';
 import { CardModule } from 'primeng/card';
+import { ViewService } from '../../../services/view.service';
+import { BuyService } from '../../../services/buy.service';
 
 @Component({
   selector: 'app-product',
@@ -46,6 +48,8 @@ export default class ProductComponent implements OnInit {
   productService = inject(ProductService);
   private messageService = inject(MessageService);
   authService = inject(AuthService);
+  viewService = inject(ViewService);
+  buyService = inject(BuyService);
   router = inject(Router);
   private meta = inject(Meta); // Inyectar servicio Meta
   private title = inject(Title); // Inyectar servicio Title
@@ -93,12 +97,21 @@ export default class ProductComponent implements OnInit {
             this.updateMetaTags(response.productInfo);
             // Añadir structured data
             this.addStructuredData(response.productInfo);
+            this.insertViewResult(response.productInfo._id);
           }
         }
       })
     ).subscribe();
 
     this.initChart();
+  }
+
+  insertViewResult(resultId: string) {
+    this.viewService.insertView(resultId, 'Seguimientos').subscribe();
+  }
+
+  insertBuyResult(resultId: string, url: string) {
+    this.buyService.insertBuy(resultId, url).subscribe();
   }
 
   // loadProductsEqual(id: string) {

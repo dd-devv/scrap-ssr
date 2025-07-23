@@ -13,6 +13,7 @@ import { CategoryService } from '../../user/services/category.service';
 interface TokenPayload {
   userId: string;
   purpose?: string;
+  role: string;
   iat: number;
   exp: number;
 }
@@ -146,7 +147,7 @@ export default class AuthService {
 
   updateUserOnlyHisLow(status: boolean): Observable<UpdateResponse> {
 
-    return this.http.post<UpdateResponse>(`${this.apiUrl}users/onlyHisLow`, {onlyHisLow: status}, {
+    return this.http.post<UpdateResponse>(`${this.apiUrl}users/onlyHisLow`, { onlyHisLow: status }, {
       headers: {
         Authorization: `Bearer ${this.authToken}`
       }
@@ -374,6 +375,41 @@ export default class AuthService {
 
     return null;
   }
+
+  isAdmin(): boolean {
+    // Si estamos en el servidor, retornar false
+    if (!isPlatformBrowser(this.platformId)) {
+      return false;
+    }
+
+    // Primero verificar si tenemos un usuario cargado con el rol
+    const currentUser = this.currentUser();
+    if (currentUser && currentUser.role === 'ADMIN') {
+      return true;
+    }
+
+    // Si no tenemos usuario cargado, verificar directamente el token
+    const authToken = this.tokenStorage.getToken();
+    if (!authToken) {
+      return false;
+    }
+
+    try {
+      const decoded = jwtDecode<TokenPayload>(authToken);
+
+      // Verificar que el token no haya expirado
+      if (decoded.exp * 1000 <= Date.now()) {
+        return false;
+      }
+
+      // Verificar el rol en el token
+      return decoded.role === 'ADMIN';
+    } catch (error) {
+      console.error('Error al decodificar el token:', error);
+      return false;
+    }
+  }
+
 
   // Obtener tokens
   getAuthToken(): string | null {

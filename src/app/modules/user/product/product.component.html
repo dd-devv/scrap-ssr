@@ -1,140 +1,141 @@
 <div class="pt-6">
 
-@if (productService.isLoading()) {
-<div class="my-8">
-  <div class="card my-4">
-    <p-skeleton width="60%" height="2rem"></p-skeleton>
+  @if (productService.isLoading()) {
+  <div class="my-8">
+    <div class="card my-4">
+      <p-skeleton width="60%" height="2rem"></p-skeleton>
+    </div>
+
+    <div class="card my-4">
+      <p-skeleton height="20rem" class="mt-4"></p-skeleton>
+    </div>
+
+
+    <div class="card my-4">
+      <p-skeleton height="20rem" class="mt-4"></p-skeleton>
+    </div>
   </div>
+  }
 
-  <div class="card my-4">
-    <p-skeleton height="20rem" class="mt-4"></p-skeleton>
-  </div>
+  @if (!productService.isLoading()){
+  @let estadoDelPrecio = obtenerEstadoDelPrecio(productService.priceHistory().productInfo.currentPrice,
+  productService.priceHistory().priceHistory.prices);
+  @let arrPrices = productService.priceHistory().priceHistory.prices;
+  <!-- <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4"> -->
+  <div class="mt-8 grid grid-cols-1 lg:flex lg:flex-row lg:gap-4">
+    <!-- imagen del producto  -->
+    <div class="card flex justify-center items-center h-96 bg-white rounded-xl  xl:min-w-[550px] 2xl:min-w-[48%]">
+      <img [src]="productService.priceHistory().productInfo.image"
+        [alt]="productService.priceHistory().productInfo.title" class="rounded-md object-contain max-h-full" />
+    </div>
 
-
-  <div class="card my-4">
-    <p-skeleton height="20rem" class="mt-4"></p-skeleton>
-  </div>
-</div>
-}
-
-@if (!productService.isLoading()){
-@let estadoDelPrecio = obtenerEstadoDelPrecio(productService.priceHistory().productInfo.currentPrice,
-productService.priceHistory().priceHistory.prices);
-@let arrPrices = productService.priceHistory().priceHistory.prices;
-<!-- <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4"> -->
-<div class="mt-8 grid grid-cols-1 lg:flex lg:flex-row lg:gap-4">
-  <!-- imagen del producto  -->
-  <div class="card flex justify-center items-center h-96 bg-white rounded-xl  xl:min-w-[550px] 2xl:min-w-[48%]">
-    <img [src]="productService.priceHistory().productInfo.image" [alt]="productService.priceHistory().productInfo.title"
-      class="rounded-md object-contain max-h-full" />
-  </div>
-
-  <!-- información del producto -->
-  <div class="flex flex-col information-container">
-    <div class="xd">
-      <h1 class="mt-3 lg:mt-0 text-2xl">
-        {{
-        productService.priceHistory().productInfo.title
-        }}
-      </h1>
-      <div class="mt-3 mb-3 flex flex-col justify-start lg:flex-row lg:justify-between">
-        <h1 class=" text-3xl">
+    <!-- información del producto -->
+    <div class="flex flex-col information-container">
+      <div class="xd">
+        <h1 class="mt-3 lg:mt-0 text-2xl">
           {{
-          productService.priceHistory().productInfo.currentPrice
-          | currency : "S/ "
+          productService.priceHistory().productInfo.title
           }}
         </h1>
-        <p class="text-sm">seguimiento desde: {{ findFirst(productService.priceHistory().priceHistory.dates) | date :
-          'dd/MM/yy '}}</p>
+        <div class="mt-3 mb-3 flex flex-col justify-start lg:flex-row lg:justify-between">
+          <h1 class=" text-3xl">
+            {{
+            productService.priceHistory().productInfo.currentPrice
+            | currency : "S/ "
+            }}
+          </h1>
+          <p class="text-sm">seguimiento desde: {{ findFirst(productService.priceHistory().priceHistory.dates) | date :
+            'dd/MM/yy '}}</p>
 
-      </div>
-      <div class="flex flex-row justify-between mb-4">
-        <div class="info-content">
-          <h4 class="text-sm font-extralight mb-1">Precio más bajo</h4>
-          <h3 class="text-base font-bold p-1 px-2 bg-green-500 bg-opacity-25 rounded-xl">
-            {{ findMin(productService.priceHistory().priceHistory.prices) | currency : "S/ " }}
-          </h3>
         </div>
-        <div class="info-content">
-          <h4 class="text-sm font-extralight mb-1">Precio Promedio</h4>
-          <h3 class="text-base font-bold p-1 px-2 bg-gray-600 bg-opacity-30 rounded-xl">
-            {{calcularMediana(arrPrices) | currency : "S/ "}}
-          </h3>
-        </div>
-        <div class="info-content">
-          <h4 class="text-sm font-extralight mb-1">Descuento</h4>
-          <h3 class="text-base font-bold">
-            {{calcularDescuento(calcularMediana(productService.priceHistory().priceHistory.prices),
-            productService.priceHistory().productInfo.currentPrice)}}</h3>
-        </div>
-
-      </div>
-      <div class="flex flex-row lg:items-center justify-between">
-        <div>
-          <p class="text-sm mb-2 text-balance">Actualizado {{ findLast(productService.priceHistory().priceHistory.dates) | timeAgo }}</p>
+        <div class="flex flex-row justify-between mb-4">
           <div class="info-content">
-          <h3 class="text-lg font-bold flex flex-row items-center gap-2">
-          <div class="my-2" title="{{productService.priceHistory().productInfo.url | extractDomain | titlecase}}">
-            <img class="h-6" src="../../../../assets/svg/{{
+            <h4 class="text-sm font-extralight mb-1">Precio más bajo</h4>
+            <h3 class="text-base font-bold p-1 px-2 bg-green-500 bg-opacity-25 rounded-xl">
+              {{ findMin(productService.priceHistory().priceHistory.prices) | currency : "S/ " }}
+            </h3>
+          </div>
+          <div class="info-content">
+            <h4 class="text-sm font-extralight mb-1">Precio Promedio</h4>
+            <h3 class="text-base font-bold p-1 px-2 bg-gray-600 bg-opacity-30 rounded-xl">
+              {{calcularMediana(arrPrices) | currency : "S/ "}}
+            </h3>
+          </div>
+          <div class="info-content">
+            <h4 class="text-sm font-extralight mb-1">Descuento</h4>
+            <h3 class="text-base font-bold">
+              {{calcularDescuento(calcularMediana(productService.priceHistory().priceHistory.prices),
+              productService.priceHistory().productInfo.currentPrice)}}</h3>
+          </div>
+
+        </div>
+        <div class="flex flex-row lg:items-center justify-between">
+          <div>
+            <p class="text-sm mb-2 text-balance">Actualizado {{
+              findLast(productService.priceHistory().priceHistory.dates) | timeAgo }}</p>
+            <div class="info-content">
+              <h3 class="text-lg font-bold flex flex-row items-center gap-2">
+                <div class="my-2" title="{{productService.priceHistory().productInfo.url | extractDomain | titlecase}}">
+                  <img class="h-6" src="../../../../assets/svg/{{
                 productService.priceHistory().productInfo.url | extractDomain
               }}.svg" alt="Logo {{
                 productService.priceHistory().productInfo.url | extractDomain
               }}" />
-          </div>
-          {{ productService.priceHistory().productInfo.url | extractDomain | titlecase}}
-          </h3>
-        </div>
-      </div>
-      <div>
-        <div class="flex flex-col">
-
-        <p class="text-sm mb-2 text-end text-balance">Recomendacion de compra</p>
-        <div class="flex flex-row gap-2 justify-end">
-        <div class="flex flex-row items-center justify-between ml-4 w-8 relative gap-1">
-          <!-- Triángulo indicador -->
-          <div class=" flex flex-col items-center justify-evenly  h-full">
-            <div class="h-5 w-5">
-              @if (estadoDelPrecio !== 'verde' && estadoDelPrecio !== 'amarillo') {
-              <div
-                class=" w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-current rotate-90">
-              </div>
-              }
-            </div>
-
-            <div class="h-5 w-5">
-              @if (estadoDelPrecio === 'amarillo') {
-              <div
-                class=" w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-current rotate-90">
-              </div>
-              }
-            </div>
-
-            <div class="h-5 w-5">
-              @if (estadoDelPrecio === 'verde') {
-              <div
-                class=" w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-current rotate-90">
-              </div>
-              }
+                </div>
+                {{ productService.priceHistory().productInfo.url | extractDomain | titlecase}}
+              </h3>
             </div>
           </div>
-          <!-- Línea de colores -->
-          <div class="h-full w-2 rounded-full flex flex-col">
-            <div class="h-1/3 bg-red-600 rounded-t-full"></div>
-            <div class="h-1/3 bg-yellow-500"></div>
-            <div class="h-1/3 bg-green-600 rounded-b-full"></div>
+          <div>
+            <div class="flex flex-col">
+
+              <p class="text-sm mb-2 text-end text-balance">Recomendacion de compra</p>
+              <div class="flex flex-row gap-2 justify-end">
+                <div class="flex flex-row items-center justify-between ml-4 w-8 relative gap-1">
+                  <!-- Triángulo indicador -->
+                  <div class=" flex flex-col items-center justify-evenly  h-full">
+                    <div class="h-5 w-5">
+                      @if (estadoDelPrecio !== 'verde' && estadoDelPrecio !== 'amarillo') {
+                      <div
+                        class=" w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-current rotate-90">
+                      </div>
+                      }
+                    </div>
+
+                    <div class="h-5 w-5">
+                      @if (estadoDelPrecio === 'amarillo') {
+                      <div
+                        class=" w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-current rotate-90">
+                      </div>
+                      }
+                    </div>
+
+                    <div class="h-5 w-5">
+                      @if (estadoDelPrecio === 'verde') {
+                      <div
+                        class=" w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-current rotate-90">
+                      </div>
+                      }
+                    </div>
+                  </div>
+                  <!-- Línea de colores -->
+                  <div class="h-full w-2 rounded-full flex flex-col">
+                    <div class="h-1/3 bg-red-600 rounded-t-full"></div>
+                    <div class="h-1/3 bg-yellow-500"></div>
+                    <div class="h-1/3 bg-green-600 rounded-b-full"></div>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
           </div>
-
         </div>
 
-        </div>
-
-      </div>
-      </div>
-      </div>
-
-      <a [href]="productService.priceHistory().productInfo.url +'?utm_source=acllabay.com&utm_medium=referral'"
-        target="_blank">
-        <!-- <div class="mt-5 flex justify-center">
+        <a [href]="productService.priceHistory().productInfo.url +'?utm_source=acllabay.com&utm_medium=referral'"
+          target="_blank">
+          <!-- <div class="mt-5 flex justify-center">
           <p-button
             severity="contrast"
             label="Comprar en tienda"
@@ -143,54 +144,56 @@ productService.priceHistory().priceHistory.prices);
             styleClass="w-full"
           />
         </div> -->
-        <div class="mt-5 flex justify-center">
-          @if (estadoDelPrecio === 'verde') {
-          <!-- Botón animado para precio mínimo -->
-          <p-button severity="success" label="¡COMPRAR AHORA! - PRECIO MÍNIMO" icon="pi pi-bolt"
-            class="w-full animate-pulse hover:animate-none"
-            styleClass="w-full font-bold shadow-lg shadow-green-500/50 hover:bg-green-500 " />
-          } @else {
-          <!-- Botón normal para otros casos -->
-          <p-button severity="contrast" label="Comprar en tienda" icon="pi pi-cart-plus" class="w-full"
-            styleClass="w-full" />
-          }
-        </div>
-      </a>
+          <div class="mt-5 flex justify-center">
+            @if (estadoDelPrecio === 'verde') {
+            <!-- Botón animado para precio mínimo -->
+            <p-button severity="success" label="¡COMPRAR AHORA! - PRECIO MÍNIMO" icon="pi pi-bolt"
+              class="w-full animate-pulse hover:animate-none"
+              styleClass="w-full font-bold shadow-lg shadow-green-500/50 hover:bg-green-500 "
+              (onClick)="insertBuyResult(productService.priceHistory().productInfo._id, productService.priceHistory().productInfo.url)" />
+            } @else {
+            <!-- Botón normal para otros casos -->
+            <p-button severity="contrast" label="Comprar en tienda" icon="pi pi-cart-plus" class="w-full"
+              styleClass="w-full"
+              (onClick)="insertBuyResult(productService.priceHistory().productInfo._id, productService.priceHistory().productInfo.url)" />
+            }
+          </div>
+        </a>
 
-      @if (authService.isAuthenticatedUser() && getMyJob(productService.priceHistory().productInfo.urlId)) {
-      <p class="text-center text-sm mt-4 text-red-500 border border-red-500 rounded-md py-2 hover:bg-red-500 hover:text-white cursor-pointer"
-        (click)="
+        @if (authService.isAuthenticatedUser() && getMyJob(productService.priceHistory().productInfo.urlId)) {
+        <p class="text-center text-sm mt-4 text-red-500 border border-red-500 rounded-md py-2 hover:bg-red-500 hover:text-white cursor-pointer"
+          (click)="
             confirm(
               productService.priceHistory().productInfo.url,
               productService.priceHistory().productInfo.urlId
             )
           ">
-        <i class="pi pi-trash me-2 text-sm"></i>
-        <a> Dejar de seguir </a>
-      </p>
-      }
-      @if (authService.isAuthenticatedUser() && !getMyJob(productService.priceHistory().productInfo.urlId)) {
-      <div class="mt-4">
-        <p-button label="Seguir" icon="pi pi-heart-fill" class="w-full text-xs sm:text-base" styleClass="w-full"
-          outlined="true"
-          (onClick)="addUrlForMe(productService.priceHistory().productInfo.job, productService.priceHistory().productInfo.urlId)" />
+          <i class="pi pi-trash me-2 text-sm"></i>
+          <a> Dejar de seguir </a>
+        </p>
+        }
+        @if (authService.isAuthenticatedUser() && !getMyJob(productService.priceHistory().productInfo.urlId)) {
+        <div class="mt-4">
+          <p-button label="Seguir" icon="pi pi-heart-fill" class="w-full text-xs sm:text-base" styleClass="w-full"
+            outlined="true"
+            (onClick)="addUrlForMe(productService.priceHistory().productInfo.job, productService.priceHistory().productInfo.urlId)" />
+        </div>
+        }
       </div>
-      }
     </div>
-  </div>
-  
-</div>
 
-<div id="section2" class="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-4">
-  <!-- tabla y titulo del producto -->
-  <div class="my-6 ">
-    <!-- <h3>Historial de precios</h3> -->
-    <p-chart type="line" [data]="data" [options]="options" class="h-[20rem]" />
   </div>
 
-  <div class="flex flex-col w-full" >
-    <div class="xd">
-      <!-- <h1 class="mt-7 mb-6 text-2xl text-start">Recomendacion de compra</h1>
+  <div id="section2" class="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <!-- tabla y titulo del producto -->
+    <div class="my-6 ">
+      <!-- <h3>Historial de precios</h3> -->
+      <p-chart type="line" [data]="data" [options]="options" class="h-[20rem]" />
+    </div>
+
+    <div class="flex flex-col w-full">
+      <div class="xd">
+        <!-- <h1 class="mt-7 mb-6 text-2xl text-start">Recomendacion de compra</h1>
       <div class="flex flex-row gap-2">
         @if (estadoDelPrecio === 'verde') {
         <div class="flex flex-row">
@@ -247,140 +250,144 @@ productService.priceHistory().priceHistory.prices);
       </div> -->
 
 
-      <!-- Prod en otras tiendas -->
-<div class="flex w-full">
-  <div class="w-full">
-    <h1 class="mt-2 mb-4 text-2xl text-start">Comparación en otras tiendas</h1>
-    <div class="w-full max-h-[480px] overflow-y-auto border border-gray-200 rounded-lg shadow-sm">
-      <p-table [value]="productsEqual()" selectionMode="single" [tableStyle]="{ 'width': '100%', 'min-width': '100%' }">
-        <ng-template #header>
-          <tr class="sticky top-0 bg-white z-10 shadow-sm">
-            <th class="p-3">Tienda</th>
-            <th class="p-3">Precio</th>
-            <th class="p-3"></th>
-          </tr>
-        </ng-template>
-        <ng-template #body let-product>
-          <tr [pSelectableRow]="product">
-            <td class="w-1/3 p-3">
-              <a [href]="product.url+'?utm_source=acllabay.com&utm_medium=referral'" target="_blank" class="block">
-                <div class="flex flex-row items-center gap-2">
-                  <img class="h-6" src="../../../../assets/svg/{{
+        <!-- Prod en otras tiendas -->
+        <div class="flex w-full">
+          <div class="w-full">
+            <h1 class="mt-2 mb-4 text-2xl text-start">Comparación en otras tiendas</h1>
+            <div class="w-full max-h-[480px] overflow-y-auto border border-gray-200 rounded-lg shadow-sm">
+              <p-table [value]="productsEqual()" selectionMode="single"
+                [tableStyle]="{ 'width': '100%', 'min-width': '100%' }">
+                <ng-template #header>
+                  <tr class="sticky top-0 bg-white z-10 shadow-sm">
+                    <th class="p-3">Tienda</th>
+                    <th class="p-3">Precio</th>
+                    <th class="p-3"></th>
+                  </tr>
+                </ng-template>
+                <ng-template #body let-product>
+                  <tr [pSelectableRow]="product">
+                    <td class="w-1/3 p-3">
+                      <a [href]="product.url+'?utm_source=acllabay.com&utm_medium=referral'" target="_blank"
+                        class="block">
+                        <div class="flex flex-row items-center gap-2">
+                          <img class="h-6" src="../../../../assets/svg/{{
                     product.url | extractDomain
                   }}.svg" alt="Logo {{
                     product.url | extractDomain
                   }}" />
-                  <h3 class="text-xs font-bold flex flex-row items-center gap-2">
-                    {{ product.url | extractDomain | titlecase }}
-                  </h3>
-                </div>
-              </a>
-            </td>
-            <td class="w-1/3 p-3">
-              <a [href]="product.url+'?utm_source=acllabay.com&utm_medium=referral'" target="_blank" class="block">
-                {{product.currentPrice | currency:'S/'}}
-              </a>
-            </td>
-            <td class="w-1/3 p-3">
-              <a [href]="product.url+'?utm_source=acllabay.com&utm_medium=referral'" target="_blank" class="block">
-                <div>
-                  <img [src]="product.image" [alt]="product.title" class="h-14 md:h-16 rounded m-auto">
-                </div>
-              </a>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
+                          <h3 class="text-xs font-bold flex flex-row items-center gap-2">
+                            {{ product.url | extractDomain | titlecase }}
+                          </h3>
+                        </div>
+                      </a>
+                    </td>
+                    <td class="w-1/3 p-3">
+                      <a [href]="product.url+'?utm_source=acllabay.com&utm_medium=referral'" target="_blank"
+                        class="block">
+                        {{product.currentPrice | currency:'S/'}}
+                      </a>
+                    </td>
+                    <td class="w-1/3 p-3">
+                      <a [href]="product.url+'?utm_source=acllabay.com&utm_medium=referral'" target="_blank"
+                        class="block">
+                        <div>
+                          <img [src]="product.image" [alt]="product.title" class="h-14 md:h-16 rounded m-auto">
+                        </div>
+                      </a>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-    </div>
+
   </div>
 
-</div>
+  <div class="my-6">
+    <h3 class="text-3xl text-center">
+      Poductos recomendados
+    </h3>
+  </div>
 
-<div class="my-6">
-  <h3 class="text-3xl text-center">
-    Poductos recomendados
-  </h3>
-</div>
-
-@if (isLoadingRec()) {
-<div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
-  @for (item of [1,2,3,4]; track $index) {
-  <skeleton-prod />
+  @if (isLoadingRec()) {
+  <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
+    @for (item of [1,2,3,4]; track $index) {
+    <skeleton-prod />
+    }
+  </div>
   }
-</div>
-}
 
-@if (!isLoadingRec()) {
-<div class=" my-4 grid grid-cols-2 gap-1 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4 ">
-  @for (product of productsRec(); track $index) {
-  <!-- @let arrDate = productService.priceHistory().priceHistory.dates[0];
+  @if (!isLoadingRec()) {
+  <div class=" my-4 grid grid-cols-2 gap-1 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4 ">
+    @for (product of productsRec(); track $index) {
+    <!-- @let arrDate = productService.priceHistory().priceHistory.dates[0];
           @let arrPrices = productService.priceHistory().priceHistory.prices[0]; -->
-  <div class="masonry-item">
-    <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%'}"
-      styleClass="[&_.p-card-body]:!p-2 sm:[&_.p-card-body]:!p-4">
-      <ng-template #header>
-        <div class="bg-white">
-          <img [alt]="product.productTitle"
-            class="h-52 md:h-[362px] xl:h-[302px] w-full m-auto cursor-pointer object-contain" [src]="product.image"
-            [routerLink]="['/seguimientos', product.urlId ]" />
-        </div>
-      </ng-template>
-      <ng-template #title>
-        <div class="text-sm h-[60px]  sm:text-xl  sm:h-16">
-          {{ truncateText(product.productTitle) | titlecase}}
-        </div>
-      </ng-template>
-      <ng-template #subtitle>
-        <div class="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-2">
-          <img class="h-5" src="../../../../assets/svg/{{product.url|extractDomain}}.svg"
-            alt="Logo {{product.url|extractDomain}}">
-          <small class="">Actualizado ({{product.lastUpdate | timeAgo}})</small>
-        </div>
-      </ng-template>
-      <h2 class="text-lg sm:text-2xl">
-        {{product.currentPrice | currency: 'S/ '}}
-      </h2>
-      <h3 class="text-surface-500 text-sm  sm:text-base "
-        [ngClass]="{'text-green-600': product.currentPrice === product.lowestPrice}">
-        Precio mínimo: <samp class="">{{product.lowestPrice | currency: 'S/'}}</samp>
-      </h3>
-      <ng-template #footer>
-        <div class="flex gap-4 mt-1">
-          <p-button label="Detalles" icon="pi pi-chart-scatter" class="w-full text-xs sm:text-base" styleClass="w-full"
-            [routerLink]="['/seguimientos', product.urlId ]" />
-        </div>
-      </ng-template>
-    </p-card>
-  </div>
-  }
-</div>
-
-}
-
-<!-- confirm dialog -->
-<p-confirmdialog #cd>
-  <ng-template #headless let-message let-onAccept="onAccept" let-onReject="onReject">
-    <div class="flex flex-col items-center p-8 rounded">
-      <div
-        class="rounded-full bg-primary text-primary-contrast inline-flex justify-center items-center h-24 w-24 -mt-20">
-        <i class="pi pi-check !text-5xl"></i>
-      </div>
-      <span class="font-bold text-xl block mb-2 mt-6">{{
-        message.header
-        }}</span>
-      <p class="mb-0 text-sm">{{ message.message }}</p>
-      <div class="flex items-center gap-2 mt-6">
-        <p-button label="Confirmar" (onClick)="onAccept()" styleClass="w-32"></p-button>
-        <p-button label="Cancelar" [outlined]="true" (onClick)="onReject()" styleClass="w-32"></p-button>
-      </div>
+    <div class="masonry-item">
+      <p-card [style]="{ width: '100%', overflow: 'hidden', height: '100%'}"
+        styleClass="[&_.p-card-body]:!p-2 sm:[&_.p-card-body]:!p-4">
+        <ng-template #header>
+          <div class="bg-white">
+            <img [alt]="product.productTitle"
+              class="h-52 md:h-[362px] xl:h-[302px] w-full m-auto cursor-pointer object-contain" [src]="product.image"
+              [routerLink]="['/seguimientos', product.urlId ]" />
+          </div>
+        </ng-template>
+        <ng-template #title>
+          <div class="text-sm h-[60px]  sm:text-xl  sm:h-16">
+            {{ truncateText(product.productTitle) | titlecase}}
+          </div>
+        </ng-template>
+        <ng-template #subtitle>
+          <div class="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-2">
+            <img class="h-5" src="../../../../assets/svg/{{product.url|extractDomain}}.svg"
+              alt="Logo {{product.url|extractDomain}}">
+            <small class="">Actualizado ({{product.lastUpdate | timeAgo}})</small>
+          </div>
+        </ng-template>
+        <h2 class="text-lg sm:text-2xl">
+          {{product.currentPrice | currency: 'S/ '}}
+        </h2>
+        <h3 class="text-surface-500 text-sm  sm:text-base "
+          [ngClass]="{'text-green-600': product.currentPrice === product.lowestPrice}">
+          Precio mínimo: <samp class="">{{product.lowestPrice | currency: 'S/'}}</samp>
+        </h3>
+        <ng-template #footer>
+          <div class="flex gap-4 mt-1">
+            <p-button label="Detalles" icon="pi pi-chart-scatter" class="w-full text-xs sm:text-base"
+              styleClass="w-full" [routerLink]="['/seguimientos', product.urlId ]" />
+          </div>
+        </ng-template>
+      </p-card>
     </div>
-  </ng-template>
-</p-confirmdialog>
-<!-- </div> -->
-}
+    }
+  </div>
+
+  }
+
+  <!-- confirm dialog -->
+  <p-confirmdialog #cd>
+    <ng-template #headless let-message let-onAccept="onAccept" let-onReject="onReject">
+      <div class="flex flex-col items-center p-8 rounded">
+        <div
+          class="rounded-full bg-primary text-primary-contrast inline-flex justify-center items-center h-24 w-24 -mt-20">
+          <i class="pi pi-check !text-5xl"></i>
+        </div>
+        <span class="font-bold text-xl block mb-2 mt-6">{{
+          message.header
+          }}</span>
+        <p class="mb-0 text-sm">{{ message.message }}</p>
+        <div class="flex items-center gap-2 mt-6">
+          <p-button label="Confirmar" (onClick)="onAccept()" styleClass="w-32"></p-button>
+          <p-button label="Cancelar" [outlined]="true" (onClick)="onReject()" styleClass="w-32"></p-button>
+        </div>
+      </div>
+    </ng-template>
+  </p-confirmdialog>
+  <!-- </div> -->
+  }
 </div>
 
 

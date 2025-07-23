@@ -75,6 +75,7 @@ export interface ProductInfo {
   image:        string;
   url:          string;
   urlId:        string;
+  _id:        string;
   job:        string;
 }
 

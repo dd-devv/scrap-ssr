@@ -4,6 +4,7 @@ export interface LoginResponse {
     fullname: string;
     email: string;
     whatsapp: string;
+    role: string;
     verified: boolean;
     onlyHisLow: boolean;
     createdAt: string;
