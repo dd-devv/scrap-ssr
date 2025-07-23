@@ -17,6 +17,7 @@ import { TableModule } from 'primeng/table';
 import { SkeletonProdComponent } from '../../../ui/skeleton-prod/skeleton-prod.component';
 import { CardModule } from 'primeng/card';
 import { ViewService } from '../../../services/view.service';
+import { BuyService } from '../../../services/buy.service';
 
 
 @Component({
@@ -49,6 +50,7 @@ export default class OfferComponent implements OnInit {
   productService = inject(ProductService);
   authService = inject(AuthService);
   viewService = inject(ViewService);
+  buyService = inject(BuyService);
   router = inject(Router);
   private meta = inject(Meta); // Inyectamos el servicio Meta
   private title = inject(Title); // Inyectamos el servicio Title
@@ -107,6 +109,10 @@ export default class OfferComponent implements OnInit {
 
   insertViewResult(resultId: string) {
     this.viewService.insertView(resultId, 'Ofertas').subscribe();
+  }
+
+  insertBuyResult(resultId: string, url: string) {
+    this.buyService.insertBuy(resultId, url).subscribe();
   }
 
   // loadProductsEqual(id: string) {
