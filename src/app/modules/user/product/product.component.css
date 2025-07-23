@@ -15,6 +15,10 @@
   /* background-color: #18181B !important ; */
   gap: 10px !important;
 }
+.information-container{
+  flex: 1;
+  width: 100%;
+}
 
 .info-content{
   /* border-left: 1px solid #f7f7f7 !important;
