@@ -30,6 +30,7 @@ import { Chip } from 'primeng/chip';
     SlicePipe
   ],
   templateUrl: './layout.component.html',
+  styleUrl: './layout.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MessageService]
 })
@@ -45,6 +46,8 @@ export class LayoutComponent implements OnInit {
   categorysSelected: string[] = [];
 
   isBrowser = false;
+  // countdown: number = 15;
+  countdown = signal(15);
 
   dialogVisible = signal(false);
 
@@ -63,6 +66,18 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit() {
     // Verificar si estamos en el navegador
+    if (isPlatformBrowser(this.platformId)) {
+      this.isBrowser = true;
+      const timer = setInterval(() => {
+        this.countdown.update(val => val - 1);
+        
+        if (this.countdown() <= 0) {
+          clearInterval(timer);
+          window.location.href = 'https://compito.pe';
+        }
+      }, 1000);
+    }
+
     this.isBrowser = isPlatformBrowser(this.platformId);
 
     if (this.isBrowser) {
