@@ -73,7 +73,7 @@ export class LayoutComponent implements OnInit {
         
         if (this.countdown() <= 0) {
           clearInterval(timer);
-          window.location.href = 'https://compito.pe';
+          window.location.href = 'https://droply.pe';
         }
       }, 1000);
     }
